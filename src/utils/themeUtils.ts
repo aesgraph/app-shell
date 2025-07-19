@@ -103,13 +103,13 @@ export const getThemeStyles = (theme: Theme) => ({
     },
     resizer: {
       backgroundColor: theme.colors.workspaceResizer,
-      '&:hover': {
+      "&:hover": {
         backgroundColor: theme.colors.workspaceResizerHover,
       },
     },
     scrollbar: {
       color: theme.colors.workspaceScrollbar,
-      '&:hover': {
+      "&:hover": {
         color: theme.colors.workspaceScrollbarHover,
       },
     },
@@ -144,15 +144,15 @@ export const getColor = (
  */
 export const generateLegacyCSSVars = (theme: Theme): Record<string, string> => {
   return {
-    '--color-bg': theme.colors.workspaceBackground,
-    '--color-panel': theme.colors.workspacePanel,
-    '--color-text': theme.colors.text,
-    '--color-border': theme.colors.border,
-    '--color-title-bg': theme.colors.workspaceTitleBackground,
-    '--color-title-text': theme.colors.workspaceTitleText,
-    '--color-resizer': theme.colors.workspaceResizer,
-    '--color-resizer-hover': theme.colors.workspaceResizerHover,
-    '--color-scrollbar': theme.colors.workspaceScrollbar,
-    '--color-scrollbar-hover': theme.colors.workspaceScrollbarHover,
+    "--color-bg": theme.colors.workspaceBackground,
+    "--color-panel": theme.colors.workspacePanel,
+    "--color-text": theme.colors.text,
+    "--color-border": theme.colors.border,
+    "--color-title-bg": theme.colors.workspaceTitleBackground,
+    "--color-title-text": theme.colors.workspaceTitleText,
+    "--color-resizer": theme.colors.workspaceResizer,
+    "--color-resizer-hover": theme.colors.workspaceResizerHover,
+    "--color-scrollbar": theme.colors.workspaceScrollbar,
+    "--color-scrollbar-hover": theme.colors.workspaceScrollbarHover,
   };
 };

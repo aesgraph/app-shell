@@ -36,13 +36,13 @@ export interface ThemeColors {
   linkHover: string;
 
   // Workspace-specific colors
-  workspaceBackground: string;      // --color-bg
-  workspacePanel: string;          // --color-panel
+  workspaceBackground: string; // --color-bg
+  workspacePanel: string; // --color-panel
   workspaceTitleBackground: string; // --color-title-bg
-  workspaceTitleText: string;      // --color-title-text
-  workspaceResizer: string;        // --color-resizer
-  workspaceResizerHover: string;   // --color-resizer-hover
-  workspaceScrollbar: string;      // --color-scrollbar
+  workspaceTitleText: string; // --color-title-text
+  workspaceResizer: string; // --color-resizer
+  workspaceResizerHover: string; // --color-resizer-hover
+  workspaceScrollbar: string; // --color-scrollbar
   workspaceScrollbarHover: string; // --color-scrollbar-hover
 }
 

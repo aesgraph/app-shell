@@ -66,14 +66,14 @@ const lightColors: ThemeColors = {
   linkHover: "#2563eb",
 
   // Workspace-specific colors
-  workspaceBackground: "#f5f5f5",      // --color-bg
-  workspacePanel: "#ffffff",           // --color-panel
+  workspaceBackground: "#f5f5f5", // --color-bg
+  workspacePanel: "#ffffff", // --color-panel
   workspaceTitleBackground: "#f5f5f5", // --color-title-bg
-  workspaceTitleText: "#222222",       // --color-title-text
-  workspaceResizer: "#e0e0e0",         // --color-resizer
-  workspaceResizerHover: "#bdbdbd",    // --color-resizer-hover
-  workspaceScrollbar: "#b0b0b0",       // --color-scrollbar
-  workspaceScrollbarHover: "#909090",  // --color-scrollbar-hover
+  workspaceTitleText: "#222222", // --color-title-text
+  workspaceResizer: "#e0e0e0", // --color-resizer
+  workspaceResizerHover: "#bdbdbd", // --color-resizer-hover
+  workspaceScrollbar: "#b0b0b0", // --color-scrollbar
+  workspaceScrollbarHover: "#909090", // --color-scrollbar-hover
 };
 
 // Dark theme
@@ -108,14 +108,14 @@ const darkColors: ThemeColors = {
   linkHover: "#93c5fd",
 
   // Workspace-specific colors
-  workspaceBackground: "#1e1e1e",      // --color-bg
-  workspacePanel: "#23272e",           // --color-panel
+  workspaceBackground: "#1e1e1e", // --color-bg
+  workspacePanel: "#23272e", // --color-panel
   workspaceTitleBackground: "#23272e", // --color-title-bg
-  workspaceTitleText: "#d4d4d4",       // --color-title-text
-  workspaceResizer: "#23272e",         // --color-resizer
-  workspaceResizerHover: "#444444",    // --color-resizer-hover
-  workspaceScrollbar: "#555555",       // --color-scrollbar
-  workspaceScrollbarHover: "#777777",  // --color-scrollbar-hover
+  workspaceTitleText: "#d4d4d4", // --color-title-text
+  workspaceResizer: "#23272e", // --color-resizer
+  workspaceResizerHover: "#444444", // --color-resizer-hover
+  workspaceScrollbar: "#555555", // --color-scrollbar
+  workspaceScrollbarHover: "#777777", // --color-scrollbar-hover
 };
 
 // Dracula theme
@@ -150,14 +150,14 @@ const draculaColors: ThemeColors = {
   linkHover: "#bd93f9",
 
   // Workspace-specific colors
-  workspaceBackground: "#282a36",      // --color-bg
-  workspacePanel: "#44475a",           // --color-panel
+  workspaceBackground: "#282a36", // --color-bg
+  workspacePanel: "#44475a", // --color-panel
   workspaceTitleBackground: "#44475a", // --color-title-bg
-  workspaceTitleText: "#bd93f9",       // --color-title-text
-  workspaceResizer: "#6272a4",         // --color-resizer
-  workspaceResizerHover: "#bd93f9",    // --color-resizer-hover
-  workspaceScrollbar: "#6272a4",       // --color-scrollbar
-  workspaceScrollbarHover: "#bd93f9",  // --color-scrollbar-hover
+  workspaceTitleText: "#bd93f9", // --color-title-text
+  workspaceResizer: "#6272a4", // --color-resizer
+  workspaceResizerHover: "#bd93f9", // --color-resizer-hover
+  workspaceScrollbar: "#6272a4", // --color-scrollbar
+  workspaceScrollbarHover: "#bd93f9", // --color-scrollbar-hover
 };
 
 // One Dark theme
@@ -192,14 +192,14 @@ const oneDarkColors: ThemeColors = {
   linkHover: "#56b6c2",
 
   // Workspace-specific colors
-  workspaceBackground: "#282c34",      // --color-bg
-  workspacePanel: "#3e4451",           // --color-panel
+  workspaceBackground: "#282c34", // --color-bg
+  workspacePanel: "#3e4451", // --color-panel
   workspaceTitleBackground: "#3e4451", // --color-title-bg
-  workspaceTitleText: "#61afef",       // --color-title-text
-  workspaceResizer: "#5c6370",         // --color-resizer
-  workspaceResizerHover: "#61afef",    // --color-resizer-hover
-  workspaceScrollbar: "#5c6370",       // --color-scrollbar
-  workspaceScrollbarHover: "#61afef",  // --color-scrollbar-hover
+  workspaceTitleText: "#61afef", // --color-title-text
+  workspaceResizer: "#5c6370", // --color-resizer
+  workspaceResizerHover: "#61afef", // --color-resizer-hover
+  workspaceScrollbar: "#5c6370", // --color-scrollbar
+  workspaceScrollbarHover: "#61afef", // --color-scrollbar-hover
 };
 
 // Solarized theme
@@ -234,14 +234,14 @@ const solarizedColors: ThemeColors = {
   linkHover: "#6c71c4",
 
   // Workspace-specific colors
-  workspaceBackground: "#002b36",      // --color-bg
-  workspacePanel: "#073642",           // --color-panel
+  workspaceBackground: "#002b36", // --color-bg
+  workspacePanel: "#073642", // --color-panel
   workspaceTitleBackground: "#073642", // --color-title-bg
-  workspaceTitleText: "#268bd2",       // --color-title-text
-  workspaceResizer: "#586e75",         // --color-resizer
-  workspaceResizerHover: "#268bd2",    // --color-resizer-hover
-  workspaceScrollbar: "#586e75",       // --color-scrollbar
-  workspaceScrollbarHover: "#268bd2",  // --color-scrollbar-hover
+  workspaceTitleText: "#268bd2", // --color-title-text
+  workspaceResizer: "#586e75", // --color-resizer
+  workspaceResizerHover: "#268bd2", // --color-resizer-hover
+  workspaceScrollbar: "#586e75", // --color-scrollbar
+  workspaceScrollbarHover: "#268bd2", // --color-scrollbar-hover
 };
 
 // Monokai theme
@@ -276,14 +276,14 @@ const monokaiColors: ThemeColors = {
   linkHover: "#f92672",
 
   // Workspace-specific colors
-  workspaceBackground: "#272822",      // --color-bg
-  workspacePanel: "#3e3d32",           // --color-panel
+  workspaceBackground: "#272822", // --color-bg
+  workspacePanel: "#3e3d32", // --color-panel
   workspaceTitleBackground: "#3e3d32", // --color-title-bg
-  workspaceTitleText: "#f92672",       // --color-title-text
-  workspaceResizer: "#75715e",         // --color-resizer
-  workspaceResizerHover: "#f92672",    // --color-resizer-hover
-  workspaceScrollbar: "#75715e",       // --color-scrollbar
-  workspaceScrollbarHover: "#f92672",  // --color-scrollbar-hover
+  workspaceTitleText: "#f92672", // --color-title-text
+  workspaceResizer: "#75715e", // --color-resizer
+  workspaceResizerHover: "#f92672", // --color-resizer-hover
+  workspaceScrollbar: "#75715e", // --color-scrollbar
+  workspaceScrollbarHover: "#f92672", // --color-scrollbar-hover
 };
 
 // Nord theme
@@ -318,14 +318,14 @@ const nordColors: ThemeColors = {
   linkHover: "#88c0d0",
 
   // Workspace-specific colors
-  workspaceBackground: "#2e3440",      // --color-bg
-  workspacePanel: "#3b4252",           // --color-panel
+  workspaceBackground: "#2e3440", // --color-bg
+  workspacePanel: "#3b4252", // --color-panel
   workspaceTitleBackground: "#3b4252", // --color-title-bg
-  workspaceTitleText: "#88c0d0",       // --color-title-text
-  workspaceResizer: "#4c566a",         // --color-resizer
-  workspaceResizerHover: "#88c0d0",    // --color-resizer-hover
-  workspaceScrollbar: "#4c566a",       // --color-scrollbar
-  workspaceScrollbarHover: "#88c0d0",  // --color-scrollbar-hover
+  workspaceTitleText: "#88c0d0", // --color-title-text
+  workspaceResizer: "#4c566a", // --color-resizer
+  workspaceResizerHover: "#88c0d0", // --color-resizer-hover
+  workspaceScrollbar: "#4c566a", // --color-scrollbar
+  workspaceScrollbarHover: "#88c0d0", // --color-scrollbar-hover
 };
 
 // Gruvbox theme
@@ -360,14 +360,14 @@ const gruvboxColors: ThemeColors = {
   linkHover: "#fabd2f",
 
   // Workspace-specific colors
-  workspaceBackground: "#282828",      // --color-bg
-  workspacePanel: "#3c3836",           // --color-panel
+  workspaceBackground: "#282828", // --color-bg
+  workspacePanel: "#3c3836", // --color-panel
   workspaceTitleBackground: "#3c3836", // --color-title-bg
-  workspaceTitleText: "#fabd2f",       // --color-title-text
-  workspaceResizer: "#504945",         // --color-resizer
-  workspaceResizerHover: "#fabd2f",    // --color-resizer-hover
-  workspaceScrollbar: "#504945",       // --color-scrollbar
-  workspaceScrollbarHover: "#fabd2f",  // --color-scrollbar-hover
+  workspaceTitleText: "#fabd2f", // --color-title-text
+  workspaceResizer: "#504945", // --color-resizer
+  workspaceResizerHover: "#fabd2f", // --color-resizer-hover
+  workspaceScrollbar: "#504945", // --color-scrollbar
+  workspaceScrollbarHover: "#fabd2f", // --color-scrollbar-hover
 };
 
 // Tokyo Night theme
@@ -402,14 +402,14 @@ const tokyoColors: ThemeColors = {
   linkHover: "#7aa2f7",
 
   // Workspace-specific colors
-  workspaceBackground: "#1a1b26",      // --color-bg
-  workspacePanel: "#24283b",           // --color-panel
+  workspaceBackground: "#1a1b26", // --color-bg
+  workspacePanel: "#24283b", // --color-panel
   workspaceTitleBackground: "#24283b", // --color-title-bg
-  workspaceTitleText: "#7aa2f7",       // --color-title-text
-  workspaceResizer: "#414868",         // --color-resizer
-  workspaceResizerHover: "#7aa2f7",    // --color-resizer-hover
-  workspaceScrollbar: "#414868",       // --color-scrollbar
-  workspaceScrollbarHover: "#7aa2f7",  // --color-scrollbar-hover
+  workspaceTitleText: "#7aa2f7", // --color-title-text
+  workspaceResizer: "#414868", // --color-resizer
+  workspaceResizerHover: "#7aa2f7", // --color-resizer-hover
+  workspaceScrollbar: "#414868", // --color-scrollbar
+  workspaceScrollbarHover: "#7aa2f7", // --color-scrollbar-hover
 };
 
 // Catppuccin theme
@@ -444,14 +444,14 @@ const catppuccinColors: ThemeColors = {
   linkHover: "#cba6f7",
 
   // Workspace-specific colors
-  workspaceBackground: "#1e1e2e",      // --color-bg
-  workspacePanel: "#313244",           // --color-panel
+  workspaceBackground: "#1e1e2e", // --color-bg
+  workspacePanel: "#313244", // --color-panel
   workspaceTitleBackground: "#313244", // --color-title-bg
-  workspaceTitleText: "#cba6f7",       // --color-title-text
-  workspaceResizer: "#45475a",         // --color-resizer
-  workspaceResizerHover: "#cba6f7",    // --color-resizer-hover
-  workspaceScrollbar: "#45475a",       // --color-scrollbar
-  workspaceScrollbarHover: "#cba6f7",  // --color-scrollbar-hover
+  workspaceTitleText: "#cba6f7", // --color-title-text
+  workspaceResizer: "#45475a", // --color-resizer
+  workspaceResizerHover: "#cba6f7", // --color-resizer-hover
+  workspaceScrollbar: "#45475a", // --color-scrollbar
+  workspaceScrollbarHover: "#cba6f7", // --color-scrollbar-hover
 };
 
 // Export all themes
