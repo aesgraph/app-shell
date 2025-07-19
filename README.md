@@ -1,8 +1,15 @@
 # App Shell
 
+[![npm version](https://badge.fury.io/js/%40aesgraph%2Fapp-shell.svg)](https://badge.fury.io/js/%40aesgraph%2Fapp-shell)
+[![Deployed on Vercel](https://vercel.com/button)](https://app-shell-aesgraph.vercel.app)
+
 A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
 
 ![App Workspace Shell](./public/screenshot.png)
+
+## Live Demo
+
+🚀 **[Try the live demo on Vercel](https://app-shell-aesgraph.vercel.app)**
 
 ## Installation
 
