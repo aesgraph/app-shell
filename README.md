@@ -23,7 +23,7 @@ To run the app locally for development or testing:
 
 ```bash
 # Clone the repository (if you haven't already)
-git clone <repo-url>
+git clone https://github.com/aesgraph/app-shell.git
 cd app-shell
 
 # Install dependencies
@@ -119,11 +119,157 @@ The workspace supports multiple terminal-inspired themes:
 - `ThemeId` - Theme type definitions
 - `ViewRegistry` - View registry types
 
+## Themes
+
+The workspace supports multiple terminal-inspired themes that can be customized and extended.
+
+### Available Themes
+
+The workspace comes with 10 built-in themes:
+
+- **Light** - Clean light theme with dark text
+- **Dark** - Classic dark theme (default)
+- **Dracula** - Purple-accented dark theme
+- **One Dark** - Blue-accented dark theme
+- **Solarized** - Blue-green theme
+- **Monokai** - High contrast with pink accents
+- **Nord** - Cool blue-gray theme
+- **Gruvbox** - Warm brown theme
+- **Tokyo** - Blue-purple theme
+- **Catppuccin** - Soft purple theme
+
+### Using Themes
+
+#### Programmatic Theme Switching
+
+```tsx
+import React from "react";
+import { WorkspaceProvider, useWorkspace } from "app-shell";
+
+function App() {
+  const { currentTheme, setCurrentTheme } = useWorkspace();
+
+  return (
+    <WorkspaceProvider>
+      <div>
+        <select
+          value={currentTheme}
+          onChange={(e) => setCurrentTheme(e.target.value)}
+        >
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="dracula">Dracula</option>
+          {/* ... other themes */}
+        </select>
+        <Workspace />
+      </div>
+    </WorkspaceProvider>
+  );
+}
+```
+
+#### Initial Theme Configuration
+
+```tsx
+import React from "react";
+import { WorkspaceProvider, Workspace } from "app-shell";
+
+function App() {
+  const workspaceConfig = {
+    theme: "dracula", // Set initial theme
+    // ... other config
+  };
+
+  return (
+    <WorkspaceProvider initialConfig={workspaceConfig}>
+      <Workspace />
+    </WorkspaceProvider>
+  );
+}
+```
+
+### Custom Themes
+
+You can create custom themes by extending the theme system:
+
+```tsx
+import { registerTheme } from "app-shell";
+
+registerTheme({
+  id: "my-custom-theme",
+  name: "My Custom Theme",
+  colors: {
+    primary: "#ff6b6b",
+    secondary: "#4ecdc4",
+    accent: "#45b7d1",
+    background: "#2c3e50",
+    backgroundSecondary: "#34495e",
+    backgroundTertiary: "#3a4a5c",
+    surface: "#34495e",
+    surfaceHover: "#4a5f7a",
+    surfaceActive: "#5a6f8a",
+    text: "#ecf0f1",
+    textSecondary: "#bdc3c7",
+    textMuted: "#95a5a6",
+    textInverse: "#2c3e50",
+    border: "#34495e",
+    borderFocus: "#3498db",
+    borderHover: "#4a5f7a",
+    success: "#27ae60",
+    warning: "#f39c12",
+    error: "#e74c3c",
+    info: "#3498db",
+    link: "#3498db",
+    linkHover: "#2980b9",
+    workspaceBackground: "#2c3e50",
+    workspacePanel: "#34495e",
+    workspaceTitleBackground: "#34495e",
+    workspaceTitleText: "#ecf0f1",
+    workspaceResizer: "#34495e",
+    workspaceResizerHover: "#4a5f7a",
+    workspaceScrollbar: "#4a5f7a",
+    workspaceScrollbarHover: "#5a6f8a",
+  },
+  sizes: {
+    spacing: {
+      xs: "4px",
+      sm: "8px",
+      md: "16px",
+      lg: "24px",
+      xl: "32px",
+      xxl: "48px",
+    },
+    borderRadius: {
+      none: "0",
+      sm: "2px",
+      md: "4px",
+      lg: "8px",
+      full: "9999px",
+    },
+    fontSize: {
+      xs: "12px",
+      sm: "14px",
+      md: "16px",
+      lg: "18px",
+      xl: "20px",
+      xxl: "24px",
+    },
+    shadow: {
+      none: "none",
+      sm: "0 1px 2px rgba(0, 0, 0, 0.05)",
+      md: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      lg: "0 10px 15px rgba(0, 0, 0, 0.1)",
+      xl: "0 20px 25px rgba(0, 0, 0, 0.15)",
+    },
+  },
+});
+```
+
 ## Registering Custom Views
 
 You can add your own custom views to the workspace using the `registerViews` API. This allows you to extend the workspace with your own components.
 
-### Example
+### Basic View Registration
 
 ```tsx
 import React from "react";
@@ -151,12 +297,74 @@ function App() {
 }
 ```
 
-You can also access and register the built-in views using the `defaultViews` export:
+### Advanced View Configuration
+
+```tsx
+registerViews([
+  {
+    id: "advanced-view",
+    title: "Advanced View",
+    description: "A more complex view with additional features",
+    component: AdvancedView,
+    icon: "⚡",
+    category: "development",
+    closable: true, // Allow users to close this view
+    defaultActive: false, // Don't activate by default
+  },
+]);
+```
+
+### View Categories
+
+Organize your views into categories for better organization:
+
+```tsx
+registerViews([
+  {
+    id: "file-explorer",
+    title: "File Explorer",
+    component: FileExplorer,
+    icon: "📁",
+    category: "navigation",
+  },
+  {
+    id: "terminal",
+    title: "Terminal",
+    component: Terminal,
+    icon: "💻",
+    category: "development",
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    component: Settings,
+    icon: "⚙️",
+    category: "configuration",
+  },
+]);
+```
+
+### Managing Registered Views
+
+You can access and register the built-in views using the `defaultViews` export:
 
 ```tsx
 import { registerViews, defaultViews } from "app-shell";
 
+// Register all default views
 registerViews(defaultViews);
+
+// Or combine default and custom views
+registerViews([
+  ...defaultViews,
+  {
+    id: "my-custom-view",
+    title: "My Custom View",
+    component: MyCustomView,
+    icon: "🔧",
+    category: "custom",
+  },
+]);
 ```
 
 To remove all registered views, use:
@@ -165,6 +373,28 @@ To remove all registered views, use:
 import { clearViews } from "app-shell";
 
 clearViews();
+```
+
+### View Lifecycle
+
+Views can implement lifecycle methods for better integration:
+
+```tsx
+const MyView = () => {
+  const { currentTheme } = useWorkspace();
+
+  // Views automatically receive theme context
+  return (
+    <div
+      style={{
+        background: currentTheme.colors.background,
+        color: currentTheme.colors.text,
+      }}
+    >
+      My themed view content
+    </div>
+  );
+};
 ```
 
 ## Development
