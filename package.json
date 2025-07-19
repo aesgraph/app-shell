@@ -3,6 +3,27 @@
   "private": false,
   "version": "1.0.1",
   "type": "module",
+  "description": "A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.",
+  "keywords": [
+    "react",
+    "workspace",
+    "shell",
+    "tabs",
+    "resizable",
+    "panels",
+    "theme",
+    "typescript"
+  ],
+  "author": "Aesgraph",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aesgraph/app-shell.git"
+  },
+  "homepage": "https://github.com/aesgraph/app-shell#readme",
+  "bugs": {
+    "url": "https://github.com/aesgraph/app-shell/issues"
+  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
