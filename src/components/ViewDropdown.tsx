@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { ViewDefinition } from "../types/ViewRegistry";
 import styles from "../App.module.css";
@@ -8,6 +8,9 @@ interface ViewDropdownProps {
   onSelectView: (view: ViewDefinition) => void;
   onClose: () => void;
   position: { x: number; y: number };
+  buttonRect: DOMRect;
+  containerId: string;
+  theme: string;
 }
 
 const ViewDropdown = ({
@@ -15,8 +18,12 @@ const ViewDropdown = ({
   onSelectView,
   onClose,
   position,
+  buttonRect,
+  containerId,
+  theme,
 }: ViewDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [adjustedPosition, setAdjustedPosition] = useState(position);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -33,6 +40,43 @@ const ViewDropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
+  // Adjust position based on actual dropdown size and viewport constraints
+  useEffect(() => {
+    if (dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      let newX = position.x;
+      let newY = position.y;
+
+      // Check if dropdown goes off the right edge
+      if (dropdownRect.right > viewportWidth) {
+        newX = viewportWidth - dropdownRect.width - 20;
+      }
+
+      // Check if dropdown goes off the left edge
+      if (dropdownRect.left < 0) {
+        newX = 20;
+      }
+
+      // For bottom pane or if dropdown goes off bottom edge, show above button
+      const isBottomPane = containerId === "bottom-pane";
+      const wouldGoOffBottom = dropdownRect.bottom > viewportHeight;
+
+      if (isBottomPane || wouldGoOffBottom) {
+        newY = buttonRect.top - dropdownRect.height - 2;
+      }
+
+      // Check if dropdown goes off the top edge
+      if (newY < 0) {
+        newY = 20;
+      }
+
+      setAdjustedPosition({ x: newX, y: newY });
+    }
+  }, [position, buttonRect, containerId]);
 
   const handleViewSelect = (view: ViewDefinition) => {
     onSelectView(view);
@@ -51,11 +95,13 @@ const ViewDropdown = ({
   const dropdownContent = (
     <div
       ref={dropdownRef}
-      className={styles.viewDropdown}
+      className={`${styles.viewDropdown} ${
+        styles[`theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`]
+      }`}
       style={{
         position: "fixed",
-        left: position.x,
-        top: position.y,
+        left: adjustedPosition.x,
+        top: adjustedPosition.y,
         zIndex: 9999,
       }}
     >
