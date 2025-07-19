@@ -49,9 +49,8 @@
     "build-lib": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build-lib && npm run update-readme-version",
-    "release": "semantic-release",
-    "update-readme-version": "node scripts/update-readme-version.js"
+    "prepublishOnly": "npm run build-lib",
+    "release": "semantic-release"
   },
   "dependencies": {
     "re-resizable": "^6.11.2",
