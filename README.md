@@ -174,6 +174,45 @@ npm run build-lib
 npm run build
 ```
 
+### Commit Message Format
+
+This project uses [semantic-release](https://github.com/semantic-release/semantic-release) for automated versioning and releases. To ensure proper release detection, commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+#### Required Commit Prefixes
+
+- `feat:` - New features (triggers minor version bump)
+- `fix:` - Bug fixes (triggers patch version bump)
+- `perf:` - Performance improvements (triggers patch version bump)
+- `BREAKING CHANGE:` - Breaking changes (triggers major version bump)
+- `docs:` - Documentation changes (no version bump)
+- `style:` - Code style changes (no version bump)
+- `refactor:` - Code refactoring (no version bump)
+- `test:` - Adding or updating tests (no version bump)
+- `chore:` - Maintenance tasks (no version bump)
+
+#### Examples
+
+```bash
+# New feature
+git commit -m "feat: add dark theme support"
+
+# Bug fix
+git commit -m "fix: resolve tab dragging issue"
+
+# Breaking change
+git commit -m "feat: redesign workspace layout
+
+BREAKING CHANGE: Workspace component API has changed"
+
+# Style changes (no release)
+git commit -m "style: improve button spacing"
+
+# Documentation (no release)
+git commit -m "docs: update installation instructions"
+```
+
+**Note:** Commits without these prefixes (like "style improvements" or "update code") will not trigger semantic-release and won't create new versions.
+
 ## License
 
 MIT
