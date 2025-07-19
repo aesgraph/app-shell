@@ -1,5 +1,6 @@
 import Workspace from "./components/Workspace";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import type { WorkspaceConfig } from "./types/WorkspaceConfig";
 
 function App() {
@@ -33,9 +34,11 @@ function App() {
   };
 
   return (
-    <WorkspaceProvider initialConfig={workspaceConfig}>
-      <Workspace />
-    </WorkspaceProvider>
+    <ThemeProvider themeId="dark">
+      <WorkspaceProvider initialConfig={workspaceConfig}>
+        <Workspace />
+      </WorkspaceProvider>
+    </ThemeProvider>
   );
 }
 

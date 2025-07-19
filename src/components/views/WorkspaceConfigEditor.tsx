@@ -98,70 +98,76 @@ const WorkspaceConfigEditor = () => {
       <div className={sharedStyles.configSection}>
         <h3>Current Theme Details</h3>
         <p>Preview of workspace-specific colors from the selected theme</p>
-        {themes[currentTheme] && (
-          <div className={styles.themeDetails}>
-            <div className={styles.colorGrid}>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor:
-                      themes[currentTheme].colors.workspaceBackground,
-                  }}
-                ></div>
-                <span>Workspace Background</span>
-              </div>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor: themes[currentTheme].colors.workspacePanel,
-                  }}
-                ></div>
-                <span>Panel Background</span>
-              </div>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor:
-                      themes[currentTheme].colors.workspaceTitleBackground,
-                  }}
-                ></div>
-                <span>Title Background</span>
-              </div>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor:
-                      themes[currentTheme].colors.workspaceResizer,
-                  }}
-                ></div>
-                <span>Resizer</span>
-              </div>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor:
-                      themes[currentTheme].colors.workspaceResizerHover,
-                  }}
-                ></div>
-                <span>Resizer Hover</span>
-              </div>
-              <div className={styles.colorSwatch}>
-                <div
-                  className={styles.colorPreview}
-                  style={{
-                    backgroundColor: themes[currentTheme].colors.primary,
-                  }}
-                ></div>
-                <span>Primary Accent</span>
-              </div>
+        <div className={styles.themeDetails}>
+          <div className={styles.colorGrid}>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)?.bg ||
+                    "#1e1e1e",
+                }}
+              ></div>
+              <span>Workspace Background</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)?.panel ||
+                    "#23272e",
+                }}
+              ></div>
+              <span>Panel Background</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)?.panel ||
+                    "#23272e",
+                }}
+              ></div>
+              <span>Title Background</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)?.panel ||
+                    "#23272e",
+                }}
+              ></div>
+              <span>Resizer</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)
+                      ?.accent || "#007acc",
+                }}
+              ></div>
+              <span>Resizer Hover</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div
+                className={styles.colorPreview}
+                style={{
+                  backgroundColor:
+                    availableThemes.find((t) => t.id === currentTheme)
+                      ?.accent || "#007acc",
+                }}
+              ></div>
+              <span>Primary Accent</span>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       <div className={sharedStyles.configSection}>
