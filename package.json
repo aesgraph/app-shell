@@ -25,7 +25,8 @@
     "prepare": "npm run build-lib",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build-lib"
+    "prepublishOnly": "npm run build-lib",
+    "publish": "npm publish --access public"
   },
   "dependencies": {
     "re-resizable": "^6.11.2",
