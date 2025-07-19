@@ -8,6 +8,24 @@ A flexible, resizable workspace shell component for React applications with tab 
 npm install app-shell
 ```
 
+## Running Locally
+
+To run the app locally for development or testing:
+
+```bash
+# Clone the repository (if you haven't already)
+git clone <repo-url>
+cd app-shell
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+This will start the app on [http://localhost:5173](http://localhost:5173) (or the port shown in your terminal). You can now view and develop the app in your browser.
+
 ## Usage
 
 ### Basic Setup
@@ -91,6 +109,54 @@ The workspace supports multiple terminal-inspired themes:
 - `WorkspaceConfig` - Configuration interface
 - `ThemeId` - Theme type definitions
 - `ViewRegistry` - View registry types
+
+## Registering Custom Views
+
+You can add your own custom views to the workspace using the `registerViews` API. This allows you to extend the workspace with your own components.
+
+### Example
+
+```tsx
+import React from "react";
+import { registerViews, WorkspaceProvider, Workspace } from "app-shell";
+
+// Define your custom view
+const MyCustomView = () => <div>My Custom View Content</div>;
+
+registerViews([
+  {
+    id: "my-custom-view",
+    title: "My Custom View",
+    component: MyCustomView,
+    icon: "🔧",
+    category: "custom",
+  },
+]);
+
+function App() {
+  return (
+    <WorkspaceProvider>
+      <Workspace />
+    </WorkspaceProvider>
+  );
+}
+```
+
+You can also access and register the built-in views using the `defaultViews` export:
+
+```tsx
+import { registerViews, defaultViews } from "app-shell";
+
+registerViews(defaultViews);
+```
+
+To remove all registered views, use:
+
+```tsx
+import { clearViews } from "app-shell";
+
+clearViews();
+```
 
 ## Development
 
