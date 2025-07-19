@@ -1,6 +1,6 @@
 # App Shell
 
-[![npm version](https://badge.fury.io/js/%40aesgraph%2Fapp-shell.svg)](https://badge.fury.io/js/%40aesgraph%2Fapp-shell)
+[![npm version](https://img.shields.io/npm/v/@aesgraph/app-shell.svg)](https://www.npmjs.com/package/@aesgraph/app-shell)
 [![Deployed on Vercel](https://vercel.com/button)](https://app-shell-aesgraph.vercel.app)
 
 A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
