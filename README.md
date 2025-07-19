@@ -2,6 +2,8 @@
 
 A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
 
+![App Workspace Shell](./public/screenshot.png)
+
 ## Installation
 
 ```bash
