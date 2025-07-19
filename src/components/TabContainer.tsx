@@ -3,6 +3,7 @@ import Tab from "./Tab";
 import type { TabData } from "./Tab";
 import type { ViewDefinition } from "../types/ViewRegistry";
 import ViewDropdown from "./ViewDropdown";
+import { useWorkspace } from "../contexts/useWorkspace";
 import styles from "../App.module.css";
 
 interface TabContainerProps {
@@ -38,11 +39,13 @@ const TabContainer = ({
   className = "",
   style = {},
 }: TabContainerProps) => {
+  const { currentTheme } = useWorkspace();
   const [dragOver, setDragOver] = useState(false);
   const [dropZone, setDropZone] = useState<DropZone>(null);
   const [dragOverTabId, setDragOverTabId] = useState<string | null>(null);
   const [showViewDropdown, setShowViewDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
 
   const handleDragStart = (e: React.DragEvent, tabId: string) => {
     e.dataTransfer.setData(
@@ -139,23 +142,34 @@ const TabContainer = ({
     e.stopPropagation();
 
     if (availableViews.length > 0 && onAddView) {
-      // Use mouse position directly for more accurate positioning
-      let x = e.clientX;
-      let y = e.clientY + 5;
+      // Get the button element's bounding rectangle for accurate positioning
+      const buttonRect = (
+        e.currentTarget as HTMLElement
+      ).getBoundingClientRect();
+
+      let x = buttonRect.left;
+      let y = buttonRect.bottom + 2; // Default: show below the button
 
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
+      const dropdownHeight = 400; // Approximate dropdown height
+      const dropdownWidth = 300; // Approximate dropdown width
 
       // Adjust horizontal position if dropdown would go off the right edge
-      if (x + 300 > viewportWidth) {
-        x = viewportWidth - 320; // 300px width + 20px margin
+      if (x + dropdownWidth > viewportWidth) {
+        x = viewportWidth - dropdownWidth - 20; // 20px margin
       }
 
-      // Adjust vertical position if dropdown would go off the bottom edge
-      if (y + 400 > viewportHeight) {
-        y = e.clientY - 405; // Show above the mouse position
+      // Check if this is the bottom pane or if dropdown would go off the bottom edge
+      const isBottomPane = id === "bottom-pane";
+      const wouldGoOffBottom = y + dropdownHeight > viewportHeight;
+
+      if (isBottomPane || wouldGoOffBottom) {
+        // Show dropdown above the button
+        y = buttonRect.top - dropdownHeight - 2;
       }
 
+      setButtonRect(buttonRect);
       setDropdownPosition({ x, y });
       setShowViewDropdown(true);
     } else if (onTabAdd) {
@@ -247,12 +261,15 @@ const TabContainer = ({
         )}
       </div>
 
-      {showViewDropdown && (
+      {showViewDropdown && buttonRect && (
         <ViewDropdown
           views={availableViews}
           onSelectView={handleViewSelect}
           onClose={() => setShowViewDropdown(false)}
           position={dropdownPosition}
+          buttonRect={buttonRect}
+          containerId={id}
+          theme={currentTheme}
         />
       )}
     </div>
