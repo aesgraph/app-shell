@@ -3,8 +3,6 @@ name: Deploy to Vercel
 on:
   push:
     branches: ["**"]
-  pull_request:
-    branches: [main]
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -36,7 +34,50 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
+        id: deploy
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Comment PR with Preview URL
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'PR')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Extract PR number from commit message (format: "message PR #123")
+            const commitMessage = '${{ github.event.head_commit.message }}';
+            const prMatch = commitMessage.match(/PR #(\d+)/);
+
+            if (prMatch) {
+              const prNumber = parseInt(prMatch[1]);
+              const deploymentUrl = '${{ steps.deploy.outputs.url }}';
+              
+              // Delete any existing comments from this action
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+              });
+              
+              const existingComment = comments.data.find(comment => 
+                comment.user.login === 'github-actions[bot]' && 
+                comment.body.includes('🚀 **Preview Deployment Ready!**')
+              );
+              
+              if (existingComment) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existingComment.id,
+                });
+              }
+              
+              // Add new comment with latest deployment URL
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `🚀 **Preview Deployment Ready!**\n\nYour changes are now live at: ${deploymentUrl}\n\nThis preview will be automatically updated with any new commits.`
+              });
+            }
 
   deploy-production:
     runs-on: ubuntu-latest
