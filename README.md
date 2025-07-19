@@ -85,21 +85,6 @@ function App() {
 }
 ```
 
-### Available Themes
-
-The workspace supports multiple terminal-inspired themes:
-
-- `light` - Light theme
-- `dark` - Dark theme
-- `dracula` - Dracula theme
-- `oneDark` - One Dark theme
-- `solarized` - Solarized theme
-- `monokai` - Monokai theme
-- `nord` - Nord theme
-- `gruvbox` - Gruvbox theme
-- `tokyo` - Tokyo Night theme
-- `catppuccin` - Catppuccin theme
-
 ### Components
 
 - `Workspace` - Main workspace component
@@ -159,7 +144,9 @@ function App() {
           <option value="dark">Dark</option>
           <option value="light">Light</option>
           <option value="dracula">Dracula</option>
-          {/* ... other themes */}
+          <option value="oneDark">One Dark</option>
+          <option value="solarized">Solarized</option>
+          <option value="monokai">Monokai</option>
         </select>
         <Workspace />
       </div>
@@ -190,7 +177,7 @@ function App() {
 
 ### Custom Themes
 
-You can create custom themes by extending the theme system:
+You can create custom themes by extending the theme system. Note: This feature requires the theme system to be properly configured in your project.
 
 ```tsx
 import { registerTheme } from "app-shell";
@@ -308,8 +295,8 @@ registerViews([
     component: AdvancedView,
     icon: "⚡",
     category: "development",
-    closable: true, // Allow users to close this view
-    defaultActive: false, // Don't activate by default
+    closable: true,
+    defaultActive: false,
   },
 ]);
 ```
@@ -373,28 +360,6 @@ To remove all registered views, use:
 import { clearViews } from "app-shell";
 
 clearViews();
-```
-
-### View Lifecycle
-
-Views can implement lifecycle methods for better integration:
-
-```tsx
-const MyView = () => {
-  const { currentTheme } = useWorkspace();
-
-  // Views automatically receive theme context
-  return (
-    <div
-      style={{
-        background: currentTheme.colors.background,
-        color: currentTheme.colors.text,
-      }}
-    >
-      My themed view content
-    </div>
-  );
-};
 ```
 
 ## Development
