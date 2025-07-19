@@ -26,11 +26,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build-lib": "tsc --project tsconfig.lib.json && vite build",
-    "prepare": "npm run build-lib",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build-lib",
-    "publish": "npm publish --access public",
+    "publish": "npm run build-lib && npm publish --access public",
     "release": "semantic-release"
   },
   "dependencies": {
