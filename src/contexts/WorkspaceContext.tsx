@@ -277,17 +277,30 @@ export const WorkspaceProvider = ({
             // Create proper React components based on tab ID
             let content: React.ReactNode;
 
-            if (tab.id === "workspace-manager") {
-              content = <WorkspaceManager />;
-            } else if (tab.id === "workspace-config") {
-              content = <WorkspaceConfigEditor />;
+            // First, try to find the view in the global registry
+            // Handle timestamped tab IDs by extracting the base view ID
+            const baseViewId = tab.id.replace(/-\d+$/, ''); // Remove timestamp suffix
+            let viewDefinition = globalViewRegistry.getView(tab.id); // Try exact match first
+            if (!viewDefinition) {
+              viewDefinition = globalViewRegistry.getView(baseViewId); // Try base ID
+            }
+
+            if (viewDefinition) {
+              content = React.createElement(viewDefinition.component, viewDefinition.props || {});
             } else {
-              // For other tabs, use the saved content or fallback to title
-              content = tab.content ? (
-                <div>{tab.content}</div>
-              ) : (
-                <div>{tab.title}</div>
-              );
+              // Fallback to hardcoded components for backwards compatibility
+              if (tab.id === "workspace-manager") {
+                content = <WorkspaceManager />;
+              } else if (tab.id === "workspace-config") {
+                content = <WorkspaceConfigEditor />;
+              } else {
+                // For other tabs, use the saved content or fallback to title
+                content = tab.content ? (
+                  <div>{tab.content}</div>
+                ) : (
+                  <div>{tab.title}</div>
+                );
+              }
             }
 
             return {
@@ -383,17 +396,30 @@ export const WorkspaceProvider = ({
                     // Create proper React components based on tab ID
                     let content: React.ReactNode;
 
-                    if (tab.id === "workspace-manager") {
-                      content = <WorkspaceManager />;
-                    } else if (tab.id === "workspace-config") {
-                      content = <WorkspaceConfigEditor />;
+                    // First, try to find the view in the global registry
+                    // Handle timestamped tab IDs by extracting the base view ID
+                    const baseViewId = tab.id.replace(/-\d+$/, ''); // Remove timestamp suffix
+                    let viewDefinition = globalViewRegistry.getView(tab.id); // Try exact match first
+                    if (!viewDefinition) {
+                      viewDefinition = globalViewRegistry.getView(baseViewId); // Try base ID
+                    }
+
+                    if (viewDefinition) {
+                      content = React.createElement(viewDefinition.component, viewDefinition.props || {});
                     } else {
-                      // For other tabs, use the saved content or fallback to title
-                      content = tab.content ? (
-                        <div>{tab.content}</div>
-                      ) : (
-                        <div>{tab.title}</div>
-                      );
+                      // Fallback to hardcoded components for backwards compatibility
+                      if (tab.id === "workspace-manager") {
+                        content = <WorkspaceManager />;
+                      } else if (tab.id === "workspace-config") {
+                        content = <WorkspaceConfigEditor />;
+                      } else {
+                        // For other tabs, use the saved content or fallback to title
+                        content = tab.content ? (
+                          <div>{tab.content}</div>
+                        ) : (
+                          <div>{tab.title}</div>
+                        );
+                      }
                     }
 
                     return {
