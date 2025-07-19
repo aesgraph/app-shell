@@ -22,11 +22,11 @@ export const ExampleThemedComponent: React.FC<ExampleThemedComponentProps> = ({
   style: customStyle,
 }) => {
   const { theme } = useTheme();
-  
+
   // Define styles based on theme and variant
   const getVariantStyles = (): React.CSSProperties => {
     const { colors, sizes } = theme;
-    
+
     switch (variant) {
       case "primary":
         return {
@@ -37,7 +37,7 @@ export const ExampleThemedComponent: React.FC<ExampleThemedComponentProps> = ({
           padding: sizes.spacing.lg,
           boxShadow: sizes.shadow.md,
         };
-      
+
       case "secondary":
         return {
           backgroundColor: colors.backgroundSecondary,
@@ -47,7 +47,7 @@ export const ExampleThemedComponent: React.FC<ExampleThemedComponentProps> = ({
           padding: sizes.spacing.lg,
           boxShadow: sizes.shadow.sm,
         };
-      
+
       case "card":
       default:
         return {
@@ -60,25 +60,25 @@ export const ExampleThemedComponent: React.FC<ExampleThemedComponentProps> = ({
         };
     }
   };
-  
+
   const titleStyles: React.CSSProperties = {
     fontSize: theme.sizes.fontSize.lg,
     fontWeight: "bold",
     marginBottom: theme.sizes.spacing.md,
     color: getColor(theme.colors, "text"),
   };
-  
+
   const contentStyles: React.CSSProperties = {
     fontSize: theme.sizes.fontSize.md,
     lineHeight: "1.5",
     color: getColor(theme.colors, "textSecondary"),
   };
-  
+
   const combinedStyles: React.CSSProperties = {
     ...getVariantStyles(),
     ...customStyle,
   };
-  
+
   return (
     <div className={className} style={combinedStyles}>
       <h3 style={titleStyles}>{title}</h3>

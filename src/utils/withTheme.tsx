@@ -17,17 +17,15 @@ export function withTheme<P extends object>(
   const WithThemeComponent = (props: P) => {
     const { theme } = useTheme();
     const themeStyles = getThemeStyles(theme);
-    
+
     return (
-      <WrappedComponent
-        {...props}
-        theme={theme}
-        themeStyles={themeStyles}
-      />
+      <WrappedComponent {...props} theme={theme} themeStyles={themeStyles} />
     );
   };
-  
-  WithThemeComponent.displayName = `withTheme(${WrappedComponent.displayName || WrappedComponent.name})`;
-  
+
+  WithThemeComponent.displayName = `withTheme(${
+    WrappedComponent.displayName || WrappedComponent.name
+  })`;
+
   return WithThemeComponent;
 }

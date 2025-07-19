@@ -27,26 +27,27 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   onThemeChange,
 }) => {
   const [currentThemeId, setCurrentThemeId] = React.useState(themeId);
-  
-  const setTheme = React.useCallback((newThemeId: string) => {
-    if (themes[newThemeId]) {
-      setCurrentThemeId(newThemeId);
-      onThemeChange?.(newThemeId);
-    }
-  }, [onThemeChange]);
-  
+
+  const setTheme = React.useCallback(
+    (newThemeId: string) => {
+      if (themes[newThemeId]) {
+        setCurrentThemeId(newThemeId);
+        onThemeChange?.(newThemeId);
+      }
+    },
+    [onThemeChange]
+  );
+
   const theme = themes[currentThemeId] || defaultTheme;
-  
+
   const value: ThemeContextValue = {
     theme,
     themeId: currentThemeId,
     setTheme,
     themes,
   };
-  
+
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };

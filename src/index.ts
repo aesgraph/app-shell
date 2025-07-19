@@ -25,6 +25,7 @@ export { useTheme } from "./contexts/useTheme";
 export { withTheme } from "./utils/withTheme";
 export {
   generateCSSVars,
+  generateLegacyCSSVars,
   getThemeStyles,
   applyThemeVars,
   getColor,

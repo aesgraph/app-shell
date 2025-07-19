@@ -11,9 +11,7 @@ import { ThemeProvider } from "app-shell";
 
 function App() {
   return (
-    <ThemeProvider themeId="dark">
-      {/* Your app components */}
-    </ThemeProvider>
+    <ThemeProvider themeId="dark">{/* Your app components */}</ThemeProvider>
   );
 }
 ```
@@ -25,14 +23,14 @@ import { useTheme } from "app-shell";
 
 function MyComponent() {
   const { theme, themeId, setTheme } = useTheme();
-  
+
   const styles = {
     backgroundColor: theme.colors.surface,
     color: theme.colors.text,
     padding: theme.sizes.spacing.md,
     borderRadius: theme.sizes.borderRadius.md,
   };
-  
+
   return <div style={styles}>Themed content</div>;
 }
 ```
@@ -55,40 +53,41 @@ function MyComponent() {
 Each theme contains:
 
 ### Colors
+
 ```tsx
 interface ThemeColors {
   // Core colors
   primary: string;
   secondary: string;
   accent: string;
-  
+
   // Background colors
   background: string;
   backgroundSecondary: string;
   backgroundTertiary: string;
-  
+
   // Surface colors (for cards, panels, etc.)
   surface: string;
   surfaceHover: string;
   surfaceActive: string;
-  
+
   // Text colors
   text: string;
   textSecondary: string;
   textMuted: string;
   textInverse: string;
-  
+
   // Border colors
   border: string;
   borderFocus: string;
   borderHover: string;
-  
+
   // Status colors
   success: string;
   warning: string;
   error: string;
   info: string;
-  
+
   // Interactive colors
   link: string;
   linkHover: string;
@@ -96,34 +95,35 @@ interface ThemeColors {
 ```
 
 ### Sizes
+
 ```tsx
 interface ThemeSizes {
   spacing: {
-    xs: string;    // 4px
-    sm: string;    // 8px
-    md: string;    // 16px
-    lg: string;    // 24px
-    xl: string;    // 32px
-    xxl: string;   // 48px
+    xs: string; // 4px
+    sm: string; // 8px
+    md: string; // 16px
+    lg: string; // 24px
+    xl: string; // 32px
+    xxl: string; // 48px
   };
-  
+
   borderRadius: {
     none: string;
-    sm: string;    // 4px
-    md: string;    // 8px
-    lg: string;    // 16px
-    full: string;  // 9999px
+    sm: string; // 4px
+    md: string; // 8px
+    lg: string; // 16px
+    full: string; // 9999px
   };
-  
+
   fontSize: {
-    xs: string;    // 12px
-    sm: string;    // 14px
-    md: string;    // 16px
-    lg: string;    // 18px
-    xl: string;    // 20px
-    xxl: string;   // 24px
+    xs: string; // 12px
+    sm: string; // 14px
+    md: string; // 16px
+    lg: string; // 18px
+    xl: string; // 20px
+    xxl: string; // 24px
   };
-  
+
   shadow: {
     none: string;
     sm: string;
@@ -143,20 +143,17 @@ import { useTheme, getColor } from "app-shell";
 
 function MyButton({ children, variant = "primary" }) {
   const { theme } = useTheme();
-  
+
   const styles = {
-    backgroundColor: variant === "primary" 
-      ? theme.colors.primary 
-      : theme.colors.surface,
-    color: variant === "primary" 
-      ? theme.colors.textInverse 
-      : theme.colors.text,
+    backgroundColor:
+      variant === "primary" ? theme.colors.primary : theme.colors.surface,
+    color: variant === "primary" ? theme.colors.textInverse : theme.colors.text,
     border: `1px solid ${theme.colors.border}`,
     borderRadius: theme.sizes.borderRadius.sm,
     padding: `${theme.sizes.spacing.sm} ${theme.sizes.spacing.md}`,
     fontSize: theme.sizes.fontSize.sm,
   };
-  
+
   return <button style={styles}>{children}</button>;
 }
 ```
@@ -169,9 +166,7 @@ import { ThemeVariables } from "app-shell";
 function MyApp() {
   return (
     <ThemeVariables>
-      <div className="my-themed-component">
-        Content with CSS variables
-      </div>
+      <div className="my-themed-component">Content with CSS variables</div>
     </ThemeVariables>
   );
 }
@@ -209,15 +204,11 @@ import { getThemeStyles, getColor } from "app-shell";
 function MyComponent() {
   const { theme } = useTheme();
   const themeStyles = getThemeStyles(theme);
-  
+
   return (
     <div style={themeStyles.panel}>
-      <button style={themeStyles.button.primary}>
-        Primary Button
-      </button>
-      <button style={themeStyles.button.secondary}>
-        Secondary Button
-      </button>
+      <button style={themeStyles.button.primary}>Primary Button</button>
+      <button style={themeStyles.button.secondary}>Secondary Button</button>
     </div>
   );
 }
