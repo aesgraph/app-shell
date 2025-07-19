@@ -378,6 +378,43 @@ npm run build-lib
 npm run build
 ```
 
+## Security
+
+This project includes automated security scanning to prevent accidental exposure of sensitive information:
+
+### Security Checks
+
+- **TruffleHog**: Scans for verified secrets and API keys
+- **Gitleaks**: Detects hardcoded secrets and credentials
+- **Pattern Matching**: Checks for common secret patterns
+- **File Scanning**: Prevents .env files from being committed
+- **Token Detection**: Identifies various service tokens (GitHub, npm, AWS, etc.)
+
+### Security Workflow
+
+The security scan runs automatically on:
+
+- All pushes to `main` and `develop` branches
+- All pull requests to `main` and `develop` branches
+
+### What Gets Scanned
+
+- API keys and secrets
+- Access tokens
+- Private keys
+- Environment files (.env\*)
+- Hardcoded credentials
+- Service-specific tokens (GitHub, npm, AWS, etc.)
+
+### If Secrets Are Found
+
+If the security scan detects potential secrets:
+
+1. The workflow will fail
+2. Review the findings in the GitHub Actions logs
+3. Remove any actual secrets from the codebase
+4. Use environment variables or secure secret management instead
+
 ### Commit Message Format
 
 This project uses [semantic-release](https://github.com/semantic-release/semantic-release) for automated versioning and releases. To ensure proper release detection, commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
