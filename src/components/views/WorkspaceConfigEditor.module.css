@@ -1,0 +1,76 @@
+.themeSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.themeOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  transition: all 0.2s;
+  background: var(--color-panel);
+  min-width: 120px;
+  overflow: visible;
+}
+
+.themeOption:hover {
+  border-color: var(--color-resizer-hover);
+  background: var(--color-bg);
+}
+
+.themeOption input[type="radio"] {
+  display: none;
+}
+
+.themeOption input[type="radio"]:checked ~ .themePreview {
+  border-color: var(--color-resizer-hover);
+  box-shadow: 0 0 0 2px var(--color-resizer-hover);
+}
+
+.themeOption input[type="radio"]:checked ~ span {
+  color: var(--color-resizer-hover);
+  font-weight: 500;
+}
+
+.themePreview {
+  width: 80px;
+  height: 60px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.themePreviewHeader {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--color-title-bg);
+}
+
+.themePreviewDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.themePreviewContent {
+  flex: 1;
+  padding: 4px;
+}
+
+.themeOption span {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  transition: color 0.2s;
+}

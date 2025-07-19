@@ -1,0 +1,670 @@
+:root {
+  --color-bg: #1e1e1e;
+  --color-panel: #23272e;
+  --color-text: #d4d4d4;
+  --color-border: #333;
+  --color-title-bg: #23272e;
+  --color-title-text: #d4d4d4;
+  --color-resizer: #23272e;
+  --color-resizer-hover: #444;
+  --color-scrollbar: #555;
+  --color-scrollbar-hover: #777;
+}
+
+.themeLight {
+  --color-bg: #f5f5f5;
+  --color-panel: #fff;
+  --color-text: #222;
+  --color-border: #ccc;
+  --color-title-bg: #f5f5f5;
+  --color-title-text: #222;
+  --color-resizer: #e0e0e0;
+  --color-resizer-hover: #bdbdbd;
+  --color-scrollbar: #b0b0b0;
+  --color-scrollbar-hover: #909090;
+}
+
+.themeDark {
+  --color-bg: #1e1e1e;
+  --color-panel: #23272e;
+  --color-text: #d4d4d4;
+  --color-border: #333;
+  --color-title-bg: #23272e;
+  --color-title-text: #d4d4d4;
+  --color-resizer: #23272e;
+  --color-resizer-hover: #444;
+  --color-scrollbar: #555;
+  --color-scrollbar-hover: #777;
+}
+
+/* Terminal-Inspired Color Themes */
+.themeDracula {
+  --color-bg: #282a36;
+  --color-panel: #44475a;
+  --color-text: #f8f8f2;
+  --color-border: #6272a4;
+  --color-title-bg: #44475a;
+  --color-title-text: #bd93f9;
+  --color-resizer: #6272a4;
+  --color-resizer-hover: #bd93f9;
+  --color-scrollbar: #6272a4;
+  --color-scrollbar-hover: #bd93f9;
+}
+
+.themeOneDark {
+  --color-bg: #282c34;
+  --color-panel: #3e4451;
+  --color-text: #abb2bf;
+  --color-border: #5c6370;
+  --color-title-bg: #3e4451;
+  --color-title-text: #61afef;
+  --color-resizer: #5c6370;
+  --color-resizer-hover: #61afef;
+  --color-scrollbar: #5c6370;
+  --color-scrollbar-hover: #61afef;
+}
+
+.themeSolarized {
+  --color-bg: #002b36;
+  --color-panel: #073642;
+  --color-text: #839496;
+  --color-border: #586e75;
+  --color-title-bg: #073642;
+  --color-title-text: #268bd2;
+  --color-resizer: #586e75;
+  --color-resizer-hover: #268bd2;
+  --color-scrollbar: #586e75;
+  --color-scrollbar-hover: #268bd2;
+}
+
+.themeMonokai {
+  --color-bg: #272822;
+  --color-panel: #3e3d32;
+  --color-text: #f8f8f2;
+  --color-border: #75715e;
+  --color-title-bg: #3e3d32;
+  --color-title-text: #f92672;
+  --color-resizer: #75715e;
+  --color-resizer-hover: #f92672;
+  --color-scrollbar: #75715e;
+  --color-scrollbar-hover: #f92672;
+}
+
+.themeNord {
+  --color-bg: #2e3440;
+  --color-panel: #3b4252;
+  --color-text: #eceff4;
+  --color-border: #4c566a;
+  --color-title-bg: #3b4252;
+  --color-title-text: #88c0d0;
+  --color-resizer: #4c566a;
+  --color-resizer-hover: #88c0d0;
+  --color-scrollbar: #4c566a;
+  --color-scrollbar-hover: #88c0d0;
+}
+
+.themeGruvbox {
+  --color-bg: #282828;
+  --color-panel: #3c3836;
+  --color-text: #ebdbb2;
+  --color-border: #504945;
+  --color-title-bg: #3c3836;
+  --color-title-text: #fabd2f;
+  --color-resizer: #504945;
+  --color-resizer-hover: #fabd2f;
+  --color-scrollbar: #504945;
+  --color-scrollbar-hover: #fabd2f;
+}
+
+.themeTokyo {
+  --color-bg: #1a1b26;
+  --color-panel: #24283b;
+  --color-text: #a9b1d6;
+  --color-border: #414868;
+  --color-title-bg: #24283b;
+  --color-title-text: #7aa2f7;
+  --color-resizer: #414868;
+  --color-resizer-hover: #7aa2f7;
+  --color-scrollbar: #414868;
+  --color-scrollbar-hover: #7aa2f7;
+}
+
+.themeCatppuccin {
+  --color-bg: #1e1e2e;
+  --color-panel: #313244;
+  --color-text: #cdd6f4;
+  --color-border: #45475a;
+  --color-title-bg: #313244;
+  --color-title-text: #cba6f7;
+  --color-resizer: #45475a;
+  --color-resizer-hover: #cba6f7;
+  --color-scrollbar: #45475a;
+  --color-scrollbar-hover: #cba6f7;
+}
+
+.appShellContainer {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: var(--color-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  font-family: "Segoe UI", "Liberation Sans", Arial, sans-serif;
+  color: var(--color-text);
+  transition: background 0.2s;
+}
+
+.appShellPanel {
+  background: var(--color-panel);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.leftPanel {
+  border-right: 1px solid var(--color-border);
+}
+
+.rightPanel {
+  border-left: 1px solid var(--color-border);
+}
+
+.bottomPanel {
+  border-top: 1px solid var(--color-border);
+  min-height: 60px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.editorTitle {
+  flex: 1 1 auto;
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: 16px;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.2s, color 0.2s;
+}
+
+.mainPanel {
+  flex: 1;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.panelTitle {
+  padding: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-title-bg);
+  color: var(--color-title-text);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Resizer handle styles for re-resizable */
+.resizableHandleVertical {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+  background: var(--color-resizer);
+  z-index: 10;
+  transition: background 0.2s;
+}
+.resizableHandleVertical:hover {
+  background: var(--color-resizer-hover);
+}
+
+.resizableHandleHorizontal {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+  background: var(--color-resizer);
+  z-index: 10;
+  transition: background 0.2s;
+}
+.resizableHandleHorizontal:hover {
+  background: var(--color-resizer-hover);
+}
+
+.collapsedBar {
+  background: var(--color-resizer);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.leftCollapsedBar,
+.rightCollapsedBar {
+  height: 100%;
+  min-width: 6px;
+  max-width: 100px;
+  cursor: ew-resize;
+}
+
+.bottomCollapsedBar {
+  width: 100%;
+  min-height: 6px;
+  max-height: 100px;
+  cursor: ns-resize;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.collapsedBar:hover {
+  background: var(--color-resizer-hover);
+}
+
+.themeToggle {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 100;
+  background: var(--color-panel);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.themeToggle:hover {
+  background: var(--color-resizer-hover);
+  color: var(--color-title-text);
+}
+
+/* Tab Styles */
+.tabContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.tabContainerDragOver {
+  border-color: var(--color-resizer-hover);
+  background: var(--color-resizer);
+}
+
+.tabBar {
+  display: flex;
+  background: var(--color-title-bg);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 32px;
+  flex-wrap: nowrap;
+}
+
+/* Webkit scrollbar styling for better appearance */
+.tabBar::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* Ensure bottom pane tab bar can scroll properly */
+.bottomPanel .tabBar {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100%;
+  flex-shrink: 0;
+  min-height: 32px;
+}
+
+.bottomPanel .tabContainer {
+  overflow: hidden;
+  max-height: 100%;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--color-panel);
+  border-right: 1px solid var(--color-border);
+  cursor: pointer;
+  user-select: none;
+  min-width: 80px;
+  max-width: 150px;
+  flex-shrink: 1;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.tab:hover {
+  background: var(--color-resizer);
+}
+
+.tabActive {
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-resizer-hover);
+}
+
+.tabTitle {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+
+.tabCloseButton {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 2px 6px;
+  margin-left: 8px;
+  border-radius: 2px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: all 0.2s;
+  opacity: 0.7;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabCloseButton:hover {
+  background: var(--color-resizer-hover);
+  opacity: 1;
+  color: #ff6b6b;
+}
+
+.tab:hover .tabCloseButton {
+  opacity: 1;
+}
+
+.tabAddButton {
+  background: var(--color-panel);
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: background 0.2s;
+  border-left: 1px solid var(--color-border);
+}
+
+.tabAddButton:hover {
+  background: var(--color-resizer);
+}
+
+.tabContent {
+  flex: 1;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 0;
+  background: var(--color-bg);
+  min-width: 0;
+  min-height: 0;
+}
+
+.tabEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.tabEmpty p {
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.tabEmpty button {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tabEmpty button:hover {
+  background: var(--color-resizer);
+}
+
+/* Drag and Drop Visual Feedback */
+.tabDragOver {
+  background: var(--color-resizer-hover) !important;
+  border: 2px dashed var(--color-resizer-hover);
+  opacity: 0.8;
+}
+
+.tabDropIndicator {
+  width: 3px;
+  height: 24px;
+  background: var(--color-resizer-hover);
+  margin: 4px 0;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.emptyTabBarDropIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: var(--color-resizer-hover);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  border-radius: 4px;
+  margin: 4px 8px;
+  border: 2px dashed var(--color-resizer-hover);
+  min-height: 24px;
+  flex-shrink: 0;
+}
+
+.centerDropZone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.centerDropIndicator {
+  background: var(--color-panel);
+  border: 2px dashed var(--color-resizer-hover);
+  border-radius: 8px;
+  padding: 16px 24px;
+  color: var(--color-text);
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* View Styles */
+.viewContainer {
+  padding: 20px;
+  height: 100%;
+  overflow: visible;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.viewHeader {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.viewHeader h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-title-text);
+}
+
+.viewHeader p {
+  margin: 0;
+  color: var(--color-text);
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.configSection {
+  margin-bottom: 32px;
+  overflow: visible;
+}
+
+.configSection h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-title-text);
+}
+
+.configSection p {
+  margin: 0 0 16px 0;
+  color: var(--color-text);
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.placeholderText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--color-panel);
+  border: 1px dashed var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Global Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) var(--color-panel);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-panel);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-hover);
+}
+
+/* View Dropdown Styles */
+.viewDropdown {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 250px;
+  max-width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 9999;
+  position: fixed;
+}
+
+.viewDropdownContent {
+  padding: 8px 0;
+}
+
+.viewCategory {
+  margin-bottom: 8px;
+}
+
+.viewCategoryTitle {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 4px;
+}
+
+.viewOption {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  gap: 12px;
+}
+
+.viewOption:hover {
+  background: var(--color-resizer-hover);
+}
+
+.viewIcon {
+  font-size: 1.2rem;
+  width: 20px;
+  text-align: center;
+}
+
+.viewInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.viewTitle {
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.viewDescription {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  opacity: 0.7;
+  line-height: 1.3;
+}
