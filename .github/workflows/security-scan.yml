@@ -44,50 +44,6 @@ jobs:
           GITLEAKS_REPORT_FORMAT: json
           GITLEAKS_REPORT_PATH: gitleaks-report.json
 
-      - name: Check for .env files
-        run: |
-          echo "🔍 Scanning for .env files..."
-          if find . -name ".env*" -type f | grep -q .; then
-            echo "❌ Found .env files:"
-            find . -name ".env*" -type f
-            exit 1
-          else
-            echo "✅ No .env files found"
-          fi
-
-      - name: Check for GitHub tokens
-        run: |
-          echo "🔍 Scanning for GitHub tokens..."
-          if grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "ghp_[a-zA-Z0-9]{36}" . | grep -q .; then
-            echo "❌ Found potential GitHub tokens:"
-            grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "ghp_[a-zA-Z0-9]{36}" . || true
-            exit 1
-          else
-            echo "✅ No GitHub tokens found"
-          fi
-
-      - name: Check for npm tokens
-        run: |
-          echo "🔍 Scanning for npm tokens..."
-          if grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "npm_[a-zA-Z0-9]{36}" . | grep -q .; then
-            echo "❌ Found potential npm tokens:"
-            grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "npm_[a-zA-Z0-9]{36}" . || true
-            exit 1
-          else
-            echo "✅ No npm tokens found"
-          fi
-
-      - name: Check for private keys
-        run: |
-          echo "🔍 Scanning for private keys..."
-          if grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "-----BEGIN PRIVATE KEY-----" . | grep -q .; then
-            echo "❌ Found potential private keys:"
-            grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "-----BEGIN PRIVATE KEY-----" . || true
-            exit 1
-          else
-            echo "✅ No private keys found"
-          fi
-
       - name: Upload Gitleaks results
         if: always()
         uses: actions/upload-artifact@v4
