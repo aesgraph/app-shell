@@ -35,6 +35,8 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true
           GITLEAKS_ENABLE_SUMMARY: true
+          GITLEAKS_REPORT_FORMAT: json
+          GITLEAKS_REPORT_PATH: gitleaks-report.json
 
       - name: Check for .env files
         run: |
