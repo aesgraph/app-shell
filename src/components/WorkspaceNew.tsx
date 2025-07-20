@@ -44,7 +44,7 @@ const WorkspaceContainerDemo: React.FC = () => {
         flexDirection: "column",
         height: "100vh",
         width: "100vw",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: theme.background,
         position: "fixed",
         top: 0,
         left: 0,
