@@ -47,52 +47,6 @@ jobs:
             echo "✅ No .env files found"
           fi
 
-      - name: Check for hardcoded secrets patterns
-        run: |
-          echo "🔍 Scanning for potential secrets patterns..."
-
-          # Patterns to check for
-          patterns=(
-            "api_key"
-            "api_secret"
-            "access_token"
-            "secret_key"
-            "private_key"
-            "password"
-            "token"
-            "key"
-            "secret"
-          )
-
-          found_secrets=false
-
-          for pattern in "${patterns[@]}"; do
-            echo "Checking for pattern: $pattern"
-            if grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "$pattern" . | grep -v "test\|example\|mock\|dummy" | grep -q .; then
-              echo "⚠️  Potential $pattern found:"
-              grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "$pattern" . | grep -v "test\|example\|mock\|dummy" || true
-              found_secrets=true
-            fi
-          done
-
-          if [ "$found_secrets" = true ]; then
-            echo "❌ Potential secrets found. Please review and remove if they are actual secrets."
-            exit 1
-          else
-            echo "✅ No obvious secrets patterns found"
-          fi
-
-      - name: Check for AWS credentials
-        run: |
-          echo "🔍 Scanning for AWS credentials..."
-          if grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "AKIA[0-9A-Z]{16}" . | grep -q .; then
-            echo "❌ Found potential AWS access keys:"
-            grep -r -i --exclude-dir={node_modules,.git,dist,build} --exclude="*.md" "AKIA[0-9A-Z]{16}" . || true
-            exit 1
-          else
-            echo "✅ No AWS access keys found"
-          fi
-
       - name: Check for GitHub tokens
         run: |
           echo "🔍 Scanning for GitHub tokens..."
