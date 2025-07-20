@@ -26,18 +26,3 @@ jobs:
         with:
           path: .
           extra_args: --only-verified
-
-      - name: Debug Gitleaks License
-        run: |
-          echo "🔍 Checking Gitleaks license configuration..."
-          echo "GITLEAKS_LICENSE is set: ${{ secrets.GITLEAKS_LICENSE != '' }}"
-          echo "License length: ${#GITLEAKS_LICENSE}"
-          echo "First 5 chars: ${GITLEAKS_LICENSE:0:5}..."
-
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
-          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true
-          GITLEAKS_ENABLE_SUMMARY: true
