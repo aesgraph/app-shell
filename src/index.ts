@@ -1,6 +1,6 @@
 // Main components
 export { default as Workspace } from "./components/Workspace";
-export { default as WorkspaceNew } from "./components/WorkspaceNew";
+export { default as WorkspaceContainerDemo } from "./components/WorkspaceNew";
 export { default as Pane } from "./components/Pane";
 export { default as Tab } from "./components/Tab";
 export { default as TabContainer } from "./components/TabContainer";

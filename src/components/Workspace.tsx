@@ -261,7 +261,10 @@ const Workspace: React.FC<WorkspaceProps> = ({
       {/* Left Panel */}
       <Pane
         title="Explorer"
-        size={{ width: leftWidth, height: containerDimensions.height }}
+        size={{ 
+          width: leftCollapsed ? workspaceConfig.leftPane.collapsedSize : leftWidth, 
+          height: containerDimensions.height 
+        }}
         minSize={{ width: 0 }}
         maxSize={{ width: workspaceConfig.leftPane.maxSize }}
         isCollapsed={leftCollapsed}
@@ -334,7 +337,9 @@ const Workspace: React.FC<WorkspaceProps> = ({
 
           <Pane
             title="Terminal"
-            size={{ height: bottomHeight }}
+            size={{ 
+              height: bottomCollapsed ? workspaceConfig.bottomPane.collapsedSize : bottomHeight 
+            }}
             minSize={{ height: workspaceConfig.bottomPane.minSize }}
             maxSize={{ height: workspaceConfig.bottomPane.maxSize }}
             isCollapsed={bottomCollapsed}
@@ -361,7 +366,10 @@ const Workspace: React.FC<WorkspaceProps> = ({
         {/* Right Panel */}
         <Pane
           title="Outline"
-          size={{ width: rightWidth, height: containerDimensions.height }}
+          size={{ 
+            width: rightCollapsed ? workspaceConfig.rightPane.collapsedSize : rightWidth, 
+            height: containerDimensions.height 
+          }}
           minSize={{ width: 0 }}
           maxSize={{ width: workspaceConfig.rightPane.maxSize }}
           isCollapsed={rightCollapsed}

@@ -1,5 +1,5 @@
 import Workspace from "./components/Workspace";
-import WorkspaceNew from "./components/WorkspaceNew";
+import WorkspaceContainerDemo from "./components/WorkspaceNew";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import type { WorkspaceConfig } from "./types/WorkspaceConfig";
@@ -19,21 +19,21 @@ function App() {
       maxSize: PANE_MAX_SIZE,
       minSize: PANE_MIN_SIZE,
       collapseThreshold: PANE_COLLAPSE_THRESHOLD,
-      collapsedSize: 8,
+      collapsedSize: 16,
     },
     rightPane: {
       defaultSize: 300,
       maxSize: PANE_MAX_SIZE,
       minSize: PANE_MIN_SIZE,
       collapseThreshold: PANE_COLLAPSE_THRESHOLD,
-      collapsedSize: 8,
+      collapsedSize: 16,
     },
     bottomPane: {
       defaultSize: 200,
       maxSize: PANE_MAX_SIZE,
       minSize: PANE_MIN_SIZE,
       collapseThreshold: PANE_COLLAPSE_THRESHOLD,
-      collapsedSize: 8,
+      collapsedSize: 16,
     },
   };
 
@@ -41,7 +41,7 @@ function App() {
     <>
       {useContainerMode ? (
         // Container mode - workspace embedded in a larger UI
-        <WorkspaceNew />
+        <WorkspaceContainerDemo />
       ) : (
         // Full viewport mode - workspace takes entire screen
         <ThemeProvider themeId="dark">
