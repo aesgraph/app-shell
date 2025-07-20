@@ -95,14 +95,17 @@ const ViewDropdown = ({
     onClose();
   };
 
-  const viewsByCategory = views.reduce((acc, view) => {
-    const category = view.category || "General";
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(view);
-    return acc;
-  }, {} as Record<string, ViewDefinition[]>);
+  const viewsByCategory = views.reduce(
+    (acc, view) => {
+      const category = view.category || "General";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(view);
+      return acc;
+    },
+    {} as Record<string, ViewDefinition[]>
+  );
 
   const dropdownContent = (
     <div

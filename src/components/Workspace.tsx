@@ -15,10 +15,10 @@ interface WorkspaceProps {
   className?: string;
 }
 
-const Workspace: React.FC<WorkspaceProps> = ({ 
-  fullViewport = false, 
-  style = {}, 
-  className = "" 
+const Workspace: React.FC<WorkspaceProps> = ({
+  fullViewport = false,
+  style = {},
+  className = "",
 }) => {
   const {
     // State
@@ -155,7 +155,7 @@ const Workspace: React.FC<WorkspaceProps> = ({
       const resizeObserver = new ResizeObserver(() => {
         updateDimensions();
       });
-      
+
       if (containerRef.current) {
         resizeObserver.observe(containerRef.current);
       }
@@ -244,26 +244,30 @@ const Workspace: React.FC<WorkspaceProps> = ({
         height: fullViewport ? "100vh" : "100%",
         width: fullViewport ? "100vw" : "100%",
         overflow: "hidden",
-        ...(fullViewport ? {
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        } : {
-          position: "relative",
-          minHeight: "100%",
-          minWidth: "100%",
-        }),
+        ...(fullViewport
+          ? {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }
+          : {
+              position: "relative",
+              minHeight: "100%",
+              minWidth: "100%",
+            }),
         ...style,
       }}
     >
       {/* Left Panel */}
       <Pane
         title="Explorer"
-        size={{ 
-          width: leftCollapsed ? workspaceConfig.leftPane.collapsedSize : leftWidth, 
-          height: containerDimensions.height 
+        size={{
+          width: leftCollapsed
+            ? workspaceConfig.leftPane.collapsedSize
+            : leftWidth,
+          height: containerDimensions.height,
         }}
         minSize={{ width: 0 }}
         maxSize={{ width: workspaceConfig.leftPane.maxSize }}
@@ -337,8 +341,10 @@ const Workspace: React.FC<WorkspaceProps> = ({
 
           <Pane
             title="Terminal"
-            size={{ 
-              height: bottomCollapsed ? workspaceConfig.bottomPane.collapsedSize : bottomHeight 
+            size={{
+              height: bottomCollapsed
+                ? workspaceConfig.bottomPane.collapsedSize
+                : bottomHeight,
             }}
             minSize={{ height: workspaceConfig.bottomPane.minSize }}
             maxSize={{ height: workspaceConfig.bottomPane.maxSize }}
@@ -366,9 +372,11 @@ const Workspace: React.FC<WorkspaceProps> = ({
         {/* Right Panel */}
         <Pane
           title="Outline"
-          size={{ 
-            width: rightCollapsed ? workspaceConfig.rightPane.collapsedSize : rightWidth, 
-            height: containerDimensions.height 
+          size={{
+            width: rightCollapsed
+              ? workspaceConfig.rightPane.collapsedSize
+              : rightWidth,
+            height: containerDimensions.height,
           }}
           minSize={{ width: 0 }}
           maxSize={{ width: workspaceConfig.rightPane.maxSize }}

@@ -48,6 +48,8 @@
     "build": "vite build --config vite.app.config.ts",
     "build-lib": "vite build",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build-lib",
     "release": "semantic-release"
@@ -72,6 +74,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "prettier": "^3.0.0",
     "semantic-release": "^24.2.7",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
