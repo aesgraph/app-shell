@@ -4,6 +4,11 @@ on:
   push:
     branches: ["**"]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -44,19 +49,19 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
             const deploymentUrl = '${{ steps.deploy.outputs.url }}';
-            
+
             // Delete any existing comments from this action
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
             });
-            
+
             const existingComment = comments.data.find(comment => 
               comment.user.login === 'github-actions[bot]' && 
               comment.body.includes('🚀 **Preview Deployment Ready!**')
             );
-            
+
             if (existingComment) {
               await github.rest.issues.deleteComment({
                 owner: context.repo.owner,
@@ -64,7 +69,7 @@ jobs:
                 comment_id: existingComment.id,
               });
             }
-            
+
             // Add new comment with latest deployment URL
             await github.rest.issues.createComment({
               owner: context.repo.owner,
