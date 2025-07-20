@@ -1,0 +1,110 @@
+/* Workspace Container Styles */
+.workspaceContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: var(--color-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  font-family: "Segoe UI", "Liberation Sans", Arial, sans-serif;
+  color: var(--color-text);
+  transition: background 0.2s;
+}
+
+.workspacePanel {
+  background: var(--color-panel);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.leftPanel {
+  border-right: 1px solid var(--color-border);
+}
+
+.rightPanel {
+  border-left: 1px solid var(--color-border);
+}
+
+.bottomPanel {
+  border-top: 1px solid var(--color-border);
+  min-height: 60px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mainPanel {
+  flex: 1;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.panelTitle {
+  padding: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-title-bg);
+  color: var(--color-title-text);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Collapsed Panel Styles */
+.collapsedBar {
+  background: var(--color-resizer);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.leftCollapsedBar,
+.rightCollapsedBar {
+  height: 100%;
+  min-width: 6px;
+  max-width: 100px;
+  cursor: ew-resize;
+}
+
+.bottomCollapsedBar {
+  width: 100%;
+  min-height: 6px;
+  max-height: 100px;
+  cursor: ns-resize;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.collapsedBar:hover {
+  background: var(--color-resizer-hover);
+}
+
+/* Theme Toggle (if needed in workspace) */
+.themeToggle {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 100;
+  background: var(--color-panel);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.themeToggle:hover {
+  background: var(--color-resizer-hover);
+  color: var(--color-title-text);
+}

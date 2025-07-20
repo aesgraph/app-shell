@@ -149,10 +149,13 @@ const TabContainer = ({
 
       // Find the nearest positioned container (appShellContainer)
       let container = (e.currentTarget as HTMLElement).parentElement;
-      while (container && window.getComputedStyle(container).position === 'static') {
+      while (
+        container &&
+        window.getComputedStyle(container).position === "static"
+      ) {
         container = container.parentElement;
       }
-      
+
       // Fall back to document.body if no positioned container found
       if (!container) container = document.body;
       const containerRect = container.getBoundingClientRect();

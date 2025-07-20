@@ -254,6 +254,22 @@
   min-width: 6px;
   max-width: 100px;
   cursor: ew-resize;
+  background: var(--color-border);
+  position: relative;
+}
+
+.rightCollapsedBar {
+  /* Add a visual indicator for collapsed right panel */
+  border-left: 2px solid var(--color-accent);
+}
+
+.leftCollapsedBar {
+  /* Add a visual indicator for collapsed left panel */
+  border-right: 2px solid var(--color-accent);
+}
+
+.collapsedBar:hover {
+  background: var(--color-resizer-hover);
 }
 
 .bottomCollapsedBar {
@@ -265,10 +281,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.collapsedBar:hover {
-  background: var(--color-resizer-hover);
 }
 
 .themeToggle {
