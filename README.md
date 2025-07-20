@@ -385,7 +385,7 @@ This project includes automated security scanning to prevent accidental exposure
 ### Security Checks
 
 - **TruffleHog**: Scans for verified secrets and API keys
-- **Gitleaks**: Detects hardcoded secrets and credentials
+- **Gitleaks**: Detects hardcoded secrets and credentials (requires license)
 - **Pattern Matching**: Checks for common secret patterns
 - **File Scanning**: Prevents .env files from being committed
 - **Token Detection**: Identifies various service tokens (GitHub, npm, AWS, etc.)
