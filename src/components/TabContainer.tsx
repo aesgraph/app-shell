@@ -147,22 +147,30 @@ const TabContainer = ({
         e.currentTarget as HTMLElement
       ).getBoundingClientRect();
 
+      // Find the nearest positioned container (appShellContainer)
+      let container = (e.currentTarget as HTMLElement).parentElement;
+      while (container && window.getComputedStyle(container).position === 'static') {
+        container = container.parentElement;
+      }
+      
+      // Fall back to document.body if no positioned container found
+      if (!container) container = document.body;
+      const containerRect = container.getBoundingClientRect();
+
       let x = buttonRect.left;
       let y = buttonRect.bottom + 2; // Default: show below the button
 
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
       const dropdownHeight = 400; // Approximate dropdown height
       const dropdownWidth = 300; // Approximate dropdown width
 
-      // Adjust horizontal position if dropdown would go off the right edge
-      if (x + dropdownWidth > viewportWidth) {
-        x = viewportWidth - dropdownWidth - 20; // 20px margin
+      // Adjust horizontal position if dropdown would go off the right edge of container
+      if (x + dropdownWidth > containerRect.right) {
+        x = containerRect.right - dropdownWidth - 20; // 20px margin
       }
 
-      // Check if this is the bottom pane or if dropdown would go off the bottom edge
+      // Check if this is the bottom pane or if dropdown would go off the bottom edge of container
       const isBottomPane = id === "bottom-pane";
-      const wouldGoOffBottom = y + dropdownHeight > viewportHeight;
+      const wouldGoOffBottom = y + dropdownHeight > containerRect.bottom;
 
       if (isBottomPane || wouldGoOffBottom) {
         // Show dropdown above the button
