@@ -108,8 +108,6 @@ const WorkspaceContainerDemo: React.FC = () => {
             <Workspace
               fullViewport={false}
               style={{
-                border: "1px solid #e2e8f0",
-                borderRadius: "8px",
                 flex: 1, // Make sure workspace fills available space
               }}
             />
