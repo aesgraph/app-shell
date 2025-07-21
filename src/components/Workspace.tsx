@@ -74,8 +74,27 @@ const Workspace: React.FC<WorkspaceProps> = ({
         width: rect.width,
         height: rect.height,
       });
+
+      // Ensure bottom pane doesn't exceed available height in container mode
+      if (!fullViewport && rect.height > 0) {
+        const minMainHeight = 150; // Minimum height for main editor
+        const maxBottomHeight = Math.max(
+          workspaceConfig.bottomPane.collapsedSize,
+          rect.height - minMainHeight
+        );
+
+        // Constrain bottom height if it's too large for the container
+        if (bottomHeight > maxBottomHeight) {
+          setBottomHeight(Math.min(bottomHeight, maxBottomHeight));
+        }
+      }
     }
-  }, [fullViewport]);
+  }, [
+    fullViewport,
+    bottomHeight,
+    setBottomHeight,
+    workspaceConfig.bottomPane.collapsedSize,
+  ]);
 
   // Initialize tab containers if empty
   useEffect(() => {
@@ -212,7 +231,19 @@ const Workspace: React.FC<WorkspaceProps> = ({
     ref: HTMLElement
   ) => {
     const height = ref.offsetHeight;
-    setBottomHeight(height);
+
+    // In container mode, ensure bottom pane doesn't exceed available space
+    if (!fullViewport && containerDimensions.height > 0) {
+      const minMainHeight = 150; // Minimum height for main editor
+      const maxBottomHeight = Math.max(
+        workspaceConfig.bottomPane.collapsedSize,
+        containerDimensions.height - minMainHeight
+      );
+      const constrainedHeight = Math.min(height, maxBottomHeight);
+      setBottomHeight(constrainedHeight);
+    } else {
+      setBottomHeight(height);
+    }
 
     if (
       !bottomCollapsed &&
@@ -347,7 +378,14 @@ const Workspace: React.FC<WorkspaceProps> = ({
                 : bottomHeight,
             }}
             minSize={{ height: workspaceConfig.bottomPane.minSize }}
-            maxSize={{ height: workspaceConfig.bottomPane.maxSize }}
+            maxSize={{
+              height: fullViewport
+                ? workspaceConfig.bottomPane.maxSize
+                : Math.max(
+                    workspaceConfig.bottomPane.collapsedSize,
+                    containerDimensions.height - 150 // Reserve 150px for main editor
+                  ),
+            }}
             isCollapsed={bottomCollapsed}
             collapsedSize={workspaceConfig.bottomPane.collapsedSize}
             collapseThreshold={workspaceConfig.bottomPane.collapseThreshold}
