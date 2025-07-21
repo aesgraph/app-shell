@@ -165,7 +165,9 @@
   min-width: 0;
   min-height: 0;
   border: none;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .leftPanel {
@@ -190,7 +192,9 @@
   padding: 16px;
   font-size: 1.2rem;
   border-bottom: 1px solid var(--color-border);
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .mainPanel {
@@ -205,7 +209,9 @@
   border-bottom: 1px solid var(--color-border);
   background: var(--color-title-bg);
   color: var(--color-title-text);
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 /* Resizer handle styles for re-resizable */
@@ -254,6 +260,22 @@
   min-width: 6px;
   max-width: 100px;
   cursor: ew-resize;
+  background: var(--color-border);
+  position: relative;
+}
+
+.rightCollapsedBar {
+  /* Add a visual indicator for collapsed right panel */
+  border-left: 2px solid var(--color-accent);
+}
+
+.leftCollapsedBar {
+  /* Add a visual indicator for collapsed left panel */
+  border-right: 2px solid var(--color-accent);
+}
+
+.collapsedBar:hover {
+  background: var(--color-resizer-hover);
 }
 
 .bottomCollapsedBar {
@@ -265,10 +287,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.collapsedBar:hover {
-  background: var(--color-resizer-hover);
 }
 
 .themeToggle {
@@ -283,7 +301,10 @@
   padding: 6px 16px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border 0.2s;
 }
 
 .themeToggle:hover {

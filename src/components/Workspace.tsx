@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import type { ResizeDirection } from "re-resizable";
 import Pane from "./Pane";
 import { useWorkspace } from "../contexts/useWorkspace";
@@ -6,7 +6,20 @@ import WorkspaceConfigEditor from "./views/WorkspaceConfigEditor";
 import WorkspaceManager from "./views/WorkspaceManager";
 import styles from "../App.module.css";
 
-const Workspace = () => {
+interface WorkspaceProps {
+  /** Whether to use full viewport (legacy behavior) or act as a contained component */
+  fullViewport?: boolean;
+  /** Custom style for the container */
+  style?: React.CSSProperties;
+  /** Custom className for the container */
+  className?: string;
+}
+
+const Workspace: React.FC<WorkspaceProps> = ({
+  fullViewport = false,
+  style = {},
+  className = "",
+}) => {
   const {
     // State
     leftWidth,
@@ -39,11 +52,30 @@ const Workspace = () => {
     getAvailableViews,
   } = useWorkspace();
 
-  // Track window dimensions for responsive sizing
-  const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
+  // Container ref for measuring dimensions
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Track container dimensions for responsive sizing
+  const [containerDimensions, setContainerDimensions] = useState({
+    width: fullViewport ? window.innerWidth : 0,
+    height: fullViewport ? window.innerHeight : 0,
   });
+
+  // Get container dimensions
+  const updateDimensions = useCallback(() => {
+    if (fullViewport) {
+      setContainerDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    } else if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setContainerDimensions({
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+  }, [fullViewport]);
 
   // Initialize tab containers if empty
   useEffect(() => {
@@ -109,18 +141,30 @@ const Workspace = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handle window resize
+  // Handle container resize
   useEffect(() => {
-    const handleResize = () => {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+    // Initial measurement
+    updateDimensions();
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (fullViewport) {
+      const handleResize = () => updateDimensions();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    } else {
+      // For contained mode, use ResizeObserver to track container size changes
+      const resizeObserver = new ResizeObserver(() => {
+        updateDimensions();
+      });
+
+      if (containerRef.current) {
+        resizeObserver.observe(containerRef.current);
+      }
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, [fullViewport, updateDimensions]);
 
   // Resize handlers
   const handleLeftResize = (
@@ -185,6 +229,7 @@ const Workspace = () => {
 
   return (
     <div
+      ref={containerRef}
       className={[
         styles.appShellContainer,
         styles[
@@ -192,23 +237,38 @@ const Workspace = () => {
             currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)
           }` as keyof typeof styles
         ],
+        className,
       ].join(" ")}
       style={{
         display: "flex",
-        height: "100vh",
-        width: "100vw",
+        height: fullViewport ? "100vh" : "100%",
+        width: fullViewport ? "100vw" : "100%",
         overflow: "hidden",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        ...(fullViewport
+          ? {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }
+          : {
+              position: "relative",
+              minHeight: "100%",
+              minWidth: "100%",
+            }),
+        ...style,
       }}
     >
       {/* Left Panel */}
       <Pane
         title="Explorer"
-        size={{ width: leftWidth, height: windowDimensions.height }}
+        size={{
+          width: leftCollapsed
+            ? workspaceConfig.leftPane.collapsedSize
+            : leftWidth,
+          height: containerDimensions.height,
+        }}
         minSize={{ width: 0 }}
         maxSize={{ width: workspaceConfig.leftPane.maxSize }}
         isCollapsed={leftCollapsed}
@@ -256,8 +316,8 @@ const Workspace = () => {
             size={{ height: 0 }}
             minSize={{ width: 0, height: 100 }}
             maxSize={{
-              width: windowDimensions.width,
-              height: windowDimensions.height,
+              width: containerDimensions.width,
+              height: containerDimensions.height,
             }}
             isCollapsed={false}
             collapsedSize={0}
@@ -281,7 +341,11 @@ const Workspace = () => {
 
           <Pane
             title="Terminal"
-            size={{ height: bottomHeight }}
+            size={{
+              height: bottomCollapsed
+                ? workspaceConfig.bottomPane.collapsedSize
+                : bottomHeight,
+            }}
             minSize={{ height: workspaceConfig.bottomPane.minSize }}
             maxSize={{ height: workspaceConfig.bottomPane.maxSize }}
             isCollapsed={bottomCollapsed}
@@ -308,7 +372,12 @@ const Workspace = () => {
         {/* Right Panel */}
         <Pane
           title="Outline"
-          size={{ width: rightWidth, height: windowDimensions.height }}
+          size={{
+            width: rightCollapsed
+              ? workspaceConfig.rightPane.collapsedSize
+              : rightWidth,
+            height: containerDimensions.height,
+          }}
           minSize={{ width: 0 }}
           maxSize={{ width: workspaceConfig.rightPane.maxSize }}
           isCollapsed={rightCollapsed}

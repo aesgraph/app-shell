@@ -45,16 +45,19 @@ const ViewDropdown = ({
   useEffect(() => {
     if (dropdownRef.current) {
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      
+
       // Find the nearest positioned container (appShellContainer)
       let container = dropdownRef.current.parentElement;
-      while (container && window.getComputedStyle(container).position === 'static') {
+      while (
+        container &&
+        window.getComputedStyle(container).position === "static"
+      ) {
         container = container.parentElement;
       }
-      
+
       // Fall back to document.body if no positioned container found
       if (!container) container = document.body;
-      
+
       const containerRect = container.getBoundingClientRect();
 
       let newX = position.x;
@@ -92,14 +95,17 @@ const ViewDropdown = ({
     onClose();
   };
 
-  const viewsByCategory = views.reduce((acc, view) => {
-    const category = view.category || "General";
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(view);
-    return acc;
-  }, {} as Record<string, ViewDefinition[]>);
+  const viewsByCategory = views.reduce(
+    (acc, view) => {
+      const category = view.category || "General";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(view);
+      return acc;
+    },
+    {} as Record<string, ViewDefinition[]>
+  );
 
   const dropdownContent = (
     <div
