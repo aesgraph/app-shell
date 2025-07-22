@@ -4,7 +4,7 @@ import type { WorkspaceState } from "../../types/workspace";
 
 const WorkspaceManager = () => {
   const { theme } = useTheme();
-  
+
   const [savedWorkspaces, setSavedWorkspaces] = useState<WorkspaceState[]>([]);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
@@ -128,14 +128,16 @@ const WorkspaceManager = () => {
   };
 
   return (
-    <div style={{ 
-      padding: "20px", 
-      maxWidth: "800px", 
-      margin: "0 auto", 
-      backgroundColor: theme.colors.background,
-      color: theme.colors.text,
-      minHeight: "100vh"
-    }}>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "800px",
+        margin: "0 auto",
+        backgroundColor: theme.colors.background,
+        color: theme.colors.text,
+        minHeight: "100vh",
+      }}
+    >
       <div style={{ marginBottom: "30px" }}>
         <h2 style={{ marginBottom: "10px", color: theme.colors.text }}>
           Workspace Manager
@@ -179,7 +181,9 @@ const WorkspaceManager = () => {
             disabled={!newWorkspaceName.trim()}
             style={{
               padding: "8px 16px",
-              backgroundColor: newWorkspaceName.trim() ? theme.colors.primary : theme.colors.textMuted,
+              backgroundColor: newWorkspaceName.trim()
+                ? theme.colors.primary
+                : theme.colors.textMuted,
               color: theme.colors.textInverse,
               border: "none",
               borderRadius: "4px",
@@ -239,7 +243,9 @@ const WorkspaceManager = () => {
                       : `1px solid ${theme.colors.border}`,
                   borderRadius: "8px",
                   backgroundColor:
-                    selectedWorkspace === workspace.id ? theme.colors.surfaceActive : theme.colors.surface,
+                    selectedWorkspace === workspace.id
+                      ? theme.colors.surfaceActive
+                      : theme.colors.surface,
                 }}
               >
                 <div

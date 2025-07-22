@@ -17,10 +17,10 @@ A sophisticated layout management system for VS Code-style applications with res
 ### Basic Setup
 
 ```tsx
-import { LayoutManager } from './components/LayoutManager';
-import { LayoutProvider } from './contexts/LayoutContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import { WorkspaceProvider } from './contexts/WorkspaceContext';
+import { LayoutManager } from "./components/LayoutManager";
+import { LayoutProvider } from "./contexts/LayoutContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { WorkspaceProvider } from "./contexts/WorkspaceContext";
 
 function App() {
   return (
@@ -111,10 +111,18 @@ The component automatically saves and restores panel layouts:
 The component uses CSS modules (`LayoutManager.module.css`) for styling:
 
 ```css
-.layoutManager { /* Main container */ }
-.pane { /* Individual panel styling */ }
-.resizeHandle { /* Resize handle styling */ }
-.iconButton { /* Control button styling */ }
+.layoutManager {
+  /* Main container */
+}
+.pane {
+  /* Individual panel styling */
+}
+.resizeHandle {
+  /* Resize handle styling */
+}
+.iconButton {
+  /* Control button styling */
+}
 ```
 
 ### Theme Integration
@@ -148,10 +156,10 @@ Tab content is provided through the workspace context:
 
 ```tsx
 const customTab: TabData = {
-  id: 'my-tab',
-  title: 'My Custom Tab',
+  id: "my-tab",
+  title: "My Custom Tab",
   content: <MyCustomComponent />,
-  closable: true
+  closable: true,
 };
 ```
 

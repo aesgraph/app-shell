@@ -56,15 +56,15 @@ export const LayoutManager: React.FC = () => {
   // Get theme context
   const { theme } = useTheme();
   const themeStyles = getThemeStyles(theme);
-  
+
   // Apply theme CSS variables to document when theme changes
   useEffect(() => {
     if (document.documentElement) {
       applyThemeVars(document.documentElement, theme);
     }
-    
+
     // Also update CSS custom properties for resize handle hover effects
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .${styles.resizeHandle}:hover {
         background-color: ${theme.colors.workspaceResizerHover} !important;
@@ -74,12 +74,12 @@ export const LayoutManager: React.FC = () => {
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       document.head.removeChild(style);
     };
   }, [theme]);
-  
+
   // Function to add a view as a tab
   const addViewAsTab = useCallback((viewId: string, pane: Pane) => {
     console.log("LayoutManager: addViewAsTab called with:", viewId, pane);
@@ -608,7 +608,7 @@ export const LayoutManager: React.FC = () => {
           >
             {/* Left Pane */}
             <Panel defaultSize={initialLayout[0]} minSize={0} collapsible>
-              <div 
+              <div
                 className={`${styles.pane} ${styles.leftPane}`}
                 style={themeStyles.workspace.panel}
               >
@@ -641,7 +641,7 @@ export const LayoutManager: React.FC = () => {
             />
             {/* Center Pane */}
             <Panel defaultSize={initialLayout[1]} minSize={0} collapsible>
-              <div 
+              <div
                 className={`${styles.pane} ${styles.centerPane}`}
                 style={themeStyles.workspace.panel}
               >
@@ -674,7 +674,7 @@ export const LayoutManager: React.FC = () => {
             />
             {/* Right Pane */}
             <Panel defaultSize={initialLayout[2]} minSize={0} collapsible>
-              <div 
+              <div
                 className={`${styles.pane} ${styles.rightPane}`}
                 style={themeStyles.workspace.panel}
               >
@@ -709,7 +709,7 @@ export const LayoutManager: React.FC = () => {
         />
         {/* Bottom Pane */}
         <Panel defaultSize={initialBottomHeight} minSize={0} collapsible>
-          <div 
+          <div
             className={`${styles.pane} ${styles.bottomPane}`}
             style={themeStyles.workspace.panel}
           >
