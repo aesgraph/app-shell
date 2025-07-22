@@ -1,12 +1,16 @@
+import React from "react";
 import sharedStyles from "../../App.module.css";
 import styles from "./WorkspaceConfigEditor.module.css";
 import { useWorkspace } from "../../contexts/useWorkspace";
 import { useTheme } from "../../contexts/useTheme";
+import { getThemeStyles } from "../../utils/themeUtils";
 import { themes } from "../../themes/themes";
 import type { ThemeId } from "../../types/Theme";
-import React from "react";
 
 const WorkspaceConfigEditor = () => {
+  const { theme } = useTheme();
+  const themeStyles = getThemeStyles(theme);
+
   const { currentTheme, setCurrentTheme } = useWorkspace();
   const { setTheme } = useTheme();
 
@@ -20,59 +24,79 @@ const WorkspaceConfigEditor = () => {
   }));
 
   return (
-    <div className={sharedStyles.viewContainer}>
-      <div className={sharedStyles.viewHeader}>
-        <h2>Workspace Configuration</h2>
-        <p>Customize your workspace appearance and behavior</p>
+    <div
+      className={sharedStyles["aes-viewContainer"]}
+      style={{
+        ...themeStyles.workspace.panel,
+        color: theme.colors.text,
+      }}
+    >
+      <div className={sharedStyles["aes-viewHeader"]}>
+        <h2 style={{ color: theme.colors.text }}>Workspace Configuration</h2>
+        <p style={{ color: theme.colors.textSecondary }}>
+          Customize your workspace appearance and behavior
+        </p>
       </div>
 
-      <div className={sharedStyles.configSection}>
-        <h3>Theme Settings</h3>
-        <div className={styles.themeSelector}>
-          {availableThemes.map((theme) => (
+      <div className={sharedStyles["aes-configSection"]}>
+        <h3 style={{ color: theme.colors.text }}>Theme Settings</h3>
+        <div className={styles["aes-themeSelector"]}>
+          {availableThemes.map((themeOption) => (
             <label
-              key={theme.id}
-              className={styles.themeOption}
+              key={themeOption.id}
+              className={styles["aes-themeOption"]}
               onClick={() => {
-                setCurrentTheme(theme.id as ThemeId);
+                setCurrentTheme(themeOption.id as ThemeId);
                 // Also update the theme context for immediate visual feedback
-                setTheme(theme.id);
+                setTheme(themeOption.id);
+              }}
+              style={{
+                backgroundColor:
+                  currentTheme === themeOption.id
+                    ? theme.colors.primary + "30"
+                    : "transparent",
+                border: `2px solid ${
+                  currentTheme === themeOption.id
+                    ? theme.colors.primary
+                    : theme.colors.border
+                }`,
               }}
             >
               <input
                 type="radio"
                 name="theme"
-                value={theme.id}
-                checked={currentTheme === theme.id}
+                value={themeOption.id}
+                checked={currentTheme === themeOption.id}
                 onChange={(e) => {
                   const themeId = e.target.value as ThemeId;
                   setCurrentTheme(themeId);
                   // Also update the theme context for immediate visual feedback
                   setTheme(themeId);
                 }}
+                style={{ display: "none" }}
               />
-              <div className={styles.themePreview}>
-                <div className={styles.themePreviewHeader}>
+              <div className={styles["aes-themePreview"]}>
+                <div className={styles["aes-themePreviewHeader"]}>
                   <div
-                    className={styles.themePreviewDot}
-                    style={{ backgroundColor: theme.accent }}
+                    className={styles["aes-themePreviewDot"]}
+                    style={{ backgroundColor: themeOption.accent }}
                   ></div>
                   <div
-                    className={styles.themePreviewDot}
-                    style={{ backgroundColor: theme.accent }}
+                    className={styles["aes-themePreviewDot"]}
+                    style={{ backgroundColor: themeOption.accent }}
                   ></div>
                   <div
-                    className={styles.themePreviewDot}
-                    style={{ backgroundColor: theme.accent }}
+                    className={styles["aes-themePreviewDot"]}
+                    style={{ backgroundColor: themeOption.accent }}
                   ></div>
                 </div>
                 <div
-                  className={styles.themePreviewContent}
-                  style={{ backgroundColor: theme.bg }}
+                  className={styles["aes-themePreviewContent"]}
+                  style={{ backgroundColor: themeOption.bg }}
                 >
                   <div
                     style={{
-                      backgroundColor: theme.panel,
+                      backgroundColor: themeOption.panel,
                       height: "20px",
                       margin: "4px",
                       borderRadius: "2px",
@@ -80,7 +104,7 @@ const WorkspaceConfigEditor = () => {
                   ></div>
                   <div
                     style={{
-                      backgroundColor: theme.accent,
+                      backgroundColor: themeOption.accent,
                       height: "12px",
                       margin: "4px",
                       borderRadius: "2px",
@@ -89,95 +113,107 @@ const WorkspaceConfigEditor = () => {
                   ></div>
                 </div>
               </div>
-              <span>{theme.name}</span>
+              <span style={{ color: theme.colors.text }}>
+                {themeOption.name}
+              </span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className={sharedStyles.configSection}>
-        <h3>Current Theme Details</h3>
-        <p>Preview of workspace-specific colors from the selected theme</p>
-        <div className={styles.themeDetails}>
-          <div className={styles.colorGrid}>
-            <div className={styles.colorSwatch}>
+      <div className={sharedStyles["aes-configSection"]}>
+        <h3 style={{ color: theme.colors.text }}>Current Theme Details</h3>
+        <p style={{ color: theme.colors.textSecondary }}>
+          Preview of workspace-specific colors from the selected theme
+        </p>
+        <div
+          className={styles["aes-themeDetails"]}
+          style={{
+            backgroundColor: theme.colors.surface,
+            border: `1px solid ${theme.colors.border}`,
+          }}
+        >
+          <div className={styles["aes-colorGrid"]}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)?.bg ||
                     "#1e1e1e",
                 }}
               ></div>
-              <span>Workspace Background</span>
+              <span style={{ color: theme.colors.text }}>
+                Workspace Background
+              </span>
             </div>
-            <div className={styles.colorSwatch}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)?.panel ||
                     "#23272e",
                 }}
               ></div>
-              <span>Panel Background</span>
+              <span style={{ color: theme.colors.text }}>Panel Background</span>
             </div>
-            <div className={styles.colorSwatch}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)?.panel ||
                     "#23272e",
                 }}
               ></div>
-              <span>Title Background</span>
+              <span style={{ color: theme.colors.text }}>Title Background</span>
             </div>
-            <div className={styles.colorSwatch}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)?.panel ||
                     "#23272e",
                 }}
               ></div>
-              <span>Resizer</span>
+              <span style={{ color: theme.colors.text }}>Resizer</span>
             </div>
-            <div className={styles.colorSwatch}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)
                       ?.accent || "#007acc",
                 }}
               ></div>
-              <span>Resizer Hover</span>
+              <span style={{ color: theme.colors.text }}>Resizer Hover</span>
             </div>
-            <div className={styles.colorSwatch}>
+            <div className={styles["aes-colorSwatch"]}>
               <div
-                className={styles.colorPreview}
+                className={styles["aes-colorPreview"]}
                 style={{
                   backgroundColor:
                     availableThemes.find((t) => t.id === currentTheme)
                       ?.accent || "#007acc",
                 }}
               ></div>
-              <span>Primary Accent</span>
+              <span style={{ color: theme.colors.text }}>Primary Accent</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={sharedStyles.configSection}>
-        <h3>Pane Configuration</h3>
-        <p>
+      <div className={sharedStyles["aes-configSection"]}>
+        <h3 style={{ color: theme.colors.text }}>Pane Configuration</h3>
+        <p style={{ color: theme.colors.textSecondary }}>
           Pane size and behavior settings will be available here in future
           updates.
         </p>
-        <div className={sharedStyles.placeholderText}>
-          <span>Coming soon...</span>
+        <div className={sharedStyles["aes-placeholderText"]}>
+          <span style={{ color: theme.colors.textMuted }}>Coming soon...</span>
         </div>
       </div>
     </div>

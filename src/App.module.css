@@ -1,163 +1,189 @@
 :root {
-  --color-bg: #1e1e1e;
-  --color-panel: #23272e;
-  --color-text: #d4d4d4;
-  --color-border: #333;
-  --color-title-bg: #23272e;
-  --color-title-text: #d4d4d4;
-  --color-resizer: #23272e;
-  --color-resizer-hover: #444;
-  --color-scrollbar: #555;
-  --color-scrollbar-hover: #777;
+  /* Namespaced variables (primary) */
+  --aes-color-bg: #1e1e1e;
+  --aes-color-panel: #23272e;
+  --aes-color-text: #d4d4d4;
+  --aes-color-border: #333;
+  --aes-color-title-bg: #23272e;
+  --aes-color-title-text: #d4d4d4;
+  --aes-color-resizer: #23272e;
+  --aes-color-resizer-hover: #444;
+  --aes-color-scrollbar: #555;
+  --aes-color-scrollbar-hover: #777;
+
+  /* Compatibility variables (for upstream projects) */
+  --color-bg: var(--aes-color-bg);
+  --color-panel: var(--aes-color-panel);
+  --color-text: var(--aes-color-text);
+  --color-border: var(--aes-color-border);
+  --color-title-bg: var(--aes-color-title-bg);
+  --color-title-text: var(--aes-color-title-text);
+  --color-resizer: var(--aes-color-resizer);
+  --color-resizer-hover: var(--aes-color-resizer-hover);
+  --color-scrollbar: var(--aes-color-scrollbar);
+  --color-scrollbar-hover: var(--aes-color-scrollbar-hover);
 }
 
-.themeLight {
-  --color-bg: #f5f5f5;
-  --color-panel: #fff;
-  --color-text: #222;
-  --color-border: #ccc;
-  --color-title-bg: #f5f5f5;
-  --color-title-text: #222;
-  --color-resizer: #e0e0e0;
-  --color-resizer-hover: #bdbdbd;
-  --color-scrollbar: #b0b0b0;
-  --color-scrollbar-hover: #909090;
+.aes-themeLight {
+  /* Namespaced variables */
+  --aes-color-bg: #f5f5f5;
+  --aes-color-panel: #fff;
+  --aes-color-text: #222;
+  --aes-color-border: #ccc;
+  --aes-color-title-bg: #f5f5f5;
+  --aes-color-title-text: #222;
+  --aes-color-resizer: #e0e0e0;
+  --aes-color-resizer-hover: #bdbdbd;
+  --aes-color-scrollbar: #b0b0b0;
+  --aes-color-scrollbar-hover: #909090;
+
+  /* Compatibility variables */
+  --color-bg: var(--aes-color-bg);
+  --color-panel: var(--aes-color-panel);
+  --color-text: var(--aes-color-text);
+  --color-border: var(--aes-color-border);
+  --color-title-bg: var(--aes-color-title-bg);
+  --color-title-text: var(--aes-color-title-text);
+  --color-resizer: var(--aes-color-resizer);
+  --color-resizer-hover: var(--aes-color-resizer-hover);
+  --color-scrollbar: var(--aes-color-scrollbar);
+  --color-scrollbar-hover: var(--aes-color-scrollbar-hover);
 }
 
-.themeDark {
-  --color-bg: #1e1e1e;
-  --color-panel: #23272e;
-  --color-text: #d4d4d4;
-  --color-border: #333;
-  --color-title-bg: #23272e;
-  --color-title-text: #d4d4d4;
-  --color-resizer: #23272e;
-  --color-resizer-hover: #444;
-  --color-scrollbar: #555;
-  --color-scrollbar-hover: #777;
+.aes-themeDark {
+  --aes-color-bg: #1e1e1e;
+  --aes-color-panel: #23272e;
+  --aes-color-text: #d4d4d4;
+  --aes-color-border: #333;
+  --aes-color-title-bg: #23272e;
+  --aes-color-title-text: #d4d4d4;
+  --aes-color-resizer: #23272e;
+  --aes-color-resizer-hover: #444;
+  --aes-color-scrollbar: #555;
+  --aes-color-scrollbar-hover: #777;
 }
 
 /* Terminal-Inspired Color Themes */
-.themeDracula {
-  --color-bg: #282a36;
-  --color-panel: #44475a;
-  --color-text: #f8f8f2;
-  --color-border: #6272a4;
-  --color-title-bg: #44475a;
-  --color-title-text: #bd93f9;
-  --color-resizer: #6272a4;
-  --color-resizer-hover: #bd93f9;
-  --color-scrollbar: #6272a4;
-  --color-scrollbar-hover: #bd93f9;
+.aes-themeDracula {
+  --aes-color-bg: #282a36;
+  --aes-color-panel: #44475a;
+  --aes-color-text: #f8f8f2;
+  --aes-color-border: #6272a4;
+  --aes-color-title-bg: #44475a;
+  --aes-color-title-text: #bd93f9;
+  --aes-color-resizer: #6272a4;
+  --aes-color-resizer-hover: #bd93f9;
+  --aes-color-scrollbar: #6272a4;
+  --aes-color-scrollbar-hover: #bd93f9;
 }
 
-.themeOneDark {
-  --color-bg: #282c34;
-  --color-panel: #3e4451;
-  --color-text: #abb2bf;
-  --color-border: #5c6370;
-  --color-title-bg: #3e4451;
-  --color-title-text: #61afef;
-  --color-resizer: #5c6370;
-  --color-resizer-hover: #61afef;
-  --color-scrollbar: #5c6370;
-  --color-scrollbar-hover: #61afef;
+.aes-themeOneDark {
+  --aes-color-bg: #282c34;
+  --aes-color-panel: #3e4451;
+  --aes-color-text: #abb2bf;
+  --aes-color-border: #5c6370;
+  --aes-color-title-bg: #3e4451;
+  --aes-color-title-text: #61afef;
+  --aes-color-resizer: #5c6370;
+  --aes-color-resizer-hover: #61afef;
+  --aes-color-scrollbar: #5c6370;
+  --aes-color-scrollbar-hover: #61afef;
 }
 
-.themeSolarized {
-  --color-bg: #002b36;
-  --color-panel: #073642;
-  --color-text: #839496;
-  --color-border: #586e75;
-  --color-title-bg: #073642;
-  --color-title-text: #268bd2;
-  --color-resizer: #586e75;
-  --color-resizer-hover: #268bd2;
-  --color-scrollbar: #586e75;
-  --color-scrollbar-hover: #268bd2;
+.aes-themeSolarized {
+  --aes-color-bg: #002b36;
+  --aes-color-panel: #073642;
+  --aes-color-text: #839496;
+  --aes-color-border: #586e75;
+  --aes-color-title-bg: #073642;
+  --aes-color-title-text: #268bd2;
+  --aes-color-resizer: #586e75;
+  --aes-color-resizer-hover: #268bd2;
+  --aes-color-scrollbar: #586e75;
+  --aes-color-scrollbar-hover: #268bd2;
 }
 
-.themeMonokai {
-  --color-bg: #272822;
-  --color-panel: #3e3d32;
-  --color-text: #f8f8f2;
-  --color-border: #75715e;
-  --color-title-bg: #3e3d32;
-  --color-title-text: #f92672;
-  --color-resizer: #75715e;
-  --color-resizer-hover: #f92672;
-  --color-scrollbar: #75715e;
-  --color-scrollbar-hover: #f92672;
+.aes-themeMonokai {
+  --aes-color-bg: #272822;
+  --aes-color-panel: #3e3d32;
+  --aes-color-text: #f8f8f2;
+  --aes-color-border: #75715e;
+  --aes-color-title-bg: #3e3d32;
+  --aes-color-title-text: #f92672;
+  --aes-color-resizer: #75715e;
+  --aes-color-resizer-hover: #f92672;
+  --aes-color-scrollbar: #75715e;
+  --aes-color-scrollbar-hover: #f92672;
 }
 
-.themeNord {
-  --color-bg: #2e3440;
-  --color-panel: #3b4252;
-  --color-text: #eceff4;
-  --color-border: #4c566a;
-  --color-title-bg: #3b4252;
-  --color-title-text: #88c0d0;
-  --color-resizer: #4c566a;
-  --color-resizer-hover: #88c0d0;
-  --color-scrollbar: #4c566a;
-  --color-scrollbar-hover: #88c0d0;
+.aes-themeNord {
+  --aes-color-bg: #2e3440;
+  --aes-color-panel: #3b4252;
+  --aes-color-text: #eceff4;
+  --aes-color-border: #4c566a;
+  --aes-color-title-bg: #3b4252;
+  --aes-color-title-text: #88c0d0;
+  --aes-color-resizer: #4c566a;
+  --aes-color-resizer-hover: #88c0d0;
+  --aes-color-scrollbar: #4c566a;
+  --aes-color-scrollbar-hover: #88c0d0;
 }
 
-.themeGruvbox {
-  --color-bg: #282828;
-  --color-panel: #3c3836;
-  --color-text: #ebdbb2;
-  --color-border: #504945;
-  --color-title-bg: #3c3836;
-  --color-title-text: #fabd2f;
-  --color-resizer: #504945;
-  --color-resizer-hover: #fabd2f;
-  --color-scrollbar: #504945;
-  --color-scrollbar-hover: #fabd2f;
+.aes-themeGruvbox {
+  --aes-color-bg: #282828;
+  --aes-color-panel: #3c3836;
+  --aes-color-text: #ebdbb2;
+  --aes-color-border: #504945;
+  --aes-color-title-bg: #3c3836;
+  --aes-color-title-text: #fabd2f;
+  --aes-color-resizer: #504945;
+  --aes-color-resizer-hover: #fabd2f;
+  --aes-color-scrollbar: #504945;
+  --aes-color-scrollbar-hover: #fabd2f;
 }
 
-.themeTokyo {
-  --color-bg: #1a1b26;
-  --color-panel: #24283b;
-  --color-text: #a9b1d6;
-  --color-border: #414868;
-  --color-title-bg: #24283b;
-  --color-title-text: #7aa2f7;
-  --color-resizer: #414868;
-  --color-resizer-hover: #7aa2f7;
-  --color-scrollbar: #414868;
-  --color-scrollbar-hover: #7aa2f7;
+.aes-themeTokyo {
+  --aes-color-bg: #1a1b26;
+  --aes-color-panel: #24283b;
+  --aes-color-text: #a9b1d6;
+  --aes-color-border: #414868;
+  --aes-color-title-bg: #24283b;
+  --aes-color-title-text: #7aa2f7;
+  --aes-color-resizer: #414868;
+  --aes-color-resizer-hover: #7aa2f7;
+  --aes-color-scrollbar: #414868;
+  --aes-color-scrollbar-hover: #7aa2f7;
 }
 
-.themeCatppuccin {
-  --color-bg: #1e1e2e;
-  --color-panel: #313244;
-  --color-text: #cdd6f4;
-  --color-border: #45475a;
-  --color-title-bg: #313244;
-  --color-title-text: #cba6f7;
-  --color-resizer: #45475a;
-  --color-resizer-hover: #cba6f7;
-  --color-scrollbar: #45475a;
-  --color-scrollbar-hover: #cba6f7;
+.aes-themeCatppuccin {
+  --aes-color-bg: #1e1e2e;
+  --aes-color-panel: #313244;
+  --aes-color-text: #cdd6f4;
+  --aes-color-border: #45475a;
+  --aes-color-title-bg: #313244;
+  --aes-color-title-text: #cba6f7;
+  --aes-color-resizer: #45475a;
+  --aes-color-resizer-hover: #cba6f7;
+  --aes-color-scrollbar: #45475a;
+  --aes-color-scrollbar-hover: #cba6f7;
 }
 
-.appShellContainer {
+.aes-appShellContainer {
   position: relative;
   height: 100%;
   width: 100%;
-  background: var(--color-bg);
+  background: var(--aes-color-bg);
   overflow: hidden;
   display: flex;
   flex-direction: row;
   font-family: "Segoe UI", "Liberation Sans", Arial, sans-serif;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   transition: background 0.2s;
 }
 
-.appShellPanel {
-  background: var(--color-panel);
-  color: var(--color-text);
+.aes-appShellPanel {
+  background: var(--aes-color-panel);
+  color: var(--aes-color-text);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -170,83 +196,83 @@
     color 0.2s;
 }
 
-.leftPanel {
-  border-right: 1px solid var(--color-border);
+.aes-leftPanel {
+  border-right: 1px solid var(--aes-color-border);
 }
 
-.rightPanel {
-  border-left: 1px solid var(--color-border);
+.aes-rightPanel {
+  border-left: 1px solid var(--aes-color-border);
 }
 
-.bottomPanel {
-  border-top: 1px solid var(--color-border);
+.aes-bottomPanel {
+  border-top: 1px solid var(--aes-color-border);
   min-height: 60px;
   box-sizing: border-box;
   width: 100%;
 }
 
-.editorTitle {
+.aes-editorTitle {
   flex: 1 1 auto;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--aes-color-bg);
+  color: var(--aes-color-text);
   padding: 16px;
   font-size: 1.2rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--aes-color-border);
   transition:
     background 0.2s,
     color 0.2s;
 }
 
-.mainPanel {
+.aes-mainPanel {
   flex: 1;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--aes-color-bg);
+  border-bottom: 1px solid var(--aes-color-border);
 }
 
-.panelTitle {
+.aes-panelTitle {
   padding: 12px;
   font-weight: bold;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-title-bg);
-  color: var(--color-title-text);
+  border-bottom: 1px solid var(--aes-color-border);
+  background: var(--aes-color-title-bg);
+  color: var(--aes-color-title-text);
   transition:
     background 0.2s,
     color 0.2s;
 }
 
 /* Resizer handle styles for re-resizable */
-.resizableHandleVertical {
+.aes-resizableHandleVertical {
   position: absolute;
   top: 0;
   right: -3px;
   width: 6px;
   height: 100%;
   cursor: ew-resize;
-  background: var(--color-resizer);
+  background: var(--aes-color-resizer);
   z-index: 10;
   transition: background 0.2s;
 }
-.resizableHandleVertical:hover {
-  background: var(--color-resizer-hover);
+.aes-resizableHandleVertical:hover {
+  background: var(--aes-color-resizer-hover);
 }
 
-.resizableHandleHorizontal {
+.aes-resizableHandleHorizontal {
   position: absolute;
   top: -3px;
   left: 0;
   width: 100%;
   height: 6px;
   cursor: ns-resize;
-  background: var(--color-resizer);
+  background: var(--aes-color-resizer);
   z-index: 10;
   transition: background 0.2s;
 }
-.resizableHandleHorizontal:hover {
-  background: var(--color-resizer-hover);
+.aes-resizableHandleHorizontal:hover {
+  background: var(--aes-color-resizer-hover);
 }
 
-.collapsedBar {
-  background: var(--color-resizer);
+.aes-collapsedBar {
+  background: var(--aes-color-resizer);
   z-index: 20;
   display: flex;
   align-items: center;
@@ -254,31 +280,37 @@
   transition: background 0.2s;
 }
 
-.leftCollapsedBar,
-.rightCollapsedBar {
+.aes-leftCollapsedBar,
+.aes-rightCollapsedBar {
   height: 100%;
   min-width: 6px;
   max-width: 100px;
   cursor: ew-resize;
-  background: var(--color-border);
+  background: var(--aes-color-border);
   position: relative;
 }
 
-.rightCollapsedBar {
-  /* Add a visual indicator for collapsed right panel */
-  border-left: 2px solid var(--color-accent);
+.aes-rightCollapsedBar {
+  background: var(--aes-panel-bg, #23272e);
+  border-left: 2px solid var(--aes-resizer, #007acc);
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 2;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
 }
 
-.leftCollapsedBar {
+.aes-leftCollapsedBar {
   /* Add a visual indicator for collapsed left panel */
-  border-right: 2px solid var(--color-accent);
+  border-right: 2px solid var(--aes-color-accent);
 }
 
-.collapsedBar:hover {
-  background: var(--color-resizer-hover);
+.aes-collapsedBar:hover {
+  background: var(--aes-color-resizer-hover);
 }
 
-.bottomCollapsedBar {
+.aes-bottomCollapsedBar {
   width: 100%;
   min-height: 6px;
   max-height: 100px;
@@ -289,14 +321,14 @@
   bottom: 0;
 }
 
-.themeToggle {
+.aes-themeToggle {
   position: absolute;
   top: 12px;
   right: 16px;
   z-index: 100;
-  background: var(--color-panel);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background: var(--aes-color-panel);
+  color: var(--aes-color-text);
+  border: 1px solid var(--aes-color-border);
   border-radius: 6px;
   padding: 6px 16px;
   font-size: 1rem;
@@ -307,33 +339,33 @@
     border 0.2s;
 }
 
-.themeToggle:hover {
-  background: var(--color-resizer-hover);
-  color: var(--color-title-text);
+.aes-themeToggle:hover {
+  background: var(--aes-color-resizer-hover);
+  color: var(--aes-color-title-text);
 }
 
 /* Tab Styles */
-.tabContainer {
+.aes-tabContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
+  background: var(--aes-color-panel);
+  border: 1px solid var(--aes-color-border);
   border-radius: 4px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-.tabContainerDragOver {
-  border-color: var(--color-resizer-hover);
-  background: var(--color-resizer);
+.aes-tabContainerDragOver {
+  border-color: var(--aes-color-resizer-hover);
+  background: var(--aes-color-resizer);
 }
 
-.tabBar {
+.aes-tabBar {
   display: flex;
-  background: var(--color-title-bg);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--aes-color-title-bg);
+  border-bottom: 1px solid var(--aes-color-border);
   overflow-x: auto;
   overflow-y: hidden;
   min-height: 32px;
@@ -341,12 +373,12 @@
 }
 
 /* Webkit scrollbar styling for better appearance */
-.tabBar::-webkit-scrollbar {
+.aes-tabBar::-webkit-scrollbar {
   height: 6px;
 }
 
 /* Ensure bottom pane tab bar can scroll properly */
-.bottomPanel .tabBar {
+.aes-bottomPanel .aes-tabBar {
   overflow-x: auto !important;
   overflow-y: hidden !important;
   max-width: 100%;
@@ -354,17 +386,17 @@
   min-height: 32px;
 }
 
-.bottomPanel .tabContainer {
+.aes-bottomPanel .aes-tabContainer {
   overflow: hidden;
   max-height: 100%;
 }
 
-.tab {
+.aes-tab {
   display: flex;
   align-items: center;
   padding: 8px 12px;
-  background: var(--color-panel);
-  border-right: 1px solid var(--color-border);
+  background: var(--aes-color-panel);
+  border-right: 1px solid var(--aes-color-border);
   cursor: pointer;
   user-select: none;
   min-width: 80px;
@@ -374,16 +406,16 @@
   position: relative;
 }
 
-.tab:hover {
-  background: var(--color-resizer);
+.aes-tab:hover {
+  background: var(--aes-color-resizer);
 }
 
-.tabActive {
-  background: var(--color-bg);
-  border-bottom: 2px solid var(--color-resizer-hover);
+.aes-tabActive {
+  background: var(--aes-color-bg);
+  border-bottom: 2px solid var(--aes-color-resizer-hover);
 }
 
-.tabTitle {
+.aes-tabTitle {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -392,10 +424,10 @@
   min-width: 0;
 }
 
-.tabCloseButton {
+.aes-tabCloseButton {
   background: none;
   border: none;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   cursor: pointer;
   padding: 2px 6px;
   margin-left: 8px;
@@ -411,104 +443,125 @@
   justify-content: center;
 }
 
-.tabCloseButton:hover {
-  background: var(--color-resizer-hover);
+.aes-tabCloseButton:hover {
+  background: var(--aes-color-resizer-hover);
   opacity: 1;
   color: #ff6b6b;
 }
 
-.tab:hover .tabCloseButton {
+.aes-tab:hover .aes-tabCloseButton {
   opacity: 1;
 }
 
-.tabAddButton {
-  background: var(--color-panel);
+.aes-tabAddButton {
+  background: var(--aes-color-panel);
   border: none;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   cursor: pointer;
   padding: 8px 12px;
   font-size: 1.2rem;
   line-height: 1;
   transition: background 0.2s;
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid var(--aes-color-border);
 }
 
-.tabAddButton:hover {
-  background: var(--color-resizer);
+.aes-tabAddButton:hover {
+  background: var(--aes-color-resizer);
 }
 
-.tabContent {
+.aes-tabSpacer {
+  flex: 1;
+  min-width: 0;
+}
+
+.aes-tabMinimizeButton {
+  background: var(--aes-color-panel);
+  border: none;
+  color: var(--aes-color-text);
+  cursor: pointer;
+  padding: 8px 6px;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.2s;
+  font-family: monospace;
+}
+
+.aes-tabMinimizeButton:hover {
+  background: var(--aes-color-resizer);
+}
+
+.aes-tabContent {
   flex: 1;
   overflow: auto;
   overflow-x: hidden;
   padding: 0;
-  background: var(--color-bg);
+  background: var(--aes-color-bg);
   min-width: 0;
   min-height: 0;
 }
 
-.tabEmpty {
+.aes-tabEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   text-align: center;
 }
 
-.tabEmpty p {
+.aes-tabEmpty p {
   margin-bottom: 16px;
   opacity: 0.7;
 }
 
-.tabEmpty button {
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
+.aes-tabEmpty button {
+  background: var(--aes-color-panel);
+  border: 1px solid var(--aes-color-border);
+  color: var(--aes-color-text);
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.tabEmpty button:hover {
-  background: var(--color-resizer);
+.aes-tabEmpty button:hover {
+  background: var(--aes-color-resizer);
 }
 
 /* Drag and Drop Visual Feedback */
-.tabDragOver {
-  background: var(--color-resizer-hover) !important;
-  border: 2px dashed var(--color-resizer-hover);
+.aes-tabDragOver {
+  background: var(--aes-color-resizer-hover) !important;
+  border: 2px dashed var(--aes-color-resizer-hover);
   opacity: 0.8;
 }
 
-.tabDropIndicator {
+.aes-tabDropIndicator {
   width: 3px;
   height: 24px;
-  background: var(--color-resizer-hover);
+  background: var(--aes-color-resizer-hover);
   margin: 4px 0;
   border-radius: 2px;
   flex-shrink: 0;
 }
 
-.emptyTabBarDropIndicator {
+.aes-emptyTabBarDropIndicator {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px 8px;
-  background: var(--color-resizer-hover);
-  color: var(--color-text);
+  background: var(--aes-color-resizer-hover);
+  color: var(--aes-color-text);
   font-size: 0.8rem;
   border-radius: 3px;
   margin: 2px 4px;
-  border: 1px dashed var(--color-resizer-hover);
+  border: 1px dashed var(--aes-color-resizer-hover);
   height: 20px;
   flex-shrink: 0;
   max-width: 120px;
 }
 
-.centerDropZone {
+.aes-centerDropZone {
   position: absolute;
   top: 0;
   left: 0;
@@ -522,108 +575,113 @@
   pointer-events: none;
 }
 
-.centerDropIndicator {
-  background: var(--color-panel);
-  border: 2px dashed var(--color-resizer-hover);
+.aes-centerDropIndicator {
+  background: var(--aes-color-panel);
+  border: 2px dashed var(--aes-color-resizer-hover);
   border-radius: 8px;
   padding: 16px 24px;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   font-weight: bold;
   font-size: 1.1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* View Styles */
-.viewContainer {
+.aes-viewContainer {
   padding: 20px;
   height: 100%;
   overflow: visible;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--aes-color-bg);
+  color: var(--aes-color-text);
 }
 
-.viewHeader {
+.aes-viewHeader {
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--aes-color-border);
 }
 
-.viewHeader h2 {
+.aes-viewHeader h2 {
   margin: 0 0 8px 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-title-text);
+  color: var(--aes-color-title-text);
 }
 
-.viewHeader p {
+.aes-viewHeader p {
   margin: 0;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   opacity: 0.8;
   font-size: 0.9rem;
 }
 
-.configSection {
+.aes-configSection {
   margin-bottom: 32px;
   overflow: visible;
 }
 
-.configSection h3 {
+.aes-configSection h3 {
   margin: 0 0 16px 0;
   font-size: 1.1rem;
   font-weight: 500;
-  color: var(--color-title-text);
+  color: var(--aes-color-title-text);
 }
 
-.configSection p {
+.aes-configSection p {
   margin: 0 0 16px 0;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   opacity: 0.8;
   font-size: 0.9rem;
 }
 
-.placeholderText {
+.aes-placeholderText {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: var(--color-panel);
-  border: 1px dashed var(--color-border);
+  background: var(--aes-color-panel);
+  border: 1px dashed var(--aes-color-border);
   border-radius: 6px;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   opacity: 0.6;
   font-style: italic;
 }
 
-/* Global Scrollbar Styles */
-* {
+/* Scoped Scrollbar Styles - only apply within our components */
+.aes-appShellContainer *,
+.aes-workspaceContainer * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-scrollbar) var(--color-panel);
+  scrollbar-color: var(--aes-color-scrollbar) var(--aes-color-panel);
 }
 
-*::-webkit-scrollbar {
+.aes-appShellContainer *::-webkit-scrollbar,
+.aes-workspaceContainer *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-*::-webkit-scrollbar-track {
-  background: var(--color-panel);
+.aes-appShellContainer *::-webkit-scrollbar-track,
+.aes-workspaceContainer *::-webkit-scrollbar-track {
+  background: var(--aes-color-panel);
   border-radius: 4px;
 }
 
-*::-webkit-scrollbar-thumb {
-  background: var(--color-scrollbar);
+.aes-appShellContainer *::-webkit-scrollbar-thumb,
+.aes-workspaceContainer *::-webkit-scrollbar-thumb {
+  background: var(--aes-color-scrollbar);
   border-radius: 4px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--aes-color-border);
 }
 
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--color-scrollbar-hover);
+.aes-appShellContainer *::-webkit-scrollbar-thumb:hover,
+.aes-workspaceContainer *::-webkit-scrollbar-thumb:hover {
+  background: var(--aes-color-scrollbar-hover);
 }
 
 /* View Dropdown Styles */
-.viewDropdown {
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
+.aes-viewDropdown {
+  background: var(--aes-color-panel, var(--color-panel, #2a2a2a));
+  border: 1px solid var(--aes-color-border, var(--color-border, #444));
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   min-width: 250px;
@@ -632,61 +690,128 @@
   overflow-y: auto;
   z-index: 9999;
   position: fixed;
+  /* Ensure the dropdown doesn't inherit unwanted styles from upstream projects */
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--aes-color-text, var(--color-text, #ffffff));
+  /* Reset any potential conflicts */
+  transform: none;
+  margin: 0;
+  padding: 0;
+  /* Ensure proper stacking context */
+  isolation: isolate;
+  /* Themed scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: var(--aes-color-scrollbar, var(--color-scrollbar, #555))
+    var(--aes-color-panel, var(--color-panel, #2a2a2a));
 }
 
-.viewDropdownContent {
+/* Themed scrollbar styles for ViewDropdown */
+.aes-viewDropdown::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.aes-viewDropdown::-webkit-scrollbar-track {
+  background: var(--aes-color-panel, var(--color-panel, #2a2a2a));
+  border-radius: 4px;
+}
+
+.aes-viewDropdown::-webkit-scrollbar-thumb {
+  background: var(--aes-color-scrollbar, var(--color-scrollbar, #555));
+  border-radius: 4px;
+  border: 1px solid var(--aes-color-border, var(--color-border, #444));
+}
+
+.aes-viewDropdown::-webkit-scrollbar-thumb:hover {
+  background: var(
+    --aes-color-scrollbar-hover,
+    var(--color-scrollbar-hover, #666)
+  );
+}
+
+.aes-viewDropdownContent {
   padding: 8px 0;
+  /* Reset any potential conflicts */
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.viewCategory {
+.aes-viewCategory {
   margin-bottom: 8px;
+  /* Defensive styles for upstream compatibility */
+  box-sizing: border-box;
 }
 
-.viewCategoryTitle {
+.aes-viewCategoryTitle {
   padding: 8px 16px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--aes-color-text, var(--color-text, #ffffff));
   opacity: 0.7;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--aes-color-border, var(--color-border, #444));
   margin-bottom: 4px;
 }
 
-.viewOption {
+.aes-viewOption {
   display: flex;
   align-items: center;
   padding: 8px 16px;
   cursor: pointer;
   transition: background 0.2s;
   gap: 12px;
+  /* Defensive styles for upstream compatibility */
+  box-sizing: border-box;
+  position: relative;
+  margin: 0;
+  border: none;
+  outline: none;
+  text-decoration: none;
 }
 
-.viewOption:hover {
-  background: var(--color-resizer-hover);
+.aes-viewOption:hover {
+  background: var(
+    --aes-color-resizer-hover,
+    var(--color-resizer-hover, #404040)
+  );
 }
 
-.viewIcon {
+.aes-viewIcon {
   font-size: 1.2rem;
   width: 20px;
   text-align: center;
 }
 
-.viewInfo {
+.aes-viewInfo {
   flex: 1;
   min-width: 0;
 }
 
-.viewTitle {
+.aes-viewTitle {
   font-weight: 500;
-  color: var(--color-text);
+  color: var(--aes-color-text, var(--color-text, #ffffff));
   margin-bottom: 2px;
 }
 
-.viewDescription {
+.aes-viewDescription {
   font-size: 0.8rem;
-  color: var(--color-text);
+  color: var(--aes-color-text, var(--color-text, #ffffff));
   opacity: 0.7;
   line-height: 1.3;
+}
+
+.aes-mainCollapsedBar {
+  background: var(--aes-panel-bg, #23272e);
+  border-left: 2px solid var(--aes-resizer, #007acc);
+  border-right: 2px solid var(--aes-resizer, #007acc);
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 2;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
 }

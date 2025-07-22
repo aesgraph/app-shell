@@ -1,4 +1,4 @@
-.themeSelector {
+.aes-themeSelector {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
@@ -6,107 +6,107 @@
   overflow: visible;
 }
 
-.themeOption {
+.aes-themeOption {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   padding: 16px;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--aes-color-border);
   border-radius: 8px;
   transition: all 0.2s;
-  background: var(--color-panel);
+  background: var(--aes-color-panel);
   min-width: 120px;
   overflow: visible;
 }
 
-.themeOption:hover {
-  border-color: var(--color-resizer-hover);
-  background: var(--color-bg);
+.aes-themeOption:hover {
+  border-color: var(--aes-color-resizer-hover);
+  background: var(--aes-color-bg);
 }
 
-.themeOption input[type="radio"] {
+.aes-themeOption input[type="radio"] {
   display: none;
 }
 
-.themeOption input[type="radio"]:checked ~ .themePreview {
-  border-color: var(--color-resizer-hover);
-  box-shadow: 0 0 0 2px var(--color-resizer-hover);
+.aes-themeOption input[type="radio"]:checked ~ .aes-themePreview {
+  border-color: var(--aes-color-resizer-hover);
+  box-shadow: 0 0 0 2px var(--aes-color-resizer-hover);
 }
 
-.themeOption input[type="radio"]:checked ~ span {
-  color: var(--color-resizer-hover);
+.aes-themeOption input[type="radio"]:checked ~ span {
+  color: var(--aes-color-resizer-hover);
   font-weight: 500;
 }
 
-.themePreview {
+.aes-themePreview {
   width: 80px;
   height: 60px;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--aes-color-border);
   border-radius: 6px;
   overflow: hidden;
   transition: all 0.2s;
 }
 
-.themePreviewHeader {
+.aes-themePreviewHeader {
   height: 16px;
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 2px 6px;
-  background: var(--color-title-bg);
+  background: var(--aes-color-title-bg);
 }
 
-.themePreviewDot {
+.aes-themePreviewDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
 }
 
-.themePreviewContent {
+.aes-themePreviewContent {
   flex: 1;
   padding: 4px;
 }
 
-.themeOption span {
+.aes-themeOption span {
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   transition: color 0.2s;
 }
 
-.themeDetails {
+.aes-themeDetails {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--aes-color-border);
   border-radius: 8px;
-  background: var(--color-panel);
+  background: var(--aes-color-panel);
 }
 
-.colorGrid {
+.aes-colorGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 16px;
 }
 
-.colorSwatch {
+.aes-colorSwatch {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
-.colorPreview {
+.aes-colorPreview {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--aes-color-border);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.colorSwatch span {
+.aes-colorSwatch span {
   font-size: 0.8rem;
-  color: var(--color-text);
+  color: var(--aes-color-text);
   text-align: center;
   opacity: 0.8;
 }

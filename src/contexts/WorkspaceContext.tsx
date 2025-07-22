@@ -25,6 +25,7 @@ export interface WorkspaceState {
   leftCollapsed: boolean;
   rightCollapsed: boolean;
   bottomCollapsed: boolean;
+  mainCollapsed: boolean;
 
   // Theme and config
   currentTheme: ThemeId;
@@ -32,6 +33,50 @@ export interface WorkspaceState {
 
   // Tab containers
   tabContainers: TabContainerData[];
+}
+
+// Interface for saved layout state
+interface SavedLayoutState {
+  leftWidth: number;
+  rightWidth: number;
+  bottomHeight: number;
+  leftCollapsed: boolean;
+  rightCollapsed: boolean;
+  bottomCollapsed: boolean;
+  mainCollapsed: boolean;
+}
+
+// Type for the saved workspace state (matching WorkspaceManager expectations)
+interface SavedWorkspaceState {
+  id: string;
+  name: string;
+  timestamp: number;
+  config?: WorkspaceConfig;
+  workspaceConfig?: WorkspaceConfig;
+  theme?: ThemeId;
+  currentTheme?: ThemeId;
+  panelSizes?: {
+    leftWidth: number;
+    rightWidth: number;
+    bottomHeight: number;
+  };
+  leftWidth?: number;
+  rightWidth?: number;
+  bottomHeight?: number;
+  leftCollapsed?: boolean;
+  rightCollapsed?: boolean;
+  bottomCollapsed?: boolean;
+  mainCollapsed?: boolean;
+  tabContainers: Array<{
+    id: string;
+    tabs: Array<{
+      id: string;
+      title: string;
+      content?: string;
+      closable?: boolean;
+    }>;
+    activeTabId?: string;
+  }>;
 }
 
 export interface WorkspaceContextType extends WorkspaceState {
@@ -44,6 +89,7 @@ export interface WorkspaceContextType extends WorkspaceState {
   setLeftCollapsed: (collapsed: boolean) => void;
   setRightCollapsed: (collapsed: boolean) => void;
   setBottomCollapsed: (collapsed: boolean) => void;
+  setMainCollapsed: (collapsed: boolean) => void;
 
   // Theme setter
   setCurrentTheme: (theme: ThemeId) => void;
@@ -88,6 +134,18 @@ export interface WorkspaceContextType extends WorkspaceState {
   // View management
   addView: (containerId: string, view: ViewDefinition) => void;
   getAvailableViews: () => ViewDefinition[];
+
+  // Pane maximization
+  maximizePane: (paneId: "left" | "right" | "bottom" | "center") => void;
+
+  // Minimize specific pane
+  minimizePane: (paneId: "left" | "right" | "bottom" | "center") => void;
+
+  // Restore all panes to normal state
+  restorePanes: () => void;
+
+  // Check if any pane is currently maximized
+  isAnyPaneMaximized: () => boolean;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
@@ -139,12 +197,17 @@ export const WorkspaceProvider = ({
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [bottomCollapsed, setBottomCollapsed] = useState(false);
+  const [mainCollapsed, setMainCollapsed] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<ThemeId>(
     workspaceConfig.theme
   );
   const [currentWorkspaceConfig, setWorkspaceConfig] =
     useState(workspaceConfig);
   const [tabContainers, setTabContainers] = useState<TabContainerData[]>([]);
+
+  // Saved layout state for maximize/restore functionality
+  const [savedLayoutState, setSavedLayoutState] =
+    useState<SavedLayoutState | null>(null);
 
   // Tab event handlers
   const handleTabSelect = useCallback((containerId: string, tabId: string) => {
@@ -339,6 +402,125 @@ export const WorkspaceProvider = ({
     return globalViewRegistry.getAllViews();
   }, []);
 
+  // Pane maximization
+  const maximizePane = useCallback(
+    (paneId: "left" | "right" | "bottom" | "center") => {
+      // If any pane is already maximized, restore first
+      if (savedLayoutState !== null) {
+        // Restore to the saved layout state
+        setLeftWidth(savedLayoutState.leftWidth);
+        setRightWidth(savedLayoutState.rightWidth);
+        setBottomHeight(savedLayoutState.bottomHeight);
+        setLeftCollapsed(savedLayoutState.leftCollapsed);
+        setRightCollapsed(savedLayoutState.rightCollapsed);
+        setBottomCollapsed(savedLayoutState.bottomCollapsed);
+        setMainCollapsed(savedLayoutState.mainCollapsed);
+        // Clear the saved state
+        setSavedLayoutState(null);
+        return;
+      }
+
+      // Save current layout state before maximizing
+      const currentLayout: SavedLayoutState = {
+        leftWidth,
+        rightWidth,
+        bottomHeight,
+        leftCollapsed,
+        rightCollapsed,
+        bottomCollapsed,
+        mainCollapsed,
+      };
+      setSavedLayoutState(currentLayout);
+
+      if (paneId === "left") {
+        // Maximize left pane: expand it and collapse others
+        setLeftWidth(currentWorkspaceConfig.leftPane.defaultSize);
+        setLeftCollapsed(false);
+        setRightCollapsed(true);
+        setBottomCollapsed(true);
+        setMainCollapsed(true);
+      } else if (paneId === "right") {
+        // Maximize right pane: expand it and collapse others
+        setRightWidth(currentWorkspaceConfig.rightPane.defaultSize);
+        setRightCollapsed(false);
+        setLeftCollapsed(true);
+        setBottomCollapsed(true);
+        setMainCollapsed(true);
+      } else if (paneId === "bottom") {
+        // Maximize bottom pane: expand it and collapse others
+        setBottomHeight(currentWorkspaceConfig.bottomPane.defaultSize);
+        setBottomCollapsed(false);
+        setLeftCollapsed(true);
+        setRightCollapsed(true);
+        setMainCollapsed(true);
+      } else if (paneId === "center") {
+        // Maximize center pane: collapse all side panes
+        setLeftCollapsed(true);
+        setRightCollapsed(true);
+        setBottomCollapsed(true);
+        setMainCollapsed(false);
+      }
+    },
+    [
+      currentWorkspaceConfig,
+      leftWidth,
+      rightWidth,
+      bottomHeight,
+      leftCollapsed,
+      rightCollapsed,
+      bottomCollapsed,
+      mainCollapsed,
+      savedLayoutState,
+    ]
+  );
+
+  // Minimize specific pane
+  const minimizePane = useCallback(
+    (paneId: "left" | "right" | "bottom" | "center") => {
+      if (paneId === "left") {
+        setLeftCollapsed(true);
+      } else if (paneId === "right") {
+        setRightCollapsed(true);
+      } else if (paneId === "bottom") {
+        setBottomCollapsed(true);
+      } else if (paneId === "center") {
+        setMainCollapsed(true);
+      }
+    },
+    []
+  );
+
+  // Restore all panes to normal state
+  const restorePanes = useCallback(() => {
+    if (savedLayoutState) {
+      // Restore to the saved layout state
+      setLeftWidth(savedLayoutState.leftWidth);
+      setRightWidth(savedLayoutState.rightWidth);
+      setBottomHeight(savedLayoutState.bottomHeight);
+      setLeftCollapsed(savedLayoutState.leftCollapsed);
+      setRightCollapsed(savedLayoutState.rightCollapsed);
+      setBottomCollapsed(savedLayoutState.bottomCollapsed);
+      setMainCollapsed(savedLayoutState.mainCollapsed);
+      // Clear the saved state after restoring
+      setSavedLayoutState(null);
+    } else {
+      // Fallback to default layout if no saved state
+      setLeftCollapsed(false);
+      setRightCollapsed(false);
+      setBottomCollapsed(false);
+      setMainCollapsed(false);
+      // Reset sizes to defaults
+      setLeftWidth(currentWorkspaceConfig.leftPane.defaultSize);
+      setRightWidth(currentWorkspaceConfig.rightPane.defaultSize);
+      setBottomHeight(currentWorkspaceConfig.bottomPane.defaultSize);
+    }
+  }, [savedLayoutState, currentWorkspaceConfig]);
+
+  // Check if any pane is currently maximized (indicated by having a saved layout state)
+  const isAnyPaneMaximized = useCallback(() => {
+    return savedLayoutState !== null;
+  }, [savedLayoutState]);
+
   // Apply CSS variables when theme changes
   useEffect(() => {
     const theme = themes[currentTheme];
@@ -449,7 +631,7 @@ export const WorkspaceProvider = ({
               activeTabId: "explorer",
             },
             {
-              id: "main-pane",
+              id: "center-pane",
               tabs: [
                 {
                   id: "workspace-manager",
@@ -503,7 +685,7 @@ export const WorkspaceProvider = ({
             activeTabId: "explorer",
           },
           {
-            id: "main-pane",
+            id: "center-pane",
             tabs: [
               {
                 id: "workspace-manager",
@@ -556,7 +738,7 @@ export const WorkspaceProvider = ({
           activeTabId: "explorer",
         },
         {
-          id: "main-pane",
+          id: "center-pane",
           tabs: [
             {
               id: "workspace-manager",
@@ -595,6 +777,174 @@ export const WorkspaceProvider = ({
     }
   }, []);
 
+  // Create enhanced workspace state getter for global access
+  const getCurrentWorkspaceState = useCallback(() => {
+    return {
+      leftWidth,
+      rightWidth,
+      bottomHeight,
+      leftCollapsed,
+      rightCollapsed,
+      bottomCollapsed,
+      mainCollapsed,
+      currentTheme,
+      workspaceConfig: currentWorkspaceConfig,
+      tabContainers: tabContainers.map((container) => ({
+        ...container,
+        tabs: container.tabs.map((tab) => ({
+          id: tab.id,
+          title: tab.title,
+          closable: tab.closable ?? true,
+          // Use viewId if available, otherwise fall back to string content
+          content:
+            tab.id ||
+            (typeof tab.content === "string" ? tab.content : tab.title),
+          viewProps: tab.content || {},
+        })),
+      })),
+      // Also include panelSizes for compatibility with WorkspaceManager
+      panelSizes: {
+        leftWidth,
+        rightWidth,
+        bottomHeight,
+      },
+    };
+  }, [
+    leftWidth,
+    rightWidth,
+    bottomHeight,
+    leftCollapsed,
+    rightCollapsed,
+    bottomCollapsed,
+    mainCollapsed,
+    currentTheme,
+    currentWorkspaceConfig,
+    tabContainers,
+  ]);
+
+  // Expose functions globally for WorkspaceManager (following app-shell-3 pattern)
+  useEffect(() => {
+    (
+      globalThis as {
+        getCurrentWorkspaceState?: () => Omit<
+          WorkspaceState,
+          "id" | "name" | "timestamp"
+        >;
+        restoreWorkspaceState?: (state: SavedWorkspaceState) => void;
+      }
+    ).getCurrentWorkspaceState = getCurrentWorkspaceState;
+    (
+      globalThis as {
+        getCurrentWorkspaceState?: () => Omit<
+          WorkspaceState,
+          "id" | "name" | "timestamp"
+        >;
+        restoreWorkspaceState?: (state: SavedWorkspaceState) => void;
+      }
+    ).restoreWorkspaceState = (state: SavedWorkspaceState) => {
+      // Set theme
+      setCurrentTheme(state.theme || state.currentTheme || "dark");
+
+      // Set panel sizes
+      if (state.panelSizes) {
+        setLeftWidth(state.panelSizes.leftWidth);
+        setRightWidth(state.panelSizes.rightWidth);
+        setBottomHeight(state.panelSizes.bottomHeight);
+      } else {
+        // Fallback to individual properties
+        setLeftWidth(state.leftWidth || 240);
+        setRightWidth(state.rightWidth || 320);
+        setBottomHeight(state.bottomHeight || 180);
+      }
+
+      // Set collapsed states (crucial for proper restoration)
+      setLeftCollapsed(state.leftCollapsed || false);
+      setRightCollapsed(state.rightCollapsed || false);
+      setBottomCollapsed(state.bottomCollapsed || false);
+      setMainCollapsed(state.mainCollapsed || false);
+
+      // Set config
+      if (state.config || state.workspaceConfig) {
+        setWorkspaceConfig(state.config || state.workspaceConfig!);
+      }
+
+      // Set tab containers with proper React components
+      setTabContainers(
+        state.tabContainers.map((container) => ({
+          ...container,
+          tabs: container.tabs.map((tab) => {
+            // Create proper React components based on tab ID
+            let content: React.ReactNode;
+
+            // First, try to find the view in the global registry
+            const baseViewId = tab.id.replace(/-\d+$/, ""); // Remove timestamp suffix
+            let viewDefinition = globalViewRegistry.getView(tab.id); // Try exact match first
+            if (!viewDefinition) {
+              viewDefinition = globalViewRegistry.getView(baseViewId); // Try base ID
+            }
+
+            if (viewDefinition) {
+              content = React.createElement(
+                viewDefinition.component,
+                viewDefinition.props || {}
+              );
+            } else {
+              // Fallback to hardcoded components for backwards compatibility
+              if (tab.id === "workspace-manager") {
+                content = <WorkspaceManager />;
+              } else if (tab.id === "workspace-config") {
+                content = <WorkspaceConfigEditor />;
+              } else {
+                // For other tabs, use the saved content or fallback to title
+                content = tab.content ? (
+                  <div>{tab.content}</div>
+                ) : (
+                  <div>{tab.title}</div>
+                );
+              }
+            }
+
+            return {
+              ...tab,
+              content,
+              closable: tab.closable ?? true,
+            };
+          }),
+        }))
+      );
+
+      console.log("Workspace state restored with:", {
+        leftWidth: state.leftWidth || state.panelSizes?.leftWidth,
+        rightWidth: state.rightWidth || state.panelSizes?.rightWidth,
+        bottomHeight: state.bottomHeight || state.panelSizes?.bottomHeight,
+        leftCollapsed: state.leftCollapsed,
+        rightCollapsed: state.rightCollapsed,
+        bottomCollapsed: state.bottomCollapsed,
+      });
+    };
+
+    return () => {
+      delete (
+        globalThis as {
+          getCurrentWorkspaceState?: () => Omit<
+            WorkspaceState,
+            "id" | "name" | "timestamp"
+          >;
+          restoreWorkspaceState?: (state: SavedWorkspaceState) => void;
+        }
+      ).getCurrentWorkspaceState;
+      delete (
+        globalThis as {
+          getCurrentWorkspaceState?: () => Omit<
+            WorkspaceState,
+            "id" | "name" | "timestamp"
+          >;
+          restoreWorkspaceState?: (state: SavedWorkspaceState) => void;
+        }
+      ).restoreWorkspaceState;
+    };
+  }, [getCurrentWorkspaceState, loadWorkspace]);
+
   const contextValue: WorkspaceContextType = {
     // State
     leftWidth,
@@ -603,6 +953,7 @@ export const WorkspaceProvider = ({
     leftCollapsed,
     rightCollapsed,
     bottomCollapsed,
+    mainCollapsed,
     currentTheme,
     workspaceConfig: currentWorkspaceConfig,
     tabContainers,
@@ -616,6 +967,7 @@ export const WorkspaceProvider = ({
     setLeftCollapsed,
     setRightCollapsed,
     setBottomCollapsed,
+    setMainCollapsed,
 
     // Theme setter
     setCurrentTheme,
@@ -638,6 +990,18 @@ export const WorkspaceProvider = ({
     // View management
     addView,
     getAvailableViews,
+
+    // Pane maximization
+    maximizePane,
+
+    // Minimize pane
+    minimizePane,
+
+    // Restore panes
+    restorePanes,
+
+    // Check if maximized
+    isAnyPaneMaximized,
   };
 
   return (

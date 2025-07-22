@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Namespace Test</title>
+    <style>
+      /* Simulate upstream project styles that might conflict */
+      .workspaceContainer {
+        background: red !important;
+        border: 5px solid blue !important;
+      }
+
+      .topRow {
+        background: green !important;
+      }
+
+      .bottomRow {
+        background: yellow !important;
+      }
+
+      /* These should NOT conflict with aes- prefixed classes */
+      .aes-workspaceContainer {
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+      }
+
+      .test-container {
+        padding: 20px;
+        margin: 20px;
+        border: 2px dashed #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>CSS Namespace Conflict Test</h1>
+
+      <div class="workspaceContainer">
+        <h2>Legacy Class (should be RED with BLUE border)</h2>
+        <p>
+          This div uses the old non-namespaced class name and should show
+          conflicts
+        </p>
+      </div>
+
+      <div class="aes-workspaceContainer">
+        <h2>Namespaced Class (should be light gray)</h2>
+        <p>This div uses the new aes- prefixed class and should NOT conflict</p>
+      </div>
+
+      <div class="topRow">
+        <h3>Legacy topRow (should be GREEN)</h3>
+      </div>
+
+      <div class="aes-topRow">
+        <h3>Namespaced aes-topRow (should be normal)</h3>
+      </div>
+
+      <p>
+        <strong>Test Result:</strong> If the aes- prefixed elements look normal
+        while the legacy elements show conflicts, the namespacing is working
+        correctly!
+      </p>
+    </div>
+  </body>
+</html>

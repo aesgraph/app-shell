@@ -46,44 +46,60 @@ const ViewDropdown = ({
     if (dropdownRef.current) {
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
 
-      // Find the nearest positioned container (appShellContainer)
-      let container = dropdownRef.current.parentElement;
-      while (
-        container &&
-        window.getComputedStyle(container).position === "static"
-      ) {
-        container = container.parentElement;
+      // Find the nearest positioned container (workspace container or body)
+      // Look specifically for our workspace container first
+      let container = document.querySelector(
+        ".aes-workspaceContainer"
+      ) as HTMLElement;
+
+      // If no workspace container found, find the nearest positioned ancestor
+      if (!container) {
+        let parent = dropdownRef.current.parentElement;
+        while (
+          parent &&
+          parent !== document.body &&
+          window.getComputedStyle(parent).position === "static"
+        ) {
+          parent = parent.parentElement;
+        }
+        container = parent || document.body;
       }
 
-      // Fall back to document.body if no positioned container found
-      if (!container) container = document.body;
-
-      const containerRect = container.getBoundingClientRect();
+      // Use viewport dimensions for document.body to avoid issues
+      const effectiveRect =
+        container === document.body
+          ? {
+              left: 0,
+              right: window.innerWidth,
+              top: 0,
+              bottom: window.innerHeight,
+            }
+          : container.getBoundingClientRect();
 
       let newX = position.x;
       let newY = position.y;
 
       // Check if dropdown goes off the right edge of container
-      if (dropdownRect.right > containerRect.right) {
-        newX = containerRect.right - dropdownRect.width - 20;
+      if (dropdownRect.right > effectiveRect.right) {
+        newX = effectiveRect.right - dropdownRect.width - 20;
       }
 
       // Check if dropdown goes off the left edge of container
-      if (dropdownRect.left < containerRect.left) {
-        newX = containerRect.left + 20;
+      if (dropdownRect.left < effectiveRect.left) {
+        newX = effectiveRect.left + 20;
       }
 
       // For bottom pane or if dropdown goes off bottom edge of container, show above button
       const isBottomPane = containerId === "bottom-pane";
-      const wouldGoOffBottom = dropdownRect.bottom > containerRect.bottom;
+      const wouldGoOffBottom = dropdownRect.bottom > effectiveRect.bottom;
 
       if (isBottomPane || wouldGoOffBottom) {
         newY = buttonRect.top - dropdownRect.height - 2;
       }
 
       // Check if dropdown goes off the top edge of container
-      if (newY < containerRect.top) {
-        newY = containerRect.top + 20;
+      if (newY < effectiveRect.top) {
+        newY = effectiveRect.top + 20;
       }
 
       setAdjustedPosition({ x: newX, y: newY });
@@ -110,8 +126,10 @@ const ViewDropdown = ({
   const dropdownContent = (
     <div
       ref={dropdownRef}
-      className={`${styles.viewDropdown} ${
-        styles[`theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`]
+      className={`${styles["aes-viewDropdown"]} ${
+        styles[`aes-theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`] ||
+        styles[`theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`] ||
+        ""
       }`}
       style={{
         position: "fixed",
@@ -120,23 +138,23 @@ const ViewDropdown = ({
         zIndex: 9999,
       }}
     >
-      <div className={styles.viewDropdownContent}>
+      <div className={styles["aes-viewDropdownContent"]}>
         {Object.entries(viewsByCategory).map(([category, categoryViews]) => (
-          <div key={category} className={styles.viewCategory}>
-            <div className={styles.viewCategoryTitle}>{category}</div>
+          <div key={category} className={styles["aes-viewCategory"]}>
+            <div className={styles["aes-viewCategoryTitle"]}>{category}</div>
             {categoryViews.map((view) => (
               <div
                 key={view.id}
-                className={styles.viewOption}
+                className={styles["aes-viewOption"]}
                 onClick={() => handleViewSelect(view)}
               >
                 {view.icon && (
-                  <span className={styles.viewIcon}>{view.icon}</span>
+                  <span className={styles["aes-viewIcon"]}>{view.icon}</span>
                 )}
-                <div className={styles.viewInfo}>
-                  <div className={styles.viewTitle}>{view.title}</div>
+                <div className={styles["aes-viewInfo"]}>
+                  <div className={styles["aes-viewTitle"]}>{view.title}</div>
                   {view.description && (
-                    <div className={styles.viewDescription}>
+                    <div className={styles["aes-viewDescription"]}>
                       {view.description}
                     </div>
                   )}
@@ -149,7 +167,8 @@ const ViewDropdown = ({
     </div>
   );
 
-  // Render the dropdown as a portal to avoid overflow clipping// Render the dropdown as a portal to avoid overflow clipping
+  // Render the dropdown as a portal to avoid overflow clipping
+  // Use document.body for consistent absolute positioning
   return createPortal(dropdownContent, document.body);
 };
 

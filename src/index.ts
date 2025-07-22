@@ -1,13 +1,13 @@
 // Main components
-export { default as Workspace } from "./components/Workspace";
-export { default as WorkspaceContainerDemo } from "./components/WorkspaceNew";
+export { default as WorkspaceGrid } from "./components/WorkspaceGrid"; // Recommended: Simpler, more reliable workspace
+export { default as WorkspaceContainerDemo } from "./components/WorkspaceContainer";
 export { default as Pane } from "./components/Pane";
 export { default as Tab } from "./components/Tab";
 export { default as TabContainer } from "./components/TabContainer";
 export { default as TabManager } from "./components/TabManager";
 export { default as ViewDropdown } from "./components/ViewDropdown";
 export { ThemeVariables } from "./components/ThemeVariables";
-export { ExampleThemedComponent } from "./components/ExampleThemedComponent";
+export { ExampleThemedComponent } from "./components/views/ExampleThemedComponent";
 
 // Views
 export { WorkspaceConfigEditor, WorkspaceManager } from "./components/views";

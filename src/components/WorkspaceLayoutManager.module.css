@@ -1,0 +1,338 @@
+/* Layout Manager Styles for react-resizable-panels */
+.layout-manager {
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5;
+  overflow: hidden;
+}
+
+.layout-manager.maximized {
+  display: block;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+}
+
+.left-pane,
+.center-pane,
+.right-pane,
+.bottom-pane {
+  height: 100%;
+}
+
+.maximized-pane {
+  width: 100%;
+  height: 100vh;
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 500;
+  color: #333;
+  min-height: 40px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.pane-title {
+  font-size: 14px;
+  color: #555;
+  user-select: none;
+}
+
+.pane-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.maximize-button {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.maximize-button:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #333;
+}
+
+.maximize-button:active {
+  background-color: #dee2e6;
+  transform: scale(0.98);
+}
+
+.pane-content {
+  flex: 1;
+  padding: 16px;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* Styles for react-resizable-panels resize handles */
+.resize-handle {
+  background-color: #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.resize-handle:hover {
+  background-color: #007acc;
+}
+
+.resize-handle:active {
+  background-color: #005999;
+}
+
+.vertical-handle {
+  width: 4px;
+  cursor: ew-resize;
+}
+
+.horizontal-handle {
+  height: 4px;
+  cursor: ns-resize;
+}
+
+/* react-resizable-panels data attributes */
+[data-panel-group-direction="vertical"] {
+  height: 100%;
+}
+
+[data-panel-group-direction="horizontal"] {
+  height: 100%;
+}
+
+[data-panel] {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Allow panels to collapse to zero */
+[data-panel][data-panel-size="0.0"],
+[data-panel][data-panel-size="0"],
+[data-panel][data-panel-size="0.00"] {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  flex-basis: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Specific fix for center panel collapse */
+[data-panel-group-direction="horizontal"]
+  [data-panel]:nth-child(3)[data-panel-size="0.0"],
+[data-panel-group-direction="horizontal"]
+  [data-panel]:nth-child(3)[data-panel-size="0"],
+[data-panel-group-direction="horizontal"]
+  [data-panel]:nth-child(3)[data-panel-size="0.00"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex-basis: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 1 !important;
+}
+
+/* Force zero dimensions on all collapsed panel children */
+[data-panel][data-panel-size="0.0"] *,
+[data-panel][data-panel-size="0"] *,
+[data-panel][data-panel-size="0.00"] * {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+[data-panel][data-panel-size="0.0"] .pane,
+[data-panel][data-panel-size="0"] .pane,
+[data-panel][data-panel-size="0.00"] .pane {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  flex: 0 0 0 !important;
+}
+
+/* Force collapsed state for panels with size 0 - Additional specificity */
+[data-panel-group-direction="horizontal"] [data-panel][data-panel-size="0.0"],
+[data-panel-group-direction="horizontal"] [data-panel][data-panel-size="0"],
+[data-panel-group-direction="horizontal"] [data-panel][data-panel-size="0.00"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex-basis: 0 !important;
+}
+
+[data-panel-group-direction="vertical"] [data-panel][data-panel-size="0.0"],
+[data-panel-group-direction="vertical"] [data-panel][data-panel-size="0"],
+[data-panel-group-direction="vertical"] [data-panel][data-panel-size="0.00"] {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  flex-basis: 0 !important;
+}
+
+/* Resize handle styles */
+[data-panel-resize-handle-enabled="true"] {
+  background-color: #e0e0e0;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+[data-panel-resize-handle-enabled="true"]:hover {
+  background-color: #007acc;
+}
+
+[data-panel-resize-handle-enabled="true"]:active {
+  background-color: #005999;
+}
+
+/* Enhanced resize handle visibility */
+[data-panel-resize-handle-enabled="true"]:before {
+  content: "";
+  position: absolute;
+  background-color: rgba(0, 122, 204, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+[data-panel-resize-handle-enabled="true"]:hover:before {
+  opacity: 1;
+}
+
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"] {
+  width: 4px;
+  cursor: ew-resize;
+}
+
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"]:before {
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  right: -2px;
+}
+
+[data-panel-group-direction="vertical"]
+  > [data-panel-resize-handle-enabled="true"] {
+  height: 4px;
+  cursor: ns-resize;
+}
+
+[data-panel-group-direction="vertical"]
+  > [data-panel-resize-handle-enabled="true"]:before {
+  left: 0;
+  right: 0;
+  top: -2px;
+  bottom: -2px;
+}
+
+/* Collapse indicator dots */
+[data-panel-resize-handle-enabled="true"]:after {
+  content: "";
+  position: absolute;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.6) 2px,
+    rgba(255, 255, 255, 0.6) 4px
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 1px;
+}
+
+[data-panel-resize-handle-enabled="true"]:hover:after {
+  opacity: 1;
+}
+
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"]:after {
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+}
+
+[data-panel-group-direction="vertical"]
+  > [data-panel-resize-handle-enabled="true"]:after {
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .layout-manager {
+    flex-direction: column;
+  }
+
+  .vertical-handle {
+    height: 4px;
+    width: 100%;
+    cursor: ns-resize;
+  }
+
+  [data-panel-group-direction="horizontal"]
+    > [data-panel-resize-handle-enabled="true"] {
+    height: 4px;
+    width: 100%;
+    cursor: ns-resize;
+  }
+}
+
+/* Scrollbar styling */
+.pane-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.pane-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.pane-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.pane-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
