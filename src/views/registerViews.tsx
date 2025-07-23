@@ -116,7 +116,7 @@ const OutputView = () => (
       [INFO] Layout system ready
     </div>
     <div style={{ color: "#666", marginTop: "4px" }}>
-      [DEBUG] View registry loaded with 6 views
+      [DEBUG] View registry loaded with {Object.keys(globalViewRegistry).length} views
     </div>
     <div style={{ color: "#009900", marginTop: "4px" }}>
       [SUCCESS] All systems operational
