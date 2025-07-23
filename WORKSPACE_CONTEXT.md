@@ -16,13 +16,13 @@ The Workspace Context provides a centralized way to manage saved layouts and wor
 ### 1. Wrap Your App with WorkspaceProvider
 
 ```tsx
-import React from 'react';
-import { WorkspaceProvider } from '@your-org/app-shell';
-import { YourApp } from './YourApp';
+import React from "react";
+import { WorkspaceProvider } from "@your-org/app-shell";
+import { YourApp } from "./YourApp";
 
 function App() {
   const handleWorkspaceChange = (workspace) => {
-    console.log('Active workspace changed:', workspace?.name);
+    console.log("Active workspace changed:", workspace?.name);
   };
 
   return (
@@ -39,8 +39,8 @@ function App() {
 ### 2. Use the Workspace Context in Components
 
 ```tsx
-import React from 'react';
-import { useWorkspace } from '@your-org/app-shell';
+import React from "react";
+import { useWorkspace } from "@your-org/app-shell";
 
 function MyWorkspaceComponent() {
   const {
@@ -51,7 +51,7 @@ function MyWorkspaceComponent() {
     deleteWorkspace,
     getAllWorkspaces,
     updateWorkspace,
-    duplicateWorkspace
+    duplicateWorkspace,
   } = useWorkspace();
 
   // Your component logic here
@@ -62,26 +62,26 @@ function MyWorkspaceComponent() {
 
 ### WorkspaceProvider Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Child components |
-| `storageKey` | `string` | `"layout-workspaces"` | localStorage key for persistence |
-| `onWorkspaceChange` | `(workspace: WorkspaceState \| null) => void` | - | Callback when current workspace changes |
+| Prop                | Type                                          | Default               | Description                             |
+| ------------------- | --------------------------------------------- | --------------------- | --------------------------------------- |
+| `children`          | `ReactNode`                                   | -                     | Child components                        |
+| `storageKey`        | `string`                                      | `"layout-workspaces"` | localStorage key for persistence        |
+| `onWorkspaceChange` | `(workspace: WorkspaceState \| null) => void` | -                     | Callback when current workspace changes |
 
 ### useWorkspace Hook Returns
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `savedWorkspaces` | `WorkspaceState[]` | Array of all saved workspaces |
-| `currentWorkspace` | `WorkspaceState \| null` | Currently active workspace |
-| `saveWorkspace` | `(state: WorkspaceState) => void` | Save or update a workspace |
-| `loadWorkspace` | `(id: string) => WorkspaceState \| null` | Load a workspace by ID |
-| `deleteWorkspace` | `(id: string) => void` | Delete a workspace |
-| `getAllWorkspaces` | `() => WorkspaceState[]` | Get all saved workspaces |
-| `getCurrentWorkspace` | `() => WorkspaceState \| null` | Get current workspace |
-| `setCurrentWorkspace` | `(workspace: WorkspaceState \| null) => void` | Set current workspace |
-| `updateWorkspace` | `(id: string, updates: Partial<WorkspaceState>) => void` | Update workspace properties |
-| `duplicateWorkspace` | `(id: string, newName?: string) => WorkspaceState \| null` | Duplicate a workspace |
+| Property              | Type                                                       | Description                   |
+| --------------------- | ---------------------------------------------------------- | ----------------------------- |
+| `savedWorkspaces`     | `WorkspaceState[]`                                         | Array of all saved workspaces |
+| `currentWorkspace`    | `WorkspaceState \| null`                                   | Currently active workspace    |
+| `saveWorkspace`       | `(state: WorkspaceState) => void`                          | Save or update a workspace    |
+| `loadWorkspace`       | `(id: string) => WorkspaceState \| null`                   | Load a workspace by ID        |
+| `deleteWorkspace`     | `(id: string) => void`                                     | Delete a workspace            |
+| `getAllWorkspaces`    | `() => WorkspaceState[]`                                   | Get all saved workspaces      |
+| `getCurrentWorkspace` | `() => WorkspaceState \| null`                             | Get current workspace         |
+| `setCurrentWorkspace` | `(workspace: WorkspaceState \| null) => void`              | Set current workspace         |
+| `updateWorkspace`     | `(id: string, updates: Partial<WorkspaceState>) => void`   | Update workspace properties   |
+| `duplicateWorkspace`  | `(id: string, newName?: string) => WorkspaceState \| null` | Duplicate a workspace         |
 
 ## Usage Examples
 
@@ -94,28 +94,30 @@ function SaveWorkspaceButton() {
   const handleSave = () => {
     const workspace: WorkspaceState = {
       id: `workspace-${Date.now()}`,
-      name: 'My Custom Layout',
+      name: "My Custom Layout",
       timestamp: Date.now(),
-      config: { /* your config */ },
+      config: {
+        /* your config */
+      },
       layout: {
         horizontal: [25, 50, 25],
-        vertical: [80, 20]
+        vertical: [80, 20],
       },
       tabContainers: [
         {
-          id: 'container-1',
+          id: "container-1",
           tabs: [
             {
-              id: 'tab-1',
-              title: 'My Tab',
-              content: 'Tab content',
-              closable: true
-            }
+              id: "tab-1",
+              title: "My Tab",
+              content: "Tab content",
+              closable: true,
+            },
           ],
-          activeTabId: 'tab-1'
-        }
+          activeTabId: "tab-1",
+        },
       ],
-      theme: 'dark'
+      theme: "dark",
     };
 
     saveWorkspace(workspace);
@@ -134,7 +136,7 @@ function WorkspaceSelector() {
   return (
     <select onChange={(e) => loadWorkspace(e.target.value)}>
       <option value="">Select a workspace...</option>
-      {savedWorkspaces.map(workspace => (
+      {savedWorkspaces.map((workspace) => (
         <option key={workspace.id} value={workspace.id}>
           {workspace.name}
         </option>
@@ -152,7 +154,7 @@ function WorkspaceManager() {
     getAllWorkspaces,
     updateWorkspace,
     duplicateWorkspace,
-    deleteWorkspace
+    deleteWorkspace,
   } = useWorkspace();
 
   const workspaces = getAllWorkspaces();
@@ -162,12 +164,12 @@ function WorkspaceManager() {
   };
 
   const cloneWorkspace = (id: string) => {
-    const cloned = duplicateWorkspace(id, 'Cloned Layout');
-    console.log('Created clone:', cloned);
+    const cloned = duplicateWorkspace(id, "Cloned Layout");
+    console.log("Created clone:", cloned);
   };
 
   const removeWorkspace = (id: string) => {
-    if (confirm('Delete this workspace?')) {
+    if (confirm("Delete this workspace?")) {
       deleteWorkspace(id);
     }
   };
@@ -175,18 +177,14 @@ function WorkspaceManager() {
   return (
     <div>
       <h3>Workspace Management</h3>
-      {workspaces.map(workspace => (
+      {workspaces.map((workspace) => (
         <div key={workspace.id}>
           <span>{workspace.name}</span>
-          <button onClick={() => renameWorkspace(workspace.id, 'New Name')}>
+          <button onClick={() => renameWorkspace(workspace.id, "New Name")}>
             Rename
           </button>
-          <button onClick={() => cloneWorkspace(workspace.id)}>
-            Clone
-          </button>
-          <button onClick={() => removeWorkspace(workspace.id)}>
-            Delete
-          </button>
+          <button onClick={() => cloneWorkspace(workspace.id)}>Clone</button>
+          <button onClick={() => removeWorkspace(workspace.id)}>Delete</button>
         </div>
       ))}
     </div>
@@ -230,8 +228,8 @@ interface WorkspaceState {
 The `WorkspaceManager` component from the app-shell automatically integrates with this context. Simply include both the `WorkspaceProvider` and `WorkspaceManager` in your app:
 
 ```tsx
-import React from 'react';
-import { WorkspaceProvider, WorkspaceManager } from '@your-org/app-shell';
+import React from "react";
+import { WorkspaceProvider, WorkspaceManager } from "@your-org/app-shell";
 
 function App() {
   return (
@@ -269,7 +267,7 @@ If you're currently using localStorage directly for workspace management, migrat
 
 ```tsx
 // Before (direct localStorage)
-const savedWorkspaces = JSON.parse(localStorage.getItem('workspaces') || '[]');
+const savedWorkspaces = JSON.parse(localStorage.getItem("workspaces") || "[]");
 
 // After (using context)
 const { savedWorkspaces } = useWorkspace();

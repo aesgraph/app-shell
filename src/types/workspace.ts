@@ -5,12 +5,14 @@ export interface WorkspaceState {
   name: string;
   timestamp: number;
   config: WorkspaceConfig;
-  layout: { // Direct panel layout arrays - the source of truth
+  layout: {
+    // Direct panel layout arrays - the source of truth
     horizontal: number[];
     vertical: number[];
   };
   maximizedPane?: string | null; // Track which pane is maximized
-  savedLayout?: { // Store pre-maximized layout for restore
+  savedLayout?: {
+    // Store pre-maximized layout for restore
     horizontal: number[];
     vertical: number[];
   } | null;
