@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "../contexts/useTheme";
+import { useTheme } from "../contexts/useAppShell";
 
 /**
  * React component that provides theme styles as CSS variables to its children

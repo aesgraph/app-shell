@@ -20,7 +20,7 @@ interface TabProps {
   isDragOver?: boolean;
 }
 
-const Tab = ({
+export const Tab = ({
   tab,
   isActive,
   onSelect,
@@ -36,18 +36,18 @@ const Tab = ({
 
   return (
     <div
-      className={`${styles.tab} ${isActive ? styles.tabActive : ""} ${
-        isDragOver ? styles.tabDragOver : ""
+      className={`${styles["aes-tab"]} ${isActive ? styles["aes-tabActive"] : ""} ${
+        isDragOver ? styles["aes-tabDragOver"] : ""
       }`}
       onClick={() => onSelect(tab.id)}
       draggable
       onDragStart={(e) => onDragStart(e, tab.id)}
       onDragEnd={onDragEnd}
     >
-      <span className={styles.tabTitle}>{tab.title}</span>
+      <span className={styles["aes-tabTitle"]}>{tab.title}</span>
       {tab.closable !== false && (
         <button
-          className={styles.tabCloseButton}
+          className={styles["aes-tabCloseButton"]}
           onClick={handleClose}
           title="Close tab"
         >

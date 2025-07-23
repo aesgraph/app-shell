@@ -1,0 +1,151 @@
+/* Workspace Manager Styles */
+.aes-workspaceManager {
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.aes-section {
+  margin-bottom: 24px;
+}
+
+.aes-sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.aes-saveForm {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.nameInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.saveButton {
+  padding: 8px 16px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.saveButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #005999;
+}
+
+.currentInfo {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 4px;
+  border-left: 4px solid #007acc;
+}
+
+.currentInfo h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.currentInfo p {
+  margin: 0;
+  color: #666;
+}
+
+.workspaceList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workspaceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.workspaceItem:hover {
+  border-color: #007acc;
+}
+
+.workspaceItemSelected {
+  border-color: #007acc;
+  background: #f0f8ff;
+}
+
+.workspaceInfo {
+  flex: 1;
+}
+
+.workspaceInfo h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.workspaceInfo p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.workspaceActions {
+  display: flex;
+  gap: 8px;
+}
+
+.loadButton {
+  padding: 6px 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.loadButton:hover {
+  background: #218838;
+}
+
+.deleteButton {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.deleteButton:hover {
+  background: #c82333;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-style: italic;
+}

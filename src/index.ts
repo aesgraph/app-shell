@@ -1,29 +1,22 @@
 // Main components
-export { default as Workspace } from "./components/Workspace";
-export { default as WorkspaceContainerDemo } from "./components/WorkspaceNew";
-export { default as Pane } from "./components/Pane";
+
+export { default as WorkspaceContainerDemo } from "./components/WorkspaceContainer";
+export { LayoutManager } from "./components/LayoutManager";
+export { TabManager } from "./components/TabManager";
 export { default as Tab } from "./components/Tab";
-export { default as TabContainer } from "./components/TabContainer";
-export { default as TabManager } from "./components/TabManager";
 export { default as ViewDropdown } from "./components/ViewDropdown";
 export { ThemeVariables } from "./components/ThemeVariables";
-export { ExampleThemedComponent } from "./components/ExampleThemedComponent";
+export { ExampleThemedComponent } from "./views/examples/ExampleThemedComponent";
 
 // Views
-export { WorkspaceConfigEditor, WorkspaceManager } from "./components/views";
+export { WorkspaceConfigEditor, WorkspaceManager } from "./views";
+export { default as ProgrammaticWorkspaceAccess } from "./views/examples/ProgrammaticWorkspaceAccess";
 export { defaultViews, registerViews, clearViews } from "./views/registerViews";
 
-// Context and hooks
-export {
-  WorkspaceProvider,
-  WorkspaceContext,
-} from "./contexts/WorkspaceContext";
-export { useWorkspace } from "./contexts/useWorkspace";
+// Unified app shell context - for workspace and theme management
+export { AppShellProvider } from "./contexts/AppShellContext";
+export { useAppShell, useWorkspace, useTheme } from "./contexts/useAppShell";
 
-// Theming system - for creating custom themes and using theme context
-export { ThemeProvider } from "./contexts/ThemeContext";
-export { useTheme } from "./contexts/useTheme";
-export { withTheme } from "./utils/withTheme";
 export {
   generateCSSVars,
   generateLegacyCSSVars,
@@ -36,6 +29,8 @@ export { themes, defaultTheme, commonSizes } from "./themes/themes";
 // Types
 export type { WorkspaceConfig } from "./types/WorkspaceConfig";
 export type { ViewRegistry, ViewDefinition } from "./types/ViewRegistry";
+export type { WorkspaceState } from "./types/workspace";
+export type { AppShellContextValue } from "./contexts/AppShellContext";
 
 // Theme types - everything needed to create custom themes
 export type {
