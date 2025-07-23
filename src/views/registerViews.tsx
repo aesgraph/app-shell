@@ -146,7 +146,7 @@ const DebugView = () => (
         console.info("Layout:", layoutState)
       </div>
       <div style={{ color: "#0066cc", marginTop: "4px" }}>
-        → Layout: {`{horizontal: [20, 60, 20], vertical: [75, 25]}`}
+        → Layout: {layoutState ? JSON.stringify(layoutState) : "Example Layout: {horizontal: [20, 60, 20], vertical: [75, 25]}"}
       </div>
     </div>
     <div style={{ marginTop: "12px" }}>
