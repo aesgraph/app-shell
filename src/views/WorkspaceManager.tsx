@@ -19,12 +19,25 @@ const WorkspaceManager = () => {
   );
 
   const saveCurrentWorkspace = async () => {
-    if (!newWorkspaceName.trim()) {
-      alert("Please enter a workspace name");
+    const trimmedName = newWorkspaceName.trim();
+    const isValidName = /^[a-zA-Z0-9 ]+$/.test(trimmedName);
+
+    if (!trimmedName) {
+      alert("Workspace name cannot be empty.");
       return;
     }
 
-    const workspaceState = await saveCurrentLayout(newWorkspaceName.trim());
+    if (trimmedName.length < 3) {
+      alert("Workspace name must be at least 3 characters long.");
+      return;
+    }
+
+    if (!isValidName) {
+      alert("Workspace name can only contain alphanumeric characters and spaces.");
+      return;
+    }
+
+    const workspaceState = await saveCurrentLayout(trimmedName);
     if (workspaceState) {
       setNewWorkspaceName("");
       console.log("Saved workspace:", workspaceState);
