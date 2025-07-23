@@ -56,15 +56,29 @@ const WorkspaceManager = () => {
     }
   };
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(null);
+
   const handleDeleteWorkspace = (workspaceId: string) => {
-    if (confirm("Are you sure you want to delete this workspace?")) {
-      deleteWorkspace(workspaceId);
-      if (selectedWorkspace === workspaceId) {
+    setWorkspaceToDelete(workspaceId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDeleteWorkspace = () => {
+    if (workspaceToDelete) {
+      deleteWorkspace(workspaceToDelete);
+      if (selectedWorkspace === workspaceToDelete) {
         setSelectedWorkspace(null);
       }
+      setWorkspaceToDelete(null);
+      setIsDeleteModalOpen(false);
     }
   };
 
+  const cancelDeleteWorkspace = () => {
+    setWorkspaceToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
   const handleDuplicateWorkspace = (workspaceId: string) => {
     const workspace = savedWorkspaces.find((w) => w.id === workspaceId);
     if (!workspace) return;
