@@ -5,17 +5,9 @@ import { globalViewRegistry } from "./types/ViewRegistry";
 import App from "./App";
 import WorkspaceManager from "./views/WorkspaceManager";
 import WorkspaceConfigEditor from "./views/WorkspaceConfigEditor";
-import { ExampleThemedComponent } from "./views/examples/ExampleThemedComponent";
 import ThemeDemoView from "./views/examples/ThemeDemoView";
 import ProgrammaticWorkspaceAccess from "./views/examples/ProgrammaticWorkspaceAccess";
-
-// Wrapper components for components with specific prop requirements
-const ExampleThemedComponentWrapper: React.FC<Record<string, unknown>> = () => (
-  <ExampleThemedComponent
-    title="Theme Demo Component"
-    content="This component demonstrates how to use the app-shell theme system in your own components."
-  />
-);
+import { ExampleThemedComponentWrapper } from "./views/wrapperComponents";
 
 // Register default views
 globalViewRegistry.registerView({
