@@ -116,7 +116,7 @@ const OutputView = () => (
       [INFO] Layout system ready
     </div>
     <div style={{ color: "#666", marginTop: "4px" }}>
-      [DEBUG] View registry loaded with 6 views
+      [DEBUG] View registry loaded with {Object.keys(globalViewRegistry).length} views
     </div>
     <div style={{ color: "#009900", marginTop: "4px" }}>
       [SUCCESS] All systems operational
@@ -146,7 +146,7 @@ const DebugView = () => (
         console.info("Layout:", layoutState)
       </div>
       <div style={{ color: "#0066cc", marginTop: "4px" }}>
-        → Layout: {`{horizontal: [20, 60, 20], vertical: [75, 25]}`}
+        → Layout: {layoutState ? JSON.stringify(layoutState) : "Example Layout: {horizontal: [20, 60, 20], vertical: [75, 25]}"}
       </div>
     </div>
     <div style={{ marginTop: "12px" }}>
