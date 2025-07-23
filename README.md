@@ -14,7 +14,7 @@ A flexible, resizable workspace shell component for React applications with tab 
 ## Installation
 
 ```bash
-npm install app-shell
+npm install @aesgraph/app-shell
 ```
 
 ## Running Locally
@@ -41,13 +41,13 @@ This will start the app on [http://localhost:5173](http://localhost:5173) (or th
 
 ```tsx
 import React from "react";
-import { WorkspaceProvider, Workspace } from "app-shell";
+import { AppShellProvider, LayoutManager } from "@aesgraph/app-shell";
 
 function App() {
   return (
-    <WorkspaceProvider>
-      <Workspace />
-    </WorkspaceProvider>
+    <AppShellProvider themeId="dark">
+      <LayoutManager />
+    </AppShellProvider>
   );
 }
 ```
@@ -56,53 +56,102 @@ function App() {
 
 ```tsx
 import React from "react";
-import { WorkspaceProvider, Workspace } from "app-shell";
+import { AppShellProvider, LayoutManager } from "@aesgraph/app-shell";
+import { createDefaultLayoutConfig } from "@aesgraph/app-shell/utils/layoutConfigUtils";
 
 function App() {
-  const initialConfig = {
-    leftPane: {
-      defaultSize: 250,
-      minSize: 200,
-      maxSize: 400,
-    },
-    rightPane: {
-      defaultSize: 300,
-      minSize: 250,
-      maxSize: 500,
-    },
-    bottomPane: {
-      defaultSize: 200,
-      minSize: 150,
-      maxSize: 400,
-    },
-  };
+  const customConfig = createDefaultLayoutConfig();
+  // Customize the config as needed
+  customConfig.layout = [30, 40, 30]; // Adjust pane sizes
+  customConfig.bottomHeight = 25; // Adjust bottom pane height
 
   return (
-    <WorkspaceProvider initialConfig={initialConfig}>
-      <Workspace />
-    </WorkspaceProvider>
+    <AppShellProvider themeId="dark">
+      <LayoutManager config={customConfig} />
+    </AppShellProvider>
   );
 }
 ```
 
-### Components
+### Demo Components
 
-- `Workspace` - Main workspace component
-- `WorkspaceProvider` - Context provider for workspace state
-- `Pane` - Individual resizable pane
-- `TabContainer` - Container for tabs
-- `Tab` - Individual tab component
+The library includes several demo components to help you get started:
+
+```tsx
+import React from "react";
+import {
+  WorkspaceDemo,
+  LayoutManagerDemo,
+  WorkspaceContainerDemo,
+} from "@aesgraph/app-shell/demos";
+
+function App() {
+  return (
+    <div>
+      {/* Main workspace demo */}
+      <WorkspaceDemo />
+
+      {/* Layout manager demo with controls */}
+      <LayoutManagerDemo />
+
+      {/* Workspace as a contained component */}
+      <WorkspaceContainerDemo />
+    </div>
+  );
+}
+```
+
+### Core Components
+
+- `LayoutManager` - Main workspace component with resizable panes
+- `AppShellProvider` - Context provider for theme and workspace state
+- `TabManager` - Tab management component
 - `ViewDropdown` - Dropdown for adding new views
+- `Tab` - Individual tab component
 
 ### Hooks
 
+- `useTheme()` - Hook to access theme context
 - `useWorkspace()` - Hook to access workspace context
+- `useLayoutContext()` - Hook to access layout context
 
 ### Types
 
-- `WorkspaceConfig` - Configuration interface
+- `LayoutConfig` - Layout configuration interface
 - `ThemeId` - Theme type definitions
-- `ViewRegistry` - View registry types
+- `ViewDefinition` - View definition interface
+- `WorkspaceState` - Workspace state interface
+
+## Project Structure
+
+```
+src/
+├── components/          # Core UI components
+│   ├── LayoutManager.tsx
+│   ├── TabManager.tsx
+│   ├── ViewDropdown.tsx
+│   └── Tab.tsx
+├── views/              # View components
+│   ├── WorkspaceManager.tsx
+│   ├── WorkspaceConfigEditor.tsx
+│   ├── examples/       # Example views
+│   │   ├── ExampleThemedComponent.tsx
+│   │   ├── ThemeDemoView.tsx
+│   │   └── ProgrammaticWorkspaceAccess.tsx
+│   └── registerViews.tsx
+├── demos/              # Demo components
+│   ├── WorkspaceDemo.tsx
+│   ├── LayoutManagerDemo.tsx
+│   ├── WorkspaceContainer.tsx
+│   └── ExampleComponents.tsx
+├── contexts/           # React contexts
+│   ├── AppShellContext.tsx
+│   ├── ThemeContext.tsx
+│   └── WorkspaceContext.tsx
+├── themes/             # Theme definitions
+├── types/              # TypeScript types
+└── utils/              # Utility functions
+```
 
 ## Themes
 
@@ -129,18 +178,15 @@ The workspace comes with 10 built-in themes:
 
 ```tsx
 import React from "react";
-import { WorkspaceProvider, useWorkspace } from "app-shell";
+import { AppShellProvider, useTheme } from "@aesgraph/app-shell";
 
 function App() {
-  const { currentTheme, setCurrentTheme } = useWorkspace();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <WorkspaceProvider>
+    <AppShellProvider themeId="dark">
       <div>
-        <select
-          value={currentTheme}
-          onChange={(e) => setCurrentTheme(e.target.value)}
-        >
+        <select value={theme.id} onChange={(e) => setTheme(e.target.value)}>
           <option value="dark">Dark</option>
           <option value="light">Light</option>
           <option value="dracula">Dracula</option>
@@ -148,9 +194,9 @@ function App() {
           <option value="solarized">Solarized</option>
           <option value="monokai">Monokai</option>
         </select>
-        <Workspace />
+        <LayoutManager />
       </div>
-    </WorkspaceProvider>
+    </AppShellProvider>
   );
 }
 ```
@@ -159,28 +205,23 @@ function App() {
 
 ```tsx
 import React from "react";
-import { WorkspaceProvider, Workspace } from "app-shell";
+import { AppShellProvider, LayoutManager } from "@aesgraph/app-shell";
 
 function App() {
-  const workspaceConfig = {
-    theme: "dracula", // Set initial theme
-    // ... other config
-  };
-
   return (
-    <WorkspaceProvider initialConfig={workspaceConfig}>
-      <Workspace />
-    </WorkspaceProvider>
+    <AppShellProvider themeId="dracula">
+      <LayoutManager />
+    </AppShellProvider>
   );
 }
 ```
 
 ### Custom Themes
 
-You can create custom themes by extending the theme system. Note: This feature requires the theme system to be properly configured in your project.
+You can create custom themes by extending the theme system:
 
 ```tsx
-import { registerTheme } from "app-shell";
+import { registerTheme } from "@aesgraph/app-shell";
 
 registerTheme({
   id: "my-custom-theme",
@@ -254,32 +295,35 @@ registerTheme({
 
 ## Registering Custom Views
 
-You can add your own custom views to the workspace using the `registerViews` API. This allows you to extend the workspace with your own components.
+You can add your own custom views to the workspace using the view registry system. This allows you to extend the workspace with your own components.
 
 ### Basic View Registration
 
 ```tsx
 import React from "react";
-import { registerViews, WorkspaceProvider, Workspace } from "app-shell";
+import {
+  globalViewRegistry,
+  AppShellProvider,
+  LayoutManager,
+} from "@aesgraph/app-shell";
 
 // Define your custom view
 const MyCustomView = () => <div>My Custom View Content</div>;
 
-registerViews([
-  {
-    id: "my-custom-view",
-    title: "My Custom View",
-    component: MyCustomView,
-    icon: "🔧",
-    category: "custom",
-  },
-]);
+// Register the view
+globalViewRegistry.register({
+  id: "my-custom-view",
+  title: "My Custom View",
+  component: MyCustomView,
+  icon: "🔧",
+  category: "custom",
+});
 
 function App() {
   return (
-    <WorkspaceProvider>
-      <Workspace />
-    </WorkspaceProvider>
+    <AppShellProvider themeId="dark">
+      <LayoutManager />
+    </AppShellProvider>
   );
 }
 ```
@@ -287,18 +331,16 @@ function App() {
 ### Advanced View Configuration
 
 ```tsx
-registerViews([
-  {
-    id: "advanced-view",
-    title: "Advanced View",
-    description: "A more complex view with additional features",
-    component: AdvancedView,
-    icon: "⚡",
-    category: "development",
-    closable: true,
-    defaultActive: false,
-  },
-]);
+globalViewRegistry.register({
+  id: "advanced-view",
+  title: "Advanced View",
+  description: "A more complex view with additional features",
+  component: AdvancedView,
+  icon: "⚡",
+  category: "development",
+  closable: true,
+  defaultActive: false,
+});
 ```
 
 ### View Categories
@@ -306,7 +348,7 @@ registerViews([
 Organize your views into categories for better organization:
 
 ```tsx
-registerViews([
+globalViewRegistry.register([
   {
     id: "file-explorer",
     title: "File Explorer",
@@ -333,33 +375,19 @@ registerViews([
 
 ### Managing Registered Views
 
-You can access and register the built-in views using the `defaultViews` export:
+You can access and manage registered views:
 
 ```tsx
-import { registerViews, defaultViews } from "app-shell";
+import { globalViewRegistry } from "@aesgraph/app-shell";
 
-// Register all default views
-registerViews(defaultViews);
+// Get all registered views
+const allViews = globalViewRegistry.getAllViews();
 
-// Or combine default and custom views
-registerViews([
-  ...defaultViews,
-  {
-    id: "my-custom-view",
-    title: "My Custom View",
-    component: MyCustomView,
-    icon: "🔧",
-    category: "custom",
-  },
-]);
-```
+// Get views by category
+const devViews = globalViewRegistry.getViewsByCategory("development");
 
-To remove all registered views, use:
-
-```tsx
-import { clearViews } from "app-shell";
-
-clearViews();
+// Clear all views
+globalViewRegistry.clear();
 ```
 
 ## Development
@@ -376,6 +404,9 @@ npm run build-lib
 
 # Build for production
 npm run build
+
+# Run tests
+npm test
 ```
 
 ## Security

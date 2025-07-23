@@ -185,7 +185,7 @@ function MyApp() {
 ### 3. Using Higher-Order Component
 
 ```tsx
-import { withTheme } from "app-shell";
+import { withTheme } from "@aesgraph/app-shell";
 
 const MyComponent = withTheme(({ theme, themeStyles, title }) => {
   return (
@@ -199,7 +199,7 @@ const MyComponent = withTheme(({ theme, themeStyles, title }) => {
 ### 4. Using Utility Functions
 
 ```tsx
-import { getThemeStyles, getColor } from "app-shell";
+import { getThemeStyles, getColor } from "@aesgraph/app-shell";
 
 function MyComponent() {
   const { theme } = useTheme();
@@ -238,7 +238,7 @@ const themeStyles = getThemeStyles(theme);
 ## Creating Custom Themes
 
 ```tsx
-import { Theme, themes } from "app-shell";
+import { Theme, themes } from "@aesgraph/app-shell";
 
 const myCustomTheme: Theme = {
   id: "custom",
@@ -263,7 +263,7 @@ const customThemes = {
 All theme utilities are fully typed:
 
 ```tsx
-import { Theme, ThemeColors, ThemeSizes } from "app-shell";
+import { Theme, ThemeColors, ThemeSizes } from "@aesgraph/app-shell";
 
 function createThemedStyles(theme: Theme) {
   // Full TypeScript support for theme properties

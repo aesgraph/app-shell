@@ -24,6 +24,7 @@ const ViewDropdown = ({
 }: ViewDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
+  const [maxHeight, setMaxHeight] = useState(400);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,52 +42,109 @@ const ViewDropdown = ({
     };
   }, [onClose]);
 
-  // Adjust position based on actual dropdown size and container constraints
+  // Calculate available space and adjust position and max-height
   useEffect(() => {
     if (dropdownRef.current) {
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
 
-      // Find the nearest positioned container (appShellContainer)
-      let container = dropdownRef.current.parentElement;
-      while (
-        container &&
-        window.getComputedStyle(container).position === "static"
-      ) {
-        container = container.parentElement;
+      // Find the nearest positioned container (workspace container or body)
+      let container = document.querySelector(
+        ".aes-workspaceContainer"
+      ) as HTMLElement;
+
+      // If no workspace container found, find the nearest positioned ancestor
+      if (!container) {
+        let parent = dropdownRef.current.parentElement;
+        while (
+          parent &&
+          parent !== document.body &&
+          window.getComputedStyle(parent).position === "static"
+        ) {
+          parent = parent.parentElement;
+        }
+        container = parent || document.body;
       }
 
-      // Fall back to document.body if no positioned container found
-      if (!container) container = document.body;
-
-      const containerRect = container.getBoundingClientRect();
+      // Use viewport dimensions for document.body to avoid issues
+      const effectiveRect =
+        container === document.body
+          ? {
+              left: 0,
+              right: viewportWidth,
+              top: 0,
+              bottom: viewportHeight,
+            }
+          : container.getBoundingClientRect();
 
       let newX = position.x;
       let newY = position.y;
+      let newMaxHeight = 400;
+
+      // Calculate available space above and below the button
+      const spaceBelow = effectiveRect.bottom - buttonRect.bottom;
+      const spaceAbove = buttonRect.top - effectiveRect.top;
+
+      // Determine if we should show above or below the button
+      const isBottomPane = containerId === "bottom-pane";
+      const wouldGoOffBottom = dropdownRect.bottom > effectiveRect.bottom;
+      const showAbove = isBottomPane || wouldGoOffBottom || spaceBelow < 200;
+
+      if (showAbove) {
+        // Position above the button
+        newY = buttonRect.top - dropdownRect.height - 2;
+
+        // Calculate max height for above positioning
+        const availableHeightAbove = spaceAbove - 20; // 20px margin
+        newMaxHeight = Math.min(400, Math.max(200, availableHeightAbove));
+
+        // If dropdown goes off the top, adjust position
+        if (newY < effectiveRect.top) {
+          newY = effectiveRect.top + 20;
+          // Recalculate max height for this position
+          const availableHeightBelow = effectiveRect.bottom - newY - 20;
+          newMaxHeight = Math.min(400, Math.max(200, availableHeightBelow));
+        }
+      } else {
+        // Position below the button
+        newY = buttonRect.bottom + 2;
+
+        // Calculate max height for below positioning
+        const availableHeightBelow = spaceBelow - 20; // 20px margin
+        newMaxHeight = Math.min(400, Math.max(200, availableHeightBelow));
+
+        // If dropdown goes off the bottom, adjust position
+        if (dropdownRect.bottom > effectiveRect.bottom) {
+          newY = effectiveRect.bottom - dropdownRect.height - 20;
+          // Recalculate max height for this position
+          const availableHeightAbove = newY - effectiveRect.top - 20;
+          newMaxHeight = Math.min(400, Math.max(200, availableHeightAbove));
+        }
+      }
 
       // Check if dropdown goes off the right edge of container
-      if (dropdownRect.right > containerRect.right) {
-        newX = containerRect.right - dropdownRect.width - 20;
+      if (dropdownRect.right > effectiveRect.right) {
+        newX = effectiveRect.right - dropdownRect.width - 20;
       }
 
       // Check if dropdown goes off the left edge of container
-      if (dropdownRect.left < containerRect.left) {
-        newX = containerRect.left + 20;
+      if (dropdownRect.left < effectiveRect.left) {
+        newX = effectiveRect.left + 20;
       }
 
-      // For bottom pane or if dropdown goes off bottom edge of container, show above button
-      const isBottomPane = containerId === "bottom-pane";
-      const wouldGoOffBottom = dropdownRect.bottom > containerRect.bottom;
-
-      if (isBottomPane || wouldGoOffBottom) {
-        newY = buttonRect.top - dropdownRect.height - 2;
+      // Ensure dropdown doesn't go off the left edge of viewport
+      if (newX < 20) {
+        newX = 20;
       }
 
-      // Check if dropdown goes off the top edge of container
-      if (newY < containerRect.top) {
-        newY = containerRect.top + 20;
+      // Ensure dropdown doesn't go off the right edge of viewport
+      if (newX + dropdownRect.width > viewportWidth - 20) {
+        newX = viewportWidth - dropdownRect.width - 20;
       }
 
       setAdjustedPosition({ x: newX, y: newY });
+      setMaxHeight(newMaxHeight);
     }
   }, [position, buttonRect, containerId]);
 
@@ -110,33 +168,36 @@ const ViewDropdown = ({
   const dropdownContent = (
     <div
       ref={dropdownRef}
-      className={`${styles.viewDropdown} ${
-        styles[`theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`]
+      className={`${styles["aes-viewDropdown"]} ${
+        styles[`aes-theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`] ||
+        styles[`theme${theme.charAt(0).toUpperCase() + theme.slice(1)}`] ||
+        ""
       }`}
       style={{
         position: "fixed",
         left: adjustedPosition.x,
         top: adjustedPosition.y,
         zIndex: 9999,
+        maxHeight: `${maxHeight}px`,
       }}
     >
-      <div className={styles.viewDropdownContent}>
+      <div className={styles["aes-viewDropdownContent"]}>
         {Object.entries(viewsByCategory).map(([category, categoryViews]) => (
-          <div key={category} className={styles.viewCategory}>
-            <div className={styles.viewCategoryTitle}>{category}</div>
+          <div key={category} className={styles["aes-viewCategory"]}>
+            <div className={styles["aes-viewCategoryTitle"]}>{category}</div>
             {categoryViews.map((view) => (
               <div
                 key={view.id}
-                className={styles.viewOption}
+                className={styles["aes-viewOption"]}
                 onClick={() => handleViewSelect(view)}
               >
                 {view.icon && (
-                  <span className={styles.viewIcon}>{view.icon}</span>
+                  <span className={styles["aes-viewIcon"]}>{view.icon}</span>
                 )}
-                <div className={styles.viewInfo}>
-                  <div className={styles.viewTitle}>{view.title}</div>
+                <div className={styles["aes-viewInfo"]}>
+                  <div className={styles["aes-viewTitle"]}>{view.title}</div>
                   {view.description && (
-                    <div className={styles.viewDescription}>
+                    <div className={styles["aes-viewDescription"]}>
                       {view.description}
                     </div>
                   )}
@@ -149,7 +210,8 @@ const ViewDropdown = ({
     </div>
   );
 
-  // Render the dropdown as a portal to avoid overflow clipping// Render the dropdown as a portal to avoid overflow clipping
+  // Render the dropdown as a portal to avoid overflow clipping
+  // Use document.body for consistent absolute positioning
   return createPortal(dropdownContent, document.body);
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "../contexts/useTheme";
+import { useTheme } from "../contexts/useAppShell";
 import { Theme } from "../types/ThemeDefinition";
 import { getThemeStyles } from "../utils/themeUtils";
 

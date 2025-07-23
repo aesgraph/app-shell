@@ -1,29 +1,34 @@
 // Main components
-export { default as Workspace } from "./components/Workspace";
-export { default as WorkspaceContainerDemo } from "./components/WorkspaceNew";
-export { default as Pane } from "./components/Pane";
+export { LayoutManager } from "./components/LayoutManager";
+export { TabManager } from "./components/TabManager";
 export { default as Tab } from "./components/Tab";
-export { default as TabContainer } from "./components/TabContainer";
-export { default as TabManager } from "./components/TabManager";
 export { default as ViewDropdown } from "./components/ViewDropdown";
 export { ThemeVariables } from "./components/ThemeVariables";
-export { ExampleThemedComponent } from "./components/ExampleThemedComponent";
+
+// Demo components
+export {
+  WorkspaceDemo,
+  LayoutManagerDemo,
+  WorkspaceContainerDemo,
+  PersistentEditor,
+  StatefulCounter,
+} from "./demos";
 
 // Views
-export { WorkspaceConfigEditor, WorkspaceManager } from "./components/views";
-export { defaultViews, registerViews, clearViews } from "./views/registerViews";
+export { WorkspaceConfigEditor, WorkspaceManager } from "./views";
+export { default as ProgrammaticWorkspaceAccess } from "./views/examples/ProgrammaticWorkspaceAccess";
+export { ExampleThemedComponent } from "./views/examples/ExampleThemedComponent";
+export { default as ThemeDemoView } from "./views/examples/ThemeDemoView";
 
-// Context and hooks
-export {
-  WorkspaceProvider,
-  WorkspaceContext,
-} from "./contexts/WorkspaceContext";
-export { useWorkspace } from "./contexts/useWorkspace";
+// View registry
+export { globalViewRegistry } from "./types/ViewRegistry";
+export { defaultViews, registerViews } from "./views/registerViews";
 
-// Theming system - for creating custom themes and using theme context
-export { ThemeProvider } from "./contexts/ThemeContext";
-export { useTheme } from "./contexts/useTheme";
-export { withTheme } from "./utils/withTheme";
+// Unified app shell context - for workspace and theme management
+export { AppShellProvider } from "./contexts/AppShellContext";
+export { useAppShell, useWorkspace, useTheme } from "./contexts/useAppShell";
+
+// Theme utilities
 export {
   generateCSSVars,
   generateLegacyCSSVars,
@@ -31,11 +36,18 @@ export {
   applyThemeVars,
   getColor,
 } from "./utils/themeUtils";
+export { withTheme } from "./utils/withTheme";
 export { themes, defaultTheme, commonSizes } from "./themes/themes";
 
+// Layout utilities
+export { createDefaultLayoutConfig } from "./utils/layoutConfigUtils";
+export { exampleCustomConfig } from "./utils/exampleConfigs";
+
 // Types
-export type { WorkspaceConfig } from "./types/WorkspaceConfig";
+export type { LayoutConfig } from "./types/LayoutConfig";
 export type { ViewRegistry, ViewDefinition } from "./types/ViewRegistry";
+export type { WorkspaceState } from "./types/workspace";
+export type { AppShellContextValue } from "./contexts/AppShellContext";
 
 // Theme types - everything needed to create custom themes
 export type {
