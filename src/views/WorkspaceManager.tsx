@@ -33,7 +33,9 @@ const WorkspaceManager = () => {
     }
 
     if (!isValidName) {
-      alert("Workspace name can only contain alphanumeric characters and spaces.");
+      alert(
+        "Workspace name can only contain alphanumeric characters and spaces."
+      );
       return;
     }
 
@@ -57,7 +59,9 @@ const WorkspaceManager = () => {
   };
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(null);
+  const [workspaceToDelete, setWorkspaceToDelete] = useState<string | null>(
+    null
+  );
 
   const handleDeleteWorkspace = (workspaceId: string) => {
     setWorkspaceToDelete(workspaceId);
