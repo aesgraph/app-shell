@@ -1,7 +1,7 @@
 {
   "name": "@aesgraph/app-shell",
   "private": false,
-  "version": "1.0.10",
+  "version": "1.0.12",
   "type": "module",
   "description": "A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.",
   "keywords": [
