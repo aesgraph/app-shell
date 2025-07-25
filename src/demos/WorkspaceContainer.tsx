@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./WorkspaceContainer.module.css";
 import { LayoutManager } from "../components/LayoutManager";
 import { AppShellProvider } from "../contexts/AppShellContext";
+import { exampleCustomConfig } from "../utils/exampleConfigs";
 
 /**
  * Example of using Workspace as a contained component within other UI elements
@@ -21,7 +22,7 @@ const WorkspaceContainerDemo: React.FC = () => {
       {/* Main Content Area with Workspace */}
       <div className={styles["aes-mainContent"]}>
         <AppShellProvider themeId="dracula">
-          <LayoutManager />
+          <LayoutManager initialConfig={exampleCustomConfig} />
           {/* <WorkspaceGrid fullViewport={false} /> */}
         </AppShellProvider>
       </div>

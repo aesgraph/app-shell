@@ -12,7 +12,7 @@ export const layoutManagerViews: ViewDefinition[] = [
     category: "core",
   },
   {
-    id: "workspace-theme-selector",
+    id: "workspace-config-editor",
     title: "Theme Selector",
     description: "Select and customize workspace themes",
     component: WorkspaceConfigEditor, // This can be a different component if needed
