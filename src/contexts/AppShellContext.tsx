@@ -8,7 +8,6 @@ import React, {
 import type { WorkspaceState } from "../types/workspace";
 import { Theme } from "../types/ThemeDefinition";
 import { themes, defaultTheme } from "../themes/themes";
-import { initialWorkspaces } from "../../../unigraph/src/config/initialWorkspaces";
 
 interface AppShellContextValue {
   // Workspace management
@@ -120,15 +119,9 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
             );
           }
         } else {
-          // If no saved workspaces exist, create initial workspaces
-          if (initialWorkspaces && Array.isArray(initialWorkspaces)) {
-            setSavedWorkspaces(initialWorkspaces);
-            localStorage.setItem(storageKey, JSON.stringify(initialWorkspaces));
-            console.log(
-              "Created initial workspaces:",
-              initialWorkspaces.length
-            );
-          }
+          // If no saved workspaces exist, start with empty array
+          // External consumers can provide initial workspaces via props if needed
+          setSavedWorkspaces([]);
         }
       } catch (error) {
         console.error("Failed to load saved workspaces:", error);
