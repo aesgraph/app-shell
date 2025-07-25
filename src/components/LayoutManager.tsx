@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { ImperativePanelGroupHandle } from "react-resizable-panels";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useTheme } from "../contexts/useAppShell";
+import { useTheme, useAppShell } from "../contexts/useAppShell";
 import {
   LayoutConfig,
   LayoutManagerProps,
@@ -22,12 +22,25 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   initialConfig,
   onConfigChange,
 }) => {
+  const { log } = useAppShell();
+
+  // Create a logger function based on context log
+  const logWithLevel = useCallback(
+    (level: "info" | "warn" | "error", message: string, ...args: unknown[]) => {
+      log(`[${level.toUpperCase()}] ${message}`, ...args);
+    },
+    [log]
+  );
+
   // Get theme context
   const { theme } = useTheme();
   const themeStyles = getThemeStyles(theme);
 
   // Use provided config or default
   const config = initialConfig || createDefaultLayoutConfig();
+
+  // Log initial configuration
+  logWithLevel("info", "Initializing LayoutManager with config:", config);
 
   // Initial values from config
   const initialLayout = config.layout;
@@ -39,9 +52,14 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   // Convert config tabs to Tab format with caching
   const convertConfigToTabs = (paneConfig: typeof config.panes.left): Tab[] => {
     if (!paneConfig || !paneConfig.tabs) {
-      console.warn("LayoutManager: Invalid pane config provided", paneConfig);
+      logWithLevel("warn", "Invalid pane config provided", paneConfig);
       return [];
     }
+
+    logWithLevel(
+      "info",
+      `Converting ${paneConfig.tabs.length} tabs to Tab format`
+    );
 
     return paneConfig.tabs.map((tab) => ({
       id: tab.id,
@@ -50,6 +68,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         // Check if we have a cached instance first
         const cachedContent = tabInstanceCache.current.get(tab.id);
         if (cachedContent) {
+          logWithLevel("info", `Using cached content for tab: ${tab.id}`);
           return cachedContent;
         }
 
@@ -62,6 +81,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
             const Component = tab.content as React.ComponentType<
               Record<string, unknown>
             >;
+            logWithLevel("info", `Creating React component for tab: ${tab.id}`);
             newContent = React.createElement(Component, { key: tab.id });
           }
           // Handle string (view ID)
@@ -70,8 +90,9 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
             const viewDef = globalViewRegistry.getView(tab.content);
             if (viewDef) {
               const ViewComponent = viewDef.component;
-              console.log(
-                `LayoutManager: Creating component for view ID: ${tab.content}`,
+              logWithLevel(
+                "info",
+                `Creating component for view ID: ${tab.content}`,
                 viewDef
               );
               newContent = React.createElement(ViewComponent, {
@@ -79,8 +100,9 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                 ...(viewDef.props || {}),
               });
             } else {
-              console.warn(
-                `LayoutManager: View ID not found in registry: ${tab.content}`
+              logWithLevel(
+                "warn",
+                `View ID not found in registry: ${tab.content}`
               );
               // Fallback to simple content div
               newContent = React.createElement(
@@ -92,11 +114,13 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
           }
           // Handle ReactNode (JSX)
           else {
+            logWithLevel("info", `Using ReactNode content for tab: ${tab.id}`);
             newContent = tab.content;
           }
         } catch (error) {
-          console.error(
-            `LayoutManager: Error creating component for tab ${tab.id}:`,
+          logWithLevel(
+            "error",
+            `Error creating component for tab ${tab.id}:`,
             error
           );
           newContent = React.createElement(
@@ -144,50 +168,62 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   }, [theme]);
 
   // Function to add a view as a tab
-  const addViewAsTab = useCallback((viewId: string, pane: Pane) => {
-    console.log("LayoutManager: addViewAsTab called with:", viewId, pane);
-    const viewDef = globalViewRegistry.getView(viewId);
-    console.log("LayoutManager: viewDef found:", viewDef);
-    if (!viewDef) return;
+  const addViewAsTab = useCallback(
+    (viewId: string, pane: Pane) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: addViewAsTab called with:",
+        viewId,
+        pane
+      );
+      const viewDef = globalViewRegistry.getView(viewId);
+      logWithLevel("info", "LayoutManager: viewDef found:", viewDef);
+      if (!viewDef) return;
 
-    const tabId = `${viewId}-${Date.now()}`;
-    const ViewComponent = viewDef.component;
+      const tabId = `${viewId}-${Date.now()}`;
+      const ViewComponent = viewDef.component;
 
-    // Create and cache the component instance
-    const content = React.createElement(ViewComponent, {
-      key: tabId,
-      ...(viewDef.props || {}),
-    });
-    tabInstanceCache.current.set(tabId, content);
+      // Create and cache the component instance
+      const content = React.createElement(ViewComponent, {
+        key: tabId,
+        ...(viewDef.props || {}),
+      });
+      tabInstanceCache.current.set(tabId, content);
 
-    const newTab: Tab = {
-      id: tabId,
-      title: viewDef.title,
-      content: content,
-    };
+      const newTab: Tab = {
+        id: tabId,
+        title: viewDef.title,
+        content: content,
+      };
 
-    console.log("LayoutManager: Adding new tab:", newTab);
+      logWithLevel("info", "LayoutManager: Adding new tab:", newTab);
 
-    setTabs((prev) => ({
-      ...prev,
-      [pane]: [...prev[pane], newTab],
-    }));
+      setTabs((prev) => ({
+        ...prev,
+        [pane]: [...prev[pane], newTab],
+      }));
 
-    setActiveTabIds((prev) => ({
-      ...prev,
-      [pane]: newTab.id,
-    }));
-  }, []);
+      setActiveTabIds((prev) => ({
+        ...prev,
+        [pane]: newTab.id,
+      }));
+    },
+    [logWithLevel]
+  );
 
   // Register views on mount
   useEffect(() => {
-    registerLayoutManagerViews();
-  }, []);
+    registerLayoutManagerViews(log);
+  }, [log]);
 
   // Add event listener for tab addition
   useEffect(() => {
     const handleAddTab = (event: CustomEvent) => {
-      console.log("LayoutManager: Received add-tab event:", event.detail);
+      logWithLevel(
+        "info",
+        "LayoutManager: Received add-tab event:",
+        event.detail
+      );
       const { panelId, viewId } = event.detail;
       addViewAsTab(viewId, panelId as Pane);
     };
@@ -195,7 +231,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
     document.addEventListener("add-tab", handleAddTab as EventListener);
     return () =>
       document.removeEventListener("add-tab", handleAddTab as EventListener);
-  }, [addViewAsTab]);
+  }, [addViewAsTab, logWithLevel]);
 
   // Cleanup tab instance cache on unmount
   useEffect(() => {
@@ -338,6 +374,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
   // Tab actions
   const handleTabSelect = (pane: Pane, tabId: string) => {
+    logWithLevel("info", `Tab selected - Pane: ${pane}, Tab ID: ${tabId}`);
     setActiveTabIds((prev) => ({ ...prev, [pane]: tabId }));
   };
 
@@ -515,7 +552,11 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   // Function to restore workspace state
   const restoreWorkspaceState = useCallback(
     (workspaceState: WorkspaceState) => {
-      console.log("LayoutManager: Restoring workspace state:", workspaceState);
+      logWithLevel(
+        "info",
+        "LayoutManager: Restoring workspace state:",
+        workspaceState
+      );
 
       // Restore panel layout directly
       if (workspaceState.layout) {
@@ -610,9 +651,9 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       setTabs(newTabs);
       setActiveTabIds(newActiveTabIds);
 
-      console.log("LayoutManager: Workspace restored successfully");
+      logWithLevel("info", "LayoutManager: Workspace restored successfully");
     },
-    []
+    [logWithLevel]
   );
 
   // Expose restoreWorkspaceState globally for WorkspaceManager
@@ -658,6 +699,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   }, [getCurrentWorkspaceState, restoreWorkspaceState]);
 
   const handleTabClose = (pane: Pane, tabId: string) => {
+    logWithLevel("info", `Tab closed - Pane: ${pane}, Tab ID: ${tabId}`);
     // Remove from cache when tab is closed
     tabInstanceCache.current.delete(tabId);
 
@@ -676,6 +718,10 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   };
 
   const handleTabDrop = (tabId: string, targetPane: Pane) => {
+    logWithLevel(
+      "info",
+      `Tab drop initiated - Tab ID: ${tabId}, Target Pane: ${targetPane}`
+    );
     // Find which pane the tab is currently in
     let fromPane: Pane | null = null;
     let tabToMove: Tab | null = null;
@@ -686,7 +732,15 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         tabToMove = found;
       }
     });
-    if (!fromPane || !tabToMove || fromPane === targetPane) return;
+    if (!fromPane || !tabToMove || fromPane === targetPane) {
+      logWithLevel(
+        "warn",
+        `Tab drop cancelled - fromPane: ${fromPane}, tabToMove: ${!!tabToMove}, targetPane: ${targetPane}`
+      );
+      return;
+    }
+
+    logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
     setTabs((prev) => {
       const newTabs = { ...prev };
       newTabs[fromPane!] = newTabs[fromPane!].filter((tab) => tab.id !== tabId);
@@ -703,51 +757,108 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
   // ...existing maximize/restore logic...
 
-  const handleMaximize = (pane: Pane) => {
-    if (maximizedPane === pane) {
-      setMaximizedPane(null);
-      // Restore layout from saved state
-      if (
-        savedLayout &&
-        savedLayout.horizontal.length &&
-        savedLayout.vertical.length
-      ) {
-        horizontalGroupRef.current?.setLayout(savedLayout.horizontal);
-        verticalGroupRef.current?.setLayout(savedLayout.vertical);
+  const handleMaximize = useCallback(
+    (pane: Pane) => {
+      logWithLevel(
+        "info",
+        `Maximize triggered for pane: ${pane}, current maximized: ${maximizedPane}`
+      );
+
+      if (maximizedPane === pane) {
+        logWithLevel("info", "Restoring pane from maximized state");
+        setMaximizedPane(null);
+        // Restore layout from saved state
+        if (
+          savedLayout &&
+          savedLayout.horizontal.length &&
+          savedLayout.vertical.length
+        ) {
+          logWithLevel("info", "Restoring from saved layout", savedLayout);
+          horizontalGroupRef.current?.setLayout(savedLayout.horizontal);
+          verticalGroupRef.current?.setLayout(savedLayout.vertical);
+        } else {
+          logWithLevel("info", "Restoring to initial layout");
+          horizontalGroupRef.current?.setLayout(initialLayout);
+          verticalGroupRef.current?.setLayout([
+            100 - initialBottomHeight,
+            initialBottomHeight,
+          ]);
+        }
+        // Clear saved layout after restoring
+        setSavedLayout(null);
       } else {
-        horizontalGroupRef.current?.setLayout(initialLayout);
-        verticalGroupRef.current?.setLayout([
-          100 - initialBottomHeight,
-          initialBottomHeight,
-        ]);
-      }
-      // Clear saved layout after restoring
-      setSavedLayout(null);
-    } else {
-      // Save current layout before maximizing
-      setSavedLayout({
-        horizontal: horizontalGroupRef.current?.getLayout?.() || layout,
-        vertical: verticalGroupRef.current?.getLayout?.() || [
+        logWithLevel("info", `Maximizing pane: ${pane}`);
+        // Save current layout before maximizing
+        const currentHorizontal =
+          horizontalGroupRef.current?.getLayout?.() || layout;
+        const currentVertical = verticalGroupRef.current?.getLayout?.() || [
           100 - bottomHeight,
           bottomHeight,
-        ],
-      });
+        ];
 
-      setMaximizedPane(pane);
-      if (pane === "bottom") {
-        verticalGroupRef.current?.setLayout([0, 100]);
-      } else {
-        verticalGroupRef.current?.setLayout([100, 0]);
-        if (pane === "left") {
-          horizontalGroupRef.current?.setLayout([100, 0, 0]);
-        } else if (pane === "center") {
-          horizontalGroupRef.current?.setLayout([0, 100, 0]);
-        } else if (pane === "right") {
-          horizontalGroupRef.current?.setLayout([0, 0, 100]);
+        logWithLevel("info", "Saving current layout before maximize", {
+          horizontal: currentHorizontal,
+          vertical: currentVertical,
+        });
+
+        setSavedLayout({
+          horizontal: currentHorizontal,
+          vertical: currentVertical,
+        });
+
+        setMaximizedPane(pane);
+        if (pane === "bottom") {
+          logWithLevel("info", "Setting bottom pane to full height");
+          verticalGroupRef.current?.setLayout([0, 100]);
+        } else {
+          logWithLevel(
+            "info",
+            "Hiding bottom pane and maximizing horizontal pane"
+          );
+          verticalGroupRef.current?.setLayout([100, 0]);
+          if (pane === "left") {
+            horizontalGroupRef.current?.setLayout([100, 0, 0]);
+          } else if (pane === "center") {
+            horizontalGroupRef.current?.setLayout([0, 100, 0]);
+          } else if (pane === "right") {
+            horizontalGroupRef.current?.setLayout([0, 0, 100]);
+          }
         }
       }
-    }
-  };
+    },
+    [
+      maximizedPane,
+      savedLayout,
+      layout,
+      bottomHeight,
+      initialLayout,
+      initialBottomHeight,
+      logWithLevel,
+    ]
+  );
+
+  // Add event listener for pane maximization
+  useEffect(() => {
+    const handleMaximizePane = (event: CustomEvent) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: Received maximize-pane event:",
+        event.detail
+      );
+      const { pane } = event.detail;
+      handleMaximize(pane as Pane);
+    };
+
+    document.addEventListener(
+      "maximize-pane",
+      handleMaximizePane as EventListener
+    );
+    return () =>
+      document.removeEventListener(
+        "maximize-pane",
+        handleMaximizePane as EventListener
+      );
+  }, [handleMaximize, logWithLevel]);
 
   // Helper to render tab content for a pane
   const renderTabContent = (pane: Pane) => {
@@ -766,8 +877,12 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       <PanelGroup
         direction="vertical"
         ref={verticalGroupRef}
-        style={{ height: "100vh", width: "100%" }}
+        style={{ height: "100%", width: "100%" }}
         onLayout={(sizes) => {
+          logWithLevel(
+            "info",
+            `Vertical layout changed - sizes: [${sizes.join(", ")}]`
+          );
           setBottomHeight(sizes[1]);
         }}
         autoSaveId="vertical-group"
@@ -778,6 +893,10 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
             ref={horizontalGroupRef}
             style={{ height: "100%", width: "100%" }}
             onLayout={(sizes) => {
+              logWithLevel(
+                "info",
+                `Horizontal layout changed - sizes: [${sizes.join(", ")}]`
+              );
               setLayout(sizes);
             }}
             autoSaveId="horizontal-group"

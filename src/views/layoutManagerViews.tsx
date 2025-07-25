@@ -27,10 +27,12 @@ export const layoutManagerViews: ViewDefinition[] = [
   },
 ];
 
-export function registerLayoutManagerViews() {
-  console.log("Registering layout manager views:", layoutManagerViews);
+export function registerLayoutManagerViews(
+  log?: (message: string, ...args: unknown[]) => void
+) {
+  log?.("Registering layout manager views:", layoutManagerViews);
   for (const view of layoutManagerViews) {
     globalViewRegistry.registerView(view);
   }
-  console.log("All registered views:", globalViewRegistry.getAllViews());
+  log?.("All registered views:", globalViewRegistry.getAllViews());
 }

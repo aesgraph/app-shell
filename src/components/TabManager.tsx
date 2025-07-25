@@ -27,28 +27,21 @@ const AddTabDropdown: React.FC<{ panelId: string }> = ({ panelId }) => {
   const { theme } = useTheme();
 
   const handleAdd = (view: ViewDefinition) => {
-    console.log(
-      "TabManager: Attempting to add view:",
-      view.id,
-      "to panel:",
-      panelId
-    );
     const event = new CustomEvent("add-tab", {
-      detail: { panelId, viewId: view.id },
-      bubbles: true,
+      detail: {
+        viewId: view.id,
+        panelId,
+      },
     });
-    console.log("TabManager: Dispatching event:", event);
     document.dispatchEvent(event);
     setOpen(false);
   };
 
   const handleButtonClick = () => {
-    console.log("Add button clicked, current open state:", open);
     setOpen((v) => !v);
   };
 
   const views = globalViewRegistry.getAllViews();
-  console.log("Available views in dropdown:", views);
 
   return (
     <div style={{ position: "relative", marginLeft: 4 }}>

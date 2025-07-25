@@ -7,7 +7,6 @@ export { ThemeVariables } from "./components/ThemeVariables";
 
 // Demo components
 export {
-  WorkspaceDemo,
   LayoutManagerDemo,
   WorkspaceContainerDemo,
   PersistentEditor,

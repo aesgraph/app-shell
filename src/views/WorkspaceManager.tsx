@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useTheme, useWorkspace } from "../contexts/useAppShell";
+import { useTheme, useWorkspace, useAppShell } from "../contexts/useAppShell";
 import type { WorkspaceState } from "../types/workspace";
 
 const WorkspaceManager = () => {
   const { theme } = useTheme();
+  const { log } = useAppShell();
   const {
     savedWorkspaces,
     currentWorkspace,
@@ -42,7 +43,7 @@ const WorkspaceManager = () => {
     const workspaceState = await saveCurrentLayout(trimmedName);
     if (workspaceState) {
       setNewWorkspaceName("");
-      console.log("Saved workspace:", workspaceState);
+      log("Saved workspace:", workspaceState);
     } else {
       alert("Failed to save workspace");
     }
@@ -52,7 +53,7 @@ const WorkspaceManager = () => {
     const success = await applyWorkspaceLayout(workspaceId);
     if (success) {
       setSelectedWorkspace(workspaceId);
-      console.log("Successfully loaded workspace");
+      log("Successfully loaded workspace");
     } else {
       alert("Failed to load workspace");
     }
@@ -73,7 +74,7 @@ const WorkspaceManager = () => {
 
     const duplicatedWorkspace = duplicateWorkspace(workspaceId);
     if (duplicatedWorkspace) {
-      console.log("Duplicated workspace:", duplicatedWorkspace.name);
+      log("Duplicated workspace:", duplicatedWorkspace.name);
     }
   };
 

@@ -8,6 +8,7 @@ import React, {
 import type { WorkspaceState } from "../types/workspace";
 import { Theme } from "../types/ThemeDefinition";
 import { themes, defaultTheme } from "../themes/themes";
+import { initialWorkspaces } from "../../../unigraph/src/config/initialWorkspaces";
 
 interface AppShellContextValue {
   // Workspace management
@@ -33,6 +34,10 @@ interface AppShellContextValue {
   themeId: string;
   setTheme: (themeId: string) => void;
   themes: Record<string, Theme>;
+  // Debug management
+  debug: boolean;
+  setDebug: (debug: boolean) => void;
+  log: (message: string, ...args: unknown[]) => void;
 }
 
 export type { AppShellContextValue };
@@ -47,6 +52,7 @@ interface WorkspaceProviderProps {
   children: ReactNode;
   storageKey?: string;
   themeId?: string;
+  debug?: boolean;
   onWorkspaceChange?: (workspace: WorkspaceState | null) => void;
   onThemeChange?: (themeId: string) => void;
 }
@@ -74,6 +80,7 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
   children,
   storageKey = "layout-workspaces",
   themeId = "dark",
+  debug = false,
   onWorkspaceChange,
   onThemeChange,
 }) => {
@@ -81,6 +88,17 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
   const [currentWorkspace, setCurrentWorkspace] =
     useState<WorkspaceState | null>(null);
   const [currentThemeId, setCurrentThemeId] = useState(themeId);
+  const [debugEnabled, setDebugEnabled] = useState(debug);
+
+  // Debug logging function
+  const log = useCallback(
+    (message: string, ...args: unknown[]) => {
+      if (debugEnabled) {
+        console.log(`[AppShell] ${message}`, ...args);
+      }
+    },
+    [debugEnabled]
+  );
 
   // Load workspaces from localStorage on initialization
   useEffect(() => {
@@ -99,6 +117,16 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
             localStorage.setItem(storageKey, JSON.stringify(validWorkspaces));
             console.log(
               `Filtered out ${workspaces.length - validWorkspaces.length} invalid workspaces from cache`
+            );
+          }
+        } else {
+          // If no saved workspaces exist, create initial workspaces
+          if (initialWorkspaces && Array.isArray(initialWorkspaces)) {
+            setSavedWorkspaces(initialWorkspaces);
+            localStorage.setItem(storageKey, JSON.stringify(initialWorkspaces));
+            console.log(
+              "Created initial workspaces:",
+              initialWorkspaces.length
             );
           }
         }
@@ -348,6 +376,10 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
     themeId: currentThemeId,
     setTheme,
     themes,
+    // Debug management
+    debug: debugEnabled,
+    setDebug: setDebugEnabled,
+    log,
   };
 
   return (

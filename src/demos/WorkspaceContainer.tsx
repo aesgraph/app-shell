@@ -10,7 +10,7 @@ const WorkspaceContainerDemo: React.FC = () => {
   return (
     <div className={styles["aes-appContainer"]}>
       {/* Top Navigation Bar */}
-      <div className={styles["aes-topBar"]}>
+      <div className={styles["aes-statusBar"]}>
         <h1 className={styles["aes-topBarTitle"]}>My Application</h1>
         <nav className={styles["aes-topBarNav"]}>
           <button className={styles["aes-topBarButton"]}>File</button>
@@ -20,7 +20,7 @@ const WorkspaceContainerDemo: React.FC = () => {
 
       {/* Main Content Area with Workspace */}
       <div className={styles["aes-mainContent"]}>
-        <AppShellProvider>
+        <AppShellProvider themeId="dracula">
           <LayoutManager />
           {/* <WorkspaceGrid fullViewport={false} /> */}
         </AppShellProvider>
