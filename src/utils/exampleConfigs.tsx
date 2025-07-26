@@ -40,12 +40,12 @@ export const exampleCustomConfig: LayoutConfig = {
     right: {
       tabs: [
         {
-          id: "workspace-theme-selector",
+          id: "workspace-config-editor",
           title: "Theme Selector",
-          content: "workspace-theme-selector", // Use view ID string for registered views
+          content: "workspace-config-editor", // Use view ID string for registered views
         },
       ],
-      activeTabId: "workspace-theme-selector",
+      activeTabId: "workspace-config-editor",
     },
     bottom: {
       tabs: [

@@ -33,6 +33,10 @@ interface AppShellContextValue {
   themeId: string;
   setTheme: (themeId: string) => void;
   themes: Record<string, Theme>;
+  // Debug management
+  debug: boolean;
+  setDebug: (debug: boolean) => void;
+  log: (message: string, ...args: unknown[]) => void;
 }
 
 export type { AppShellContextValue };
@@ -47,6 +51,7 @@ interface WorkspaceProviderProps {
   children: ReactNode;
   storageKey?: string;
   themeId?: string;
+  debug?: boolean;
   onWorkspaceChange?: (workspace: WorkspaceState | null) => void;
   onThemeChange?: (themeId: string) => void;
 }
@@ -74,6 +79,7 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
   children,
   storageKey = "layout-workspaces",
   themeId = "dark",
+  debug = false,
   onWorkspaceChange,
   onThemeChange,
 }) => {
@@ -81,6 +87,17 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
   const [currentWorkspace, setCurrentWorkspace] =
     useState<WorkspaceState | null>(null);
   const [currentThemeId, setCurrentThemeId] = useState(themeId);
+  const [debugEnabled, setDebugEnabled] = useState(debug);
+
+  // Debug logging function
+  const log = useCallback(
+    (message: string, ...args: unknown[]) => {
+      if (debugEnabled) {
+        console.log(`[AppShell] ${message}`, ...args);
+      }
+    },
+    [debugEnabled]
+  );
 
   // Load workspaces from localStorage on initialization
   useEffect(() => {
@@ -101,6 +118,10 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
               `Filtered out ${workspaces.length - validWorkspaces.length} invalid workspaces from cache`
             );
           }
+        } else {
+          // If no saved workspaces exist, start with empty array
+          // External consumers can provide initial workspaces via props if needed
+          setSavedWorkspaces([]);
         }
       } catch (error) {
         console.error("Failed to load saved workspaces:", error);
@@ -348,6 +369,10 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
     themeId: currentThemeId,
     setTheme,
     themes,
+    // Debug management
+    debug: debugEnabled,
+    setDebug: setDebugEnabled,
+    log,
   };
 
   return (

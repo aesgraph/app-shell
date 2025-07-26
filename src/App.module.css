@@ -682,19 +682,23 @@
 .aes-viewDropdown {
   background: var(--aes-color-panel, var(--color-panel, #2a2a2a));
   border: 1px solid var(--aes-color-border, var(--color-border, #444));
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  min-width: 250px;
-  max-width: 350px;
+  border-radius: 8px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  min-width: 240px;
+  max-width: 320px;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 9999;
   position: fixed;
   /* Ensure the dropdown doesn't inherit unwanted styles from upstream projects */
   box-sizing: border-box;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.4;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.3;
   color: var(--aes-color-text, var(--color-text, #ffffff));
   /* Reset any potential conflicts */
   transform: none;
@@ -702,6 +706,9 @@
   padding: 0;
   /* Ensure proper stacking context */
   isolation: isolate;
+  /* More subtle backdrop blur effect for modern OS feel */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   /* Themed scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: var(--aes-color-scrollbar, var(--color-scrollbar, #555))
@@ -710,30 +717,30 @@
 
 /* Themed scrollbar styles for ViewDropdown */
 .aes-viewDropdown::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 .aes-viewDropdown::-webkit-scrollbar-track {
-  background: var(--aes-color-panel, var(--color-panel, #2a2a2a));
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 3px;
 }
 
 .aes-viewDropdown::-webkit-scrollbar-thumb {
-  background: var(--aes-color-scrollbar, var(--color-scrollbar, #555));
-  border-radius: 4px;
-  border: 1px solid var(--aes-color-border, var(--color-border, #444));
+  background: var(--aes-color-scrollbar, var(--color-scrollbar, #666));
+  border-radius: 3px;
+  border: none;
 }
 
 .aes-viewDropdown::-webkit-scrollbar-thumb:hover {
   background: var(
     --aes-color-scrollbar-hover,
-    var(--color-scrollbar-hover, #666)
+    var(--color-scrollbar-hover, #777)
   );
 }
 
 .aes-viewDropdownContent {
-  padding: 8px 0;
+  padding: 4px 0;
   /* Reset any potential conflicts */
   margin: 0;
   box-sizing: border-box;
@@ -742,8 +749,52 @@
   height: 100%;
 }
 
+.aes-viewSearchContainer {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--aes-color-border, var(--color-border, #444));
+  margin-bottom: 4px;
+}
+
+.aes-viewSearchInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--aes-color-border, var(--color-border, #444));
+  border-radius: 6px;
+  background: var(--aes-color-bg, var(--color-bg, #1e1e1e));
+  color: var(--aes-color-text, var(--color-text, #ffffff));
+  font-size: 13px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.aes-viewSearchInput:focus {
+  border-color: var(
+    --aes-color-resizer-hover,
+    var(--color-resizer-hover, #007acc)
+  );
+  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.15);
+}
+
+.aes-viewSearchInput::placeholder {
+  color: var(--aes-color-text, var(--color-text, #ffffff));
+  opacity: 0.5;
+}
+
+.aes-viewNoResults {
+  padding: 12px;
+  text-align: center;
+  color: var(--aes-color-text, var(--color-text, #ffffff));
+  opacity: 0.6;
+  font-style: italic;
+  font-size: 12px;
+}
+
 .aes-viewCategory {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   /* Defensive styles for upstream compatibility */
   box-sizing: border-box;
   /* Ensure categories don't overflow */
@@ -752,24 +803,23 @@
 }
 
 .aes-viewCategoryTitle {
-  padding: 8px 16px;
-  font-size: 0.8rem;
+  padding: 6px 12px 4px 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--aes-color-text, var(--color-text, #ffffff));
-  opacity: 0.7;
+  opacity: 0.6;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--aes-color-border, var(--color-border, #444));
-  margin-bottom: 4px;
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
 }
 
 .aes-viewOption {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
+  padding: 6px 12px;
   cursor: pointer;
-  transition: background 0.2s;
-  gap: 12px;
+  transition: background-color 0.12s ease;
+  gap: 10px;
   /* Defensive styles for upstream compatibility */
   box-sizing: border-box;
   position: relative;
@@ -780,19 +830,39 @@
   /* Ensure options don't overflow */
   min-width: 0;
   flex-shrink: 0;
+  border-radius: 4px;
+  margin: 0 4px;
 }
 
 .aes-viewOption:hover {
   background: var(
     --aes-color-resizer-hover,
-    var(--color-resizer-hover, #404040)
+    var(--color-resizer-hover, rgba(255, 255, 255, 0.08))
   );
 }
 
+.aes-viewOptionSelected {
+  background: var(
+    --aes-color-resizer-hover,
+    var(--color-resizer-hover, #007acc)
+  );
+  color: #ffffff;
+}
+
+.aes-viewOptionSelected .aes-viewTitle {
+  color: #ffffff;
+}
+
+.aes-viewOptionSelected .aes-viewDescription {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
 .aes-viewIcon {
-  font-size: 1.2rem;
-  width: 20px;
+  font-size: 16px;
+  width: 18px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .aes-viewInfo {
@@ -803,7 +873,8 @@
 .aes-viewTitle {
   font-weight: 500;
   color: var(--aes-color-text, var(--color-text, #ffffff));
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  font-size: 13px;
   /* Handle text overflow */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -811,10 +882,10 @@
 }
 
 .aes-viewDescription {
-  font-size: 0.8rem;
+  font-size: 11px;
   color: var(--aes-color-text, var(--color-text, #ffffff));
-  opacity: 0.7;
-  line-height: 1.3;
+  opacity: 0.65;
+  line-height: 1.2;
   /* Handle text overflow */
   overflow: hidden;
   text-overflow: ellipsis;

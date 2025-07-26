@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppShell } from "../contexts/useAppShell";
 import { LayoutManager } from "../components/LayoutManager";
 import { LayoutConfig } from "../types/LayoutConfig";
 import { createDefaultLayoutConfig } from "../utils/layoutConfigUtils";
@@ -18,10 +19,11 @@ const LayoutManagerDemo: React.FC<LayoutManagerDemoProps> = ({
   showControls = true,
   title = "Layout Manager Demo",
 }) => {
+  const { log } = useAppShell();
   const [useCustomConfig, setUseCustomConfig] = useState(false);
 
   const handleConfigChange = (newConfig: LayoutConfig) => {
-    console.log("Layout configuration changed:", newConfig);
+    log("Layout configuration changed:", newConfig);
   };
 
   const handleToggleConfig = () => {

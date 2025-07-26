@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useAppShell } from "../contexts/useAppShell";
 import type { ViewDefinition } from "../types/ViewRegistry";
 import styles from "../App.module.css";
 
@@ -22,9 +23,25 @@ const ViewDropdown = ({
   containerId,
   theme,
 }: ViewDropdownProps) => {
+  const { log } = useAppShell();
+
+  log(
+    "ViewDropdown: Rendering with views:",
+    views.map((v) => ({ id: v.id, title: v.title, category: v.category }))
+  );
+
+  // Check if our specific views are in the list
+  const devToolsInList = views.find((v) => v.id === "dev-tools");
+  const testViewInList = views.find((v) => v.id === "test-view");
+  log("ViewDropdown: dev-tools in list:", !!devToolsInList);
+  log("ViewDropdown: test-view in list:", !!testViewInList);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const selectedItemRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
   const [maxHeight, setMaxHeight] = useState(400);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,6 +58,19 @@ const ViewDropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
+  // Reset selected index when dropdown opens and focus the search input
+  useEffect(() => {
+    setSelectedIndex(-1); // Start with no selection so search input is clearly focused
+    // Focus the search input after a short delay to ensure it's rendered
+    const timer = setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+        searchInputRef.current.select(); // Select all text for easy replacement
+      }
+    }, 10);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Calculate available space and adjust position and max-height
   useEffect(() => {
@@ -153,7 +183,66 @@ const ViewDropdown = ({
     onClose();
   };
 
-  const viewsByCategory = views.reduce(
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      onClose();
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      // Move to the first item in the list or next item if already selected
+      const newIndex =
+        selectedIndex >= 0
+          ? Math.min(selectedIndex + 1, flatFilteredViews.length - 1)
+          : 0;
+      setSelectedIndex(newIndex);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      // Move to previous item or stay at -1 if at top (keeps search focused)
+      const newIndex = selectedIndex > 0 ? selectedIndex - 1 : -1;
+      setSelectedIndex(newIndex);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      // If there's a selected item, select it; otherwise select the first one
+      if (selectedIndex >= 0 && flatFilteredViews[selectedIndex]) {
+        handleViewSelect(flatFilteredViews[selectedIndex]);
+      } else if (flatFilteredViews.length > 0) {
+        handleViewSelect(flatFilteredViews[0]);
+      }
+    }
+  };
+
+  const handleDropdownKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // This handler is mainly for cases where the dropdown has focus
+    // Most navigation should happen through the search input
+    if (e.key === "Escape") {
+      onClose();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0 && flatFilteredViews[selectedIndex]) {
+        handleViewSelect(flatFilteredViews[selectedIndex]);
+      }
+    } else if (e.key.length === 1 || e.key === "Backspace") {
+      // If user types while dropdown has focus, redirect to search input
+      searchInputRef.current?.focus();
+    }
+  };
+
+  // Filter views based on search term
+  const filteredViews = views.filter((view) => {
+    if (!searchTerm.trim()) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      view.title.toLowerCase().includes(searchLower) ||
+      view.description?.toLowerCase().includes(searchLower) ||
+      view.category?.toLowerCase().includes(searchLower) ||
+      view.id.toLowerCase().includes(searchLower)
+    );
+  });
+
+  const viewsByCategory = filteredViews.reduce(
     (acc, view) => {
       const category = view.category || "General";
       if (!acc[category]) {
@@ -164,6 +253,30 @@ const ViewDropdown = ({
     },
     {} as Record<string, ViewDefinition[]>
   );
+
+  // Create a flat list that matches the rendered structure
+  const flatFilteredViews: ViewDefinition[] = [];
+  Object.entries(viewsByCategory).forEach(([, categoryViews]) => {
+    categoryViews.forEach((view) => {
+      flatFilteredViews.push(view);
+    });
+  });
+
+  // Reset selected index when filtered views change
+  useEffect(() => {
+    setSelectedIndex(-1); // Reset to no selection when search results change
+  }, [flatFilteredViews.length]);
+
+  // Auto-scroll selected item into view
+  useEffect(() => {
+    if (selectedIndex >= 0 && selectedItemRef.current) {
+      selectedItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
+      });
+    }
+  }, [selectedIndex]);
 
   const dropdownContent = (
     <div
@@ -180,32 +293,68 @@ const ViewDropdown = ({
         zIndex: 9999,
         maxHeight: `${maxHeight}px`,
       }}
+      onKeyDown={handleDropdownKeyDown}
+      tabIndex={-1}
     >
       <div className={styles["aes-viewDropdownContent"]}>
+        {/* Search Bar */}
+        <div className={styles["aes-viewSearchContainer"]}>
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search views..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            onKeyDown={handleSearchKeyDown}
+            className={styles["aes-viewSearchInput"]}
+            autoFocus
+            onFocus={(e) => e.target.select()}
+          />
+        </div>
+
+        {/* Views List */}
         {Object.entries(viewsByCategory).map(([category, categoryViews]) => (
           <div key={category} className={styles["aes-viewCategory"]}>
             <div className={styles["aes-viewCategoryTitle"]}>{category}</div>
-            {categoryViews.map((view) => (
-              <div
-                key={view.id}
-                className={styles["aes-viewOption"]}
-                onClick={() => handleViewSelect(view)}
-              >
-                {view.icon && (
-                  <span className={styles["aes-viewIcon"]}>{view.icon}</span>
-                )}
-                <div className={styles["aes-viewInfo"]}>
-                  <div className={styles["aes-viewTitle"]}>{view.title}</div>
-                  {view.description && (
-                    <div className={styles["aes-viewDescription"]}>
-                      {view.description}
-                    </div>
+            {categoryViews.map((view) => {
+              const globalIndex = flatFilteredViews.findIndex(
+                (v) => v.id === view.id
+              );
+              const isSelected =
+                globalIndex === selectedIndex && selectedIndex >= 0;
+
+              return (
+                <div
+                  key={view.id}
+                  ref={isSelected ? selectedItemRef : null}
+                  className={`${styles["aes-viewOption"]} ${
+                    isSelected ? styles["aes-viewOptionSelected"] : ""
+                  }`}
+                  onClick={() => handleViewSelect(view)}
+                >
+                  {view.icon && (
+                    <span className={styles["aes-viewIcon"]}>{view.icon}</span>
                   )}
+                  <div className={styles["aes-viewInfo"]}>
+                    <div className={styles["aes-viewTitle"]}>{view.title}</div>
+                    {view.description && (
+                      <div className={styles["aes-viewDescription"]}>
+                        {view.description}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ))}
+
+        {/* No results message */}
+        {searchTerm.trim() && Object.keys(viewsByCategory).length === 0 && (
+          <div className={styles["aes-viewNoResults"]}>
+            No views found matching "{searchTerm}"
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useTheme, useWorkspace } from "../contexts/useAppShell";
+import { useTheme, useWorkspace, useAppShell } from "../contexts/useAppShell";
 import type { WorkspaceState } from "../types/workspace";
 
 const WorkspaceManager = () => {
   const { theme } = useTheme();
+  const { log } = useAppShell();
   const {
     savedWorkspaces,
     currentWorkspace,
@@ -42,7 +43,7 @@ const WorkspaceManager = () => {
     const workspaceState = await saveCurrentLayout(trimmedName);
     if (workspaceState) {
       setNewWorkspaceName("");
-      console.log("Saved workspace:", workspaceState);
+      log("Saved workspace:", workspaceState);
     } else {
       alert("Failed to save workspace");
     }
@@ -52,7 +53,7 @@ const WorkspaceManager = () => {
     const success = await applyWorkspaceLayout(workspaceId);
     if (success) {
       setSelectedWorkspace(workspaceId);
-      console.log("Successfully loaded workspace");
+      log("Successfully loaded workspace");
     } else {
       alert("Failed to load workspace");
     }
@@ -73,7 +74,7 @@ const WorkspaceManager = () => {
 
     const duplicatedWorkspace = duplicateWorkspace(workspaceId);
     if (duplicatedWorkspace) {
-      console.log("Duplicated workspace:", duplicatedWorkspace.name);
+      log("Duplicated workspace:", duplicatedWorkspace.name);
     }
   };
 
@@ -114,6 +115,7 @@ const WorkspaceManager = () => {
         backgroundColor: theme.colors.background,
         color: theme.colors.text,
         minHeight: "100vh",
+        overflow: "auto",
       }}
     >
       <div style={{ marginBottom: "30px" }}>
@@ -133,31 +135,44 @@ const WorkspaceManager = () => {
           border: `1px solid ${theme.colors.border}`,
           borderRadius: "8px",
           backgroundColor: theme.colors.backgroundSecondary,
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
         <h3 style={{ marginBottom: "15px", color: theme.colors.text }}>
           Save Current Workspace
         </h3>
-        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginBottom: "15px",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
           <input
             type="text"
             placeholder="Enter workspace name..."
             value={newWorkspaceName}
             onChange={(e) => setNewWorkspaceName(e.target.value)}
             style={{
-              flex: 1,
+              flex: "1 1 0",
+              minWidth: "0",
               padding: "8px 12px",
               border: `1px solid ${theme.colors.border}`,
               borderRadius: "4px",
               fontSize: "14px",
               backgroundColor: theme.colors.surface,
               color: theme.colors.text,
+              boxSizing: "border-box",
             }}
           />
           <button
             onClick={saveCurrentWorkspace}
             disabled={!newWorkspaceName.trim()}
             style={{
+              flex: "0 0 auto",
               padding: "8px 16px",
               backgroundColor: newWorkspaceName.trim()
                 ? theme.colors.primary
@@ -167,6 +182,8 @@ const WorkspaceManager = () => {
               borderRadius: "4px",
               cursor: newWorkspaceName.trim() ? "pointer" : "not-allowed",
               fontSize: "14px",
+              whiteSpace: "nowrap",
+              boxSizing: "border-box",
             }}
           >
             Save Workspace
