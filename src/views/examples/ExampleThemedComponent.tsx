@@ -27,8 +27,7 @@ export const ExampleThemedComponent: React.FC<ExampleThemedComponentProps> = ({
     borderRadius: theme.sizes.borderRadius.lg,
     border: `1px solid ${theme.colors.border}`,
     fontFamily: "system-ui, -apple-system, sans-serif",
-    maxHeight: "80vh",
-    overflowY: "auto",
+    height: "100%",
     ...customStyle,
   };
 
