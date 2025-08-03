@@ -5,7 +5,7 @@
 
 A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
 
-![App Workspace Shell](./public/screenshot.png)
+<img width="1648" height="1182" alt="image" src="https://github.com/user-attachments/assets/56ab3a62-601a-4b02-9953-1e1d6d1f70d6" />
 
 ## Live Demo
 
