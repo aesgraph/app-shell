@@ -193,12 +193,16 @@ const ViewDropdown = ({
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
       // Move to the next item in the list
-      const newIndex = Math.min(selectedIndex + 1, flatFilteredViews.length - 1);
+      const newIndex = Math.min(
+        selectedIndex + 1,
+        flatFilteredViews.length - 1
+      );
       setSelectedIndex(newIndex);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       // Move to previous item, wrap to last item if at first item
-      const newIndex = selectedIndex > 0 ? selectedIndex - 1 : flatFilteredViews.length - 1;
+      const newIndex =
+        selectedIndex > 0 ? selectedIndex - 1 : flatFilteredViews.length - 1;
       setSelectedIndex(newIndex);
     } else if (e.key === "Enter") {
       e.preventDefault();
