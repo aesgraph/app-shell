@@ -5,7 +5,7 @@
 
 A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
 
-<img width="1648" height="1182" alt="image" src="https://github.com/user-attachments/assets/56ab3a62-601a-4b02-9953-1e1d6d1f70d6" />
+<img width="1644" height="1179" alt="image" src="https://github.com/user-attachments/assets/d9c46995-6892-4e55-b361-287d8e333d6a" />
 
 ## Live Demo
 
