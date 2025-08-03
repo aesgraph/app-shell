@@ -189,9 +189,12 @@ const ViewDropdown = ({
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
       onClose();
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
+      e.stopPropagation();
       // Move to the next item in the list
       const newIndex = Math.min(
         selectedIndex + 1,
@@ -200,12 +203,14 @@ const ViewDropdown = ({
       setSelectedIndex(newIndex);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      e.stopPropagation();
       // Move to previous item, wrap to last item if at first item
       const newIndex =
         selectedIndex > 0 ? selectedIndex - 1 : flatFilteredViews.length - 1;
       setSelectedIndex(newIndex);
     } else if (e.key === "Enter") {
       e.preventDefault();
+      e.stopPropagation(); // Prevent event from bubbling to dropdown handler
       // Select the currently highlighted item
       if (selectedIndex >= 0 && flatFilteredViews[selectedIndex]) {
         handleViewSelect(flatFilteredViews[selectedIndex]);
