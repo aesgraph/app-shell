@@ -59,9 +59,9 @@ const ViewDropdown = ({
     };
   }, [onClose]);
 
-  // Reset selected index when dropdown opens and focus the search input
+  // Auto-select first item when dropdown opens and focus the search input
   useEffect(() => {
-    setSelectedIndex(-1); // Start with no selection so search input is clearly focused
+    setSelectedIndex(0); // Start with first item selected
     // Focus the search input after a short delay to ensure it's rendered
     const timer = setTimeout(() => {
       if (searchInputRef.current) {
@@ -192,20 +192,17 @@ const ViewDropdown = ({
       onClose();
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      // Move to the first item in the list or next item if already selected
-      const newIndex =
-        selectedIndex >= 0
-          ? Math.min(selectedIndex + 1, flatFilteredViews.length - 1)
-          : 0;
+      // Move to the next item in the list
+      const newIndex = Math.min(selectedIndex + 1, flatFilteredViews.length - 1);
       setSelectedIndex(newIndex);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      // Move to previous item or stay at -1 if at top (keeps search focused)
-      const newIndex = selectedIndex > 0 ? selectedIndex - 1 : -1;
+      // Move to previous item, wrap to last item if at first item
+      const newIndex = selectedIndex > 0 ? selectedIndex - 1 : flatFilteredViews.length - 1;
       setSelectedIndex(newIndex);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      // If there's a selected item, select it; otherwise select the first one
+      // Select the currently highlighted item
       if (selectedIndex >= 0 && flatFilteredViews[selectedIndex]) {
         handleViewSelect(flatFilteredViews[selectedIndex]);
       } else if (flatFilteredViews.length > 0) {
@@ -262,10 +259,14 @@ const ViewDropdown = ({
     });
   });
 
-  // Reset selected index when filtered views change
+  // Auto-select first item when filtered views change
   useEffect(() => {
-    setSelectedIndex(-1); // Reset to no selection when search results change
-  }, [flatFilteredViews.length]);
+    if (flatFilteredViews.length > 0) {
+      setSelectedIndex(0); // Auto-select first item when search results change
+    } else {
+      setSelectedIndex(-1); // No items to select
+    }
+  }, [flatFilteredViews.length, searchTerm]);
 
   // Auto-scroll selected item into view
   useEffect(() => {
