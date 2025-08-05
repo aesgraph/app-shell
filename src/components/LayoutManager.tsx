@@ -169,12 +169,21 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
   // Function to add a view as a tab
   const addViewAsTab = useCallback(
-    (viewId: string, pane: Pane) => {
+    (
+      viewId: string,
+      pane: Pane,
+      options?: {
+        props?: Record<string, unknown>;
+        title?: string;
+        activate?: boolean;
+      }
+    ) => {
       logWithLevel(
         "info",
         "LayoutManager: addViewAsTab called with:",
         viewId,
-        pane
+        pane,
+        options
       );
       const viewDef = globalViewRegistry.getView(viewId);
       logWithLevel("info", "LayoutManager: viewDef found:", viewDef);
@@ -182,17 +191,19 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
       const tabId = `${viewId}-${Date.now()}`;
       const ViewComponent = viewDef.component;
+      const { props = {}, title, activate = true } = options || {};
 
       // Create and cache the component instance
       const content = React.createElement(ViewComponent, {
         key: tabId,
         ...(viewDef.props || {}),
+        ...props,
       });
       tabInstanceCache.current.set(tabId, content);
 
       const newTab: Tab = {
         id: tabId,
-        title: viewDef.title,
+        title: title || viewDef.title,
         content: content,
       };
 
@@ -203,10 +214,65 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         [pane]: [...prev[pane], newTab],
       }));
 
-      setActiveTabIds((prev) => ({
+      if (activate) {
+        setActiveTabIds((prev) => ({
+          ...prev,
+          [pane]: newTab.id,
+        }));
+      }
+    },
+    [logWithLevel]
+  );
+
+  // Function to add a custom component as a tab
+  const addCustomTabAsTab = useCallback(
+    (
+      tabId: string,
+      component: React.ComponentType<Record<string, unknown>>,
+      title: string,
+      pane: Pane,
+      options?: {
+        props?: Record<string, unknown>;
+        activate?: boolean;
+      }
+    ) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: addCustomTabAsTab called with:",
+        tabId,
+        title,
+        pane,
+        options
+      );
+
+      const { props = {}, activate = true } = options || {};
+
+      // Create and cache the component instance
+      const content = React.createElement(component, {
+        key: tabId,
+        ...props,
+      });
+      tabInstanceCache.current.set(tabId, content);
+
+      const newTab: Tab = {
+        id: tabId,
+        title: title,
+        content: content,
+      };
+
+      logWithLevel("info", "LayoutManager: Adding custom tab:", newTab);
+
+      setTabs((prev) => ({
         ...prev,
-        [pane]: newTab.id,
+        [pane]: [...prev[pane], newTab],
       }));
+
+      if (activate) {
+        setActiveTabIds((prev) => ({
+          ...prev,
+          [pane]: newTab.id,
+        }));
+      }
     },
     [logWithLevel]
   );
@@ -224,14 +290,37 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         "LayoutManager: Received add-tab event:",
         event.detail
       );
-      const { panelId, viewId } = event.detail;
-      addViewAsTab(viewId, panelId as Pane);
+      const { panelId, viewId, props, title, activate } = event.detail;
+      addViewAsTab(viewId, panelId as Pane, { props, title, activate });
+    };
+
+    const handleAddCustomTab = (event: CustomEvent) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: Received add-custom-tab event:",
+        event.detail
+      );
+      const { panelId, tabId, component, title, props, activate } =
+        event.detail;
+      addCustomTabAsTab(tabId, component, title, panelId as Pane, {
+        props,
+        activate,
+      });
     };
 
     document.addEventListener("add-tab", handleAddTab as EventListener);
-    return () =>
+    document.addEventListener(
+      "add-custom-tab",
+      handleAddCustomTab as EventListener
+    );
+    return () => {
       document.removeEventListener("add-tab", handleAddTab as EventListener);
-  }, [addViewAsTab, logWithLevel]);
+      document.removeEventListener(
+        "add-custom-tab",
+        handleAddCustomTab as EventListener
+      );
+    };
+  }, [addViewAsTab, addCustomTabAsTab, logWithLevel]);
 
   // Cleanup tab instance cache on unmount
   useEffect(() => {
