@@ -14,7 +14,6 @@ export {
 } from "./demos";
 
 // Examples
-export { default as UnigraphIntegrationExample } from "./examples/UnigraphIntegrationExample";
 export { default as TestCustomViewRegistration } from "./examples/TestCustomViewRegistration";
 
 // Views
