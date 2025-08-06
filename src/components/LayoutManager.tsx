@@ -175,6 +175,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       options?: {
         props?: Record<string, unknown>;
         title?: string;
+        tabId?: string;
         activate?: boolean;
       }
     ) => {
@@ -189,7 +190,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       logWithLevel("info", "LayoutManager: viewDef found:", viewDef);
       if (!viewDef) return;
 
-      const tabId = `${viewId}-${Date.now()}`;
+      // Use custom tab ID if provided, otherwise generate one
+      const tabId = options?.tabId || `${viewId}-${Date.now()}`;
       const ViewComponent = viewDef.component;
       const { props = {}, title, activate = true } = options || {};
 
@@ -290,8 +292,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         "LayoutManager: Received add-tab event:",
         event.detail
       );
-      const { panelId, viewId, props, title, activate } = event.detail;
-      addViewAsTab(viewId, panelId as Pane, { props, title, activate });
+      const { panelId, viewId, props, title, tabId, activate } = event.detail;
+      addViewAsTab(viewId, panelId as Pane, { props, title, tabId, activate });
     };
 
     const handleAddCustomTab = (event: CustomEvent) => {

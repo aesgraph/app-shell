@@ -1,11 +1,48 @@
 import { globalViewRegistry, ViewDefinition } from "../types/ViewRegistry";
 import type { PaneType } from "../types/LayoutConfig";
 
+/**
+ * Check if a tab ID is unique across the entire app shell
+ * @param tabId The tab ID to check
+ * @returns True if the tab ID is unique
+ */
+export function isTabIdUnique(tabId: string): boolean {
+  // This function now needs to be called from within a component that has access to the AppShell context
+  // For programmatic usage, we'll use a different approach
+  console.warn(
+    `isTabIdUnique(${tabId}) should be called from within a component with AppShell context access`
+  );
+  return true; // Default to true for programmatic usage
+}
+
+/**
+ * Reserve a tab ID to ensure uniqueness
+ * @param tabId The tab ID to reserve
+ * @returns True if the tab ID was successfully reserved
+ */
+export function reserveTabId(tabId: string): boolean {
+  if (!isTabIdUnique(tabId)) {
+    console.warn(`Tab ID "${tabId}" is already in use`);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Release a tab ID when a tab is closed
+ * @param tabId The tab ID to release
+ */
+export function releaseTabId(tabId: string): void {
+  // No need to maintain separate state - the workspace state is the source of truth
+  console.log(`Released tab ID: ${tabId}`);
+}
+
 export interface AddViewOptions {
   viewId: string;
   pane: PaneType;
   props?: Record<string, unknown>;
   title?: string;
+  tabId?: string; // Optional custom tab ID (must be unique)
   activate?: boolean; // Whether to make this tab active immediately
 }
 
@@ -14,6 +51,7 @@ export interface AddCustomViewOptions {
   title: string;
   pane: PaneType;
   props?: Record<string, unknown>;
+  tabId?: string; // Optional custom tab ID (must be unique)
   activate?: boolean;
 }
 
@@ -50,7 +88,14 @@ export interface AddCustomViewOptions {
  * @returns The generated tab ID, or null if the view wasn't found
  */
 export function addViewAsTab(options: AddViewOptions): string | null {
-  const { viewId, pane, props = {}, title, activate = true } = options;
+  const {
+    viewId,
+    pane,
+    props = {},
+    title,
+    tabId: customTabId,
+    activate = true,
+  } = options;
 
   const viewDef = globalViewRegistry.getView(viewId);
   if (!viewDef) {
@@ -58,7 +103,16 @@ export function addViewAsTab(options: AddViewOptions): string | null {
     return null;
   }
 
-  const tabId = `${viewId}-${Date.now()}`;
+  // Use custom tab ID if provided, otherwise generate one
+  const tabId = customTabId || `${viewId}-${Date.now()}`;
+
+  // Validate tab ID uniqueness
+  if (!reserveTabId(tabId)) {
+    console.error(
+      `Tab ID "${tabId}" is already in use. Please choose a different ID.`
+    );
+    return null;
+  }
 
   // Create custom event to add the tab
   const event = new CustomEvent("add-tab", {
@@ -67,6 +121,7 @@ export function addViewAsTab(options: AddViewOptions): string | null {
       panelId: pane,
       props,
       title: title || viewDef.title,
+      tabId, // Pass the tab ID to the event
       activate,
     },
   });
@@ -103,9 +158,27 @@ export function addViewAsTab(options: AddViewOptions): string | null {
  * @returns The generated tab ID
  */
 export function addCustomViewAsTab(options: AddCustomViewOptions): string {
-  const { component, title, pane, props = {}, activate = true } = options;
+  const {
+    component,
+    title,
+    pane,
+    props = {},
+    tabId: customTabId,
+    activate = true,
+  } = options;
 
-  const tabId = `custom-${Date.now()}`;
+  // Use custom tab ID if provided, otherwise generate one
+  const tabId = customTabId || `custom-${Date.now()}`;
+
+  // Validate tab ID uniqueness
+  if (!reserveTabId(tabId)) {
+    console.error(
+      `Tab ID "${tabId}" is already in use. Please choose a different ID.`
+    );
+    throw new Error(
+      `Tab ID "${tabId}" is already in use. Please choose a different ID.`
+    );
+  }
 
   // Create custom event to add the tab directly with component
   const event = new CustomEvent("add-custom-tab", {

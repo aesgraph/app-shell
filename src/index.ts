@@ -56,6 +56,9 @@ export {
   getViewsByCategory,
   hasView,
 } from "./utils/programmaticViews";
+
+// Tab management utilities (use within components with AppShell context)
+export { useTabManagement } from "./contexts/useAppShell";
 export type {
   AddViewOptions,
   AddCustomViewOptions,

@@ -28,6 +28,9 @@ interface AppShellContextValue {
     WorkspaceState,
     "id" | "name" | "timestamp"
   > | null>;
+  // Tab management
+  getExistingTabIds: () => string[];
+  isTabIdUnique: (tabId: string) => boolean;
   // Theme management
   theme: Theme;
   themeId: string;
@@ -349,6 +352,34 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
 
   const theme = themes[currentThemeId] || defaultTheme;
 
+  // Tab management functions
+  const getExistingTabIds = useCallback((): string[] => {
+    if (!currentWorkspace) {
+      return [];
+    }
+
+    const existingTabIds: string[] = [];
+
+    // Extract tab IDs from all tab containers in the current workspace
+    currentWorkspace.tabContainers.forEach((container) => {
+      container.tabs.forEach((tab) => {
+        if (tab.id) {
+          existingTabIds.push(tab.id);
+        }
+      });
+    });
+
+    return existingTabIds;
+  }, [currentWorkspace]);
+
+  const isTabIdUnique = useCallback(
+    (tabId: string): boolean => {
+      const existingTabIds = getExistingTabIds();
+      return !existingTabIds.includes(tabId);
+    },
+    [getExistingTabIds]
+  );
+
   const value: AppShellContextValue = {
     // Workspace management
     savedWorkspaces,
@@ -364,6 +395,9 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
     saveCurrentLayout,
     applyWorkspaceLayout,
     captureCurrentState,
+    // Tab management
+    getExistingTabIds,
+    isTabIdUnique,
     // Theme management
     theme,
     themeId: currentThemeId,
