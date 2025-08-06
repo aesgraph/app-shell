@@ -813,7 +813,19 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
     });
   };
 
-  const handleTabDrop = (tabId: string, targetPane: Pane) => {
+  // Helper function to determine drop position within a pane
+  const getDropIndex = (pane: Pane, draggedTabId: string): number => {
+    const paneTabs = tabs[pane];
+    const draggedIndex = paneTabs.findIndex((tab) => tab.id === draggedTabId);
+    if (draggedIndex === -1) return -1;
+    
+    // For now, just move to the end of the pane
+    // In a more sophisticated implementation, you could calculate the exact drop position
+    // based on mouse position relative to tab elements
+    return paneTabs.length;
+  };
+
+  const handleTabDrop = (tabId: string, targetPane: Pane, dropIndex?: number) => {
     logWithLevel(
       "info",
       `Tab drop initiated - Tab ID: ${tabId}, Target Pane: ${targetPane}`
@@ -828,7 +840,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         tabToMove = found;
       }
     });
-    if (!fromPane || !tabToMove || fromPane === targetPane) {
+    if (!fromPane || !tabToMove) {
       logWithLevel(
         "warn",
         `Tab drop cancelled - fromPane: ${fromPane}, tabToMove: ${!!tabToMove}, targetPane: ${targetPane}`
@@ -836,19 +848,40 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       return;
     }
 
-    logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
-    setTabs((prev) => {
-      const newTabs = { ...prev };
-      newTabs[fromPane!] = newTabs[fromPane!].filter((tab) => tab.id !== tabId);
-      newTabs[targetPane] = [...newTabs[targetPane], tabToMove!];
-      return newTabs;
-    });
-    setActiveTabIds((prev) => ({
-      ...prev,
-      [fromPane!]:
-        tabs[fromPane!].filter((tab) => tab.id !== tabId)[0]?.id || "",
-      [targetPane]: tabId,
-    }));
+    if (fromPane === targetPane) {
+      // Reordering within the same pane - use provided drop index or calculate
+      const finalDropIndex = dropIndex !== undefined ? dropIndex : getDropIndex(targetPane, tabId);
+      if (finalDropIndex !== -1) {
+        logWithLevel("info", `Reordering tab within ${targetPane} to position ${finalDropIndex}`);
+        setTabs((prev) => {
+          const newTabs = { ...prev };
+          const paneTabs = [...newTabs[targetPane]];
+          const currentIndex = paneTabs.findIndex((tab) => tab.id === tabId);
+          if (currentIndex !== -1) {
+            // Remove from current position and insert at new position
+            const [movedTab] = paneTabs.splice(currentIndex, 1);
+            paneTabs.splice(finalDropIndex, 0, movedTab);
+            newTabs[targetPane] = paneTabs;
+          }
+          return newTabs;
+        });
+      }
+    } else {
+      // Moving between different panes
+      logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
+      setTabs((prev) => {
+        const newTabs = { ...prev };
+        newTabs[fromPane!] = newTabs[fromPane!].filter((tab) => tab.id !== tabId);
+        newTabs[targetPane] = [...newTabs[targetPane], tabToMove!];
+        return newTabs;
+      });
+      setActiveTabIds((prev) => ({
+        ...prev,
+        [fromPane!]:
+          tabs[fromPane!].filter((tab) => tab.id !== tabId)[0]?.id || "",
+        [targetPane]: tabId,
+      }));
+    }
   };
 
   // ...existing maximize/restore logic...
@@ -1008,8 +1041,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.left}
                   onTabSelect={(tabId) => handleTabSelect("left", tabId)}
                   onTabClose={(tabId) => handleTabClose("left", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="left"
                   rightContent={
@@ -1041,8 +1074,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.center}
                   onTabSelect={(tabId) => handleTabSelect("center", tabId)}
                   onTabClose={(tabId) => handleTabClose("center", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="center"
                   rightContent={
@@ -1074,8 +1107,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.right}
                   onTabSelect={(tabId) => handleTabSelect("right", tabId)}
                   onTabClose={(tabId) => handleTabClose("right", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="right"
                   rightContent={
@@ -1109,8 +1142,8 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               activeTabId={activeTabIds.bottom}
               onTabSelect={(tabId) => handleTabSelect("bottom", tabId)}
               onTabClose={(tabId) => handleTabClose("bottom", tabId)}
-              onTabDrop={(tabId, targetPanel) =>
-                handleTabDrop(tabId, targetPanel as Pane)
+              onTabDrop={(tabId, targetPanel, dropIndex) =>
+                handleTabDrop(tabId, targetPanel as Pane, dropIndex)
               }
               panelId="bottom"
               rightContent={

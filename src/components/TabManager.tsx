@@ -15,7 +15,7 @@ export interface TabManagerProps {
   activeTabId: string;
   onTabSelect: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
-  onTabDrop: (tabId: string, targetPanel: string) => void;
+  onTabDrop: (tabId: string, targetPanel: string, dropIndex?: number) => void;
   panelId: string;
   rightContent?: React.ReactNode;
 }
@@ -104,6 +104,8 @@ export const TabManager: React.FC<TabManagerProps> = ({
   rightContent,
 }) => {
   const dragTabId = useRef<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null);
+  const [dropPosition, setDropPosition] = React.useState<number>(0);
   const { theme } = useTheme();
 
   const handleDragStart = (e: React.DragEvent, tabId: string) => {
@@ -115,16 +117,70 @@ export const TabManager: React.FC<TabManagerProps> = ({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    setDragOverIndex(null);
     const tabId = e.dataTransfer.getData("text/plain");
-    const fromPanel = e.dataTransfer.getData("panel-id");
-    if (tabId && fromPanel !== panelId) {
-      onTabDrop(tabId, panelId);
+    if (tabId) {
+      // Calculate drop index based on mouse position relative to tab elements
+      const tabElements = e.currentTarget.querySelectorAll("[data-tab-index]");
+      const mouseX = e.clientX;
+      let dropIndex = tabs.length; // Default to end
+
+      for (let i = 0; i < tabElements.length; i++) {
+        const element = tabElements[i] as HTMLElement;
+        const rect = element.getBoundingClientRect();
+        if (mouseX < rect.left + rect.width / 2) {
+          dropIndex = i;
+          break;
+        }
+      }
+
+      onTabDrop(tabId, panelId, dropIndex);
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+
+    // Calculate drop index for visual feedback
+    const tabElements = e.currentTarget.querySelectorAll("[data-tab-index]");
+    const mouseX = e.clientX;
+    let dropIndex = tabs.length; // Default to end
+
+    console.log(
+      `DragOver in ${panelId}: mouseX=${mouseX}, tabElements=${tabElements.length}`
+    );
+
+    const containerRect = e.currentTarget.getBoundingClientRect();
+    for (let i = 0; i < tabElements.length; i++) {
+      const element = tabElements[i] as HTMLElement;
+      const rect = element.getBoundingClientRect();
+      const relativeLeft = rect.left - containerRect.left;
+      console.log(
+        `Tab ${i}: left=${rect.left}, width=${rect.width}, relativeLeft=${relativeLeft}, center=${rect.left + rect.width / 2}`
+      );
+      if (mouseX < rect.left + rect.width / 2) {
+        dropIndex = i;
+        setDropPosition(relativeLeft);
+        console.log(`Setting drop position to ${relativeLeft} for index ${i}`);
+        break;
+      }
+    }
+
+    if (dropIndex === tabs.length && tabElements.length > 0) {
+      const lastElement = tabElements[tabElements.length - 1] as HTMLElement;
+      const rect = lastElement.getBoundingClientRect();
+      const relativeLeft = rect.left - containerRect.left + rect.width;
+      setDropPosition(relativeLeft);
+      console.log(`Setting drop position to end: ${relativeLeft}`);
+    }
+
+    console.log(`Final dropIndex: ${dropIndex}, dropPosition: ${dropPosition}`);
+    setDragOverIndex(dropIndex);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
   };
 
   return (
@@ -132,6 +188,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
       className={styles["aes-tabBar"]}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
       data-panel-id={panelId}
       style={{
         display: "flex",
@@ -140,6 +197,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
         backgroundColor: theme.colors.workspaceTitleBackground,
         borderBottom: `1px solid ${theme.colors.border}`,
         minHeight: "32px",
+        position: "relative",
       }}
     >
       {/* Scrollable tabs section */}
@@ -158,108 +216,127 @@ export const TabManager: React.FC<TabManagerProps> = ({
             alignItems: "center",
             minWidth: "fit-content",
             gap: "2px",
+            position: "relative",
           }}
         >
-          {tabs.map((tab) => (
-            <div
-              key={tab.id}
-              className={
-                styles["aes-tab"] +
-                (tab.id === activeTabId ? " " + styles["aes-activeTab"] : "")
-              }
-              draggable
-              onDragStart={(e) => handleDragStart(e, tab.id)}
-              onClick={() => onTabSelect(tab.id)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "4px 8px",
-                borderRadius: "4px 4px 0 0",
-                cursor: "pointer",
-                userSelect: "none",
-                backgroundColor:
-                  tab.id === activeTabId
-                    ? theme.colors.surface
-                    : theme.colors.backgroundSecondary,
-                color:
-                  tab.id === activeTabId
-                    ? theme.colors.text
-                    : theme.colors.textMuted,
-                border: `1px solid ${theme.colors.border}`,
-                borderBottom:
-                  tab.id === activeTabId
-                    ? `1px solid ${theme.colors.surface}`
-                    : `1px solid ${theme.colors.border}`,
-                transition: "background-color 0.15s ease, color 0.15s ease",
-                position: "relative",
-                zIndex: tab.id === activeTabId ? 2 : 1,
-                whiteSpace: "nowrap",
-                flexShrink: 0, // Prevent tabs from shrinking
-              }}
-              onMouseEnter={(e) => {
-                if (tab.id !== activeTabId) {
-                  e.currentTarget.style.backgroundColor =
-                    theme.colors.surfaceHover;
-                  e.currentTarget.style.color = theme.colors.text;
+          {tabs.map((tab, index) => (
+            <React.Fragment key={tab.id}>
+              <div
+                className={
+                  styles["aes-tab"] +
+                  (tab.id === activeTabId ? " " + styles["aes-activeTab"] : "")
                 }
-              }}
-              onMouseLeave={(e) => {
-                if (tab.id !== activeTabId) {
-                  e.currentTarget.style.backgroundColor =
-                    theme.colors.backgroundSecondary;
-                  e.currentTarget.style.color = theme.colors.textMuted;
-                }
-              }}
-            >
-              <span
-                className={styles["aes-tabTitle"]}
+                draggable
+                data-tab-index={index}
+                onDragStart={(e) => handleDragStart(e, tab.id)}
+                onClick={() => onTabSelect(tab.id)}
                 style={{
-                  fontSize: "13px",
-                  fontWeight: tab.id === activeTabId ? 500 : 400,
-                  marginRight: "6px",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  maxWidth: "120px",
-                }}
-              >
-                {tab.title}
-              </span>
-              <button
-                className={styles["aes-closeTabButton"]}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onTabClose(tab.id);
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "inherit",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                  padding: "0 2px",
-                  borderRadius: "2px",
-                  lineHeight: 1,
-                  width: "16px",
-                  height: "16px",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  transition: "background-color 0.15s ease",
+                  padding: "4px 8px",
+                  borderRadius: "4px 4px 0 0",
+                  cursor: "pointer",
+                  userSelect: "none",
+                  backgroundColor:
+                    tab.id === activeTabId
+                      ? theme.colors.surface
+                      : theme.colors.backgroundSecondary,
+                  color:
+                    tab.id === activeTabId
+                      ? theme.colors.text
+                      : theme.colors.textMuted,
+                  border: `1px solid ${theme.colors.border}`,
+                  borderBottom:
+                    tab.id === activeTabId
+                      ? `1px solid ${theme.colors.surface}`
+                      : `1px solid ${theme.colors.border}`,
+                  transition: "background-color 0.15s ease, color 0.15s ease",
+                  position: "relative",
+                  zIndex: tab.id === activeTabId ? 2 : 1,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0, // Prevent tabs from shrinking
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = theme.colors.error;
-                  e.currentTarget.style.color = theme.colors.textInverse;
+                  if (tab.id !== activeTabId) {
+                    e.currentTarget.style.backgroundColor =
+                      theme.colors.surfaceHover;
+                    e.currentTarget.style.color = theme.colors.text;
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "inherit";
+                  if (tab.id !== activeTabId) {
+                    e.currentTarget.style.backgroundColor =
+                      theme.colors.backgroundSecondary;
+                    e.currentTarget.style.color = theme.colors.textMuted;
+                  }
                 }}
               >
-                ×
-              </button>
-            </div>
+                <span
+                  className={styles["aes-tabTitle"]}
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: tab.id === activeTabId ? 500 : 400,
+                    marginRight: "6px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: "120px",
+                  }}
+                >
+                  {tab.title}
+                </span>
+                <button
+                  className={styles["aes-closeTabButton"]}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTabClose(tab.id);
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "inherit",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                    padding: "0 2px",
+                    borderRadius: "2px",
+                    lineHeight: 1,
+                    width: "16px",
+                    height: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "background-color 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = theme.colors.error;
+                    e.currentTarget.style.color = theme.colors.textInverse;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "inherit";
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            </React.Fragment>
           ))}
+          {/* Drop indicators */}
+          {dragOverIndex !== null && (
+            <div
+              style={{
+                position: "absolute",
+                left: `${dropPosition}px`,
+                top: "0",
+                bottom: "0",
+                width: "2px",
+                backgroundColor: theme.colors.accent,
+                zIndex: 10,
+                pointerEvents: "none",
+              }}
+              title={`Drop indicator at ${dropPosition}px for index ${dragOverIndex} in ${panelId}`}
+            />
+          )}
           <AddTabDropdown panelId={panelId} />
         </div>
       </div>
