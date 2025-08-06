@@ -818,14 +818,18 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
     const paneTabs = tabs[pane];
     const draggedIndex = paneTabs.findIndex((tab) => tab.id === draggedTabId);
     if (draggedIndex === -1) return -1;
-    
+
     // For now, just move to the end of the pane
     // In a more sophisticated implementation, you could calculate the exact drop position
     // based on mouse position relative to tab elements
     return paneTabs.length;
   };
 
-  const handleTabDrop = (tabId: string, targetPane: Pane, dropIndex?: number) => {
+  const handleTabDrop = (
+    tabId: string,
+    targetPane: Pane,
+    dropIndex?: number
+  ) => {
     logWithLevel(
       "info",
       `Tab drop initiated - Tab ID: ${tabId}, Target Pane: ${targetPane}`
@@ -850,9 +854,13 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
     if (fromPane === targetPane) {
       // Reordering within the same pane - use provided drop index or calculate
-      const finalDropIndex = dropIndex !== undefined ? dropIndex : getDropIndex(targetPane, tabId);
+      const finalDropIndex =
+        dropIndex !== undefined ? dropIndex : getDropIndex(targetPane, tabId);
       if (finalDropIndex !== -1) {
-        logWithLevel("info", `Reordering tab within ${targetPane} to position ${finalDropIndex}`);
+        logWithLevel(
+          "info",
+          `Reordering tab within ${targetPane} to position ${finalDropIndex}`
+        );
         setTabs((prev) => {
           const newTabs = { ...prev };
           const paneTabs = [...newTabs[targetPane]];
@@ -871,7 +879,9 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
       setTabs((prev) => {
         const newTabs = { ...prev };
-        newTabs[fromPane!] = newTabs[fromPane!].filter((tab) => tab.id !== tabId);
+        newTabs[fromPane!] = newTabs[fromPane!].filter(
+          (tab) => tab.id !== tabId
+        );
         newTabs[targetPane] = [...newTabs[targetPane], tabToMove!];
         return newTabs;
       });

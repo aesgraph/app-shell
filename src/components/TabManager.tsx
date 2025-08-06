@@ -147,22 +147,14 @@ export const TabManager: React.FC<TabManagerProps> = ({
     const mouseX = e.clientX;
     let dropIndex = tabs.length; // Default to end
 
-    console.log(
-      `DragOver in ${panelId}: mouseX=${mouseX}, tabElements=${tabElements.length}`
-    );
-
     const containerRect = e.currentTarget.getBoundingClientRect();
     for (let i = 0; i < tabElements.length; i++) {
       const element = tabElements[i] as HTMLElement;
       const rect = element.getBoundingClientRect();
       const relativeLeft = rect.left - containerRect.left;
-      console.log(
-        `Tab ${i}: left=${rect.left}, width=${rect.width}, relativeLeft=${relativeLeft}, center=${rect.left + rect.width / 2}`
-      );
       if (mouseX < rect.left + rect.width / 2) {
         dropIndex = i;
         setDropPosition(relativeLeft);
-        console.log(`Setting drop position to ${relativeLeft} for index ${i}`);
         break;
       }
     }
@@ -172,10 +164,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
       const rect = lastElement.getBoundingClientRect();
       const relativeLeft = rect.left - containerRect.left + rect.width;
       setDropPosition(relativeLeft);
-      console.log(`Setting drop position to end: ${relativeLeft}`);
     }
-
-    console.log(`Final dropIndex: ${dropIndex}, dropPosition: ${dropPosition}`);
     setDragOverIndex(dropIndex);
   };
 
@@ -294,7 +283,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
                   style={{
                     background: "none",
                     border: "none",
-                    color: "inherit",
+                    color: theme.colors.textMuted,
                     cursor: "pointer",
                     fontSize: "16px",
                     padding: "0 2px",
@@ -305,7 +294,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    transition: "background-color 0.15s ease",
+                    transition: "background-color 0.15s ease, color 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = theme.colors.error;
@@ -313,7 +302,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "inherit";
+                    e.currentTarget.style.color = theme.colors.textMuted;
                   }}
                 >
                   ×
@@ -330,7 +319,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
                 top: "0",
                 bottom: "0",
                 width: "2px",
-                backgroundColor: theme.colors.accent,
+                backgroundColor: theme.colors.borderFocus,
                 zIndex: 10,
                 pointerEvents: "none",
               }}
@@ -350,6 +339,8 @@ export const TabManager: React.FC<TabManagerProps> = ({
             marginLeft: "4px",
             paddingRight: "2px",
             flexShrink: 0, // Never shrink the action buttons
+            borderLeft: `1px solid ${theme.colors.backgroundSecondary}`,
+            paddingLeft: "8px",
           }}
         >
           {rightContent}
