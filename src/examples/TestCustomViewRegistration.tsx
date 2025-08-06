@@ -123,27 +123,31 @@ export const TestCustomViewRegistration: React.FC = () => {
   );
 };
 
-const TestCustomComponent: React.FC<{ testData: string }> = ({ testData }) => (
-  <div style={{ padding: "20px" }}>
-    <h3>Test Custom Component</h3>
-    <p>
-      This is a test custom component that should not interfere with the view
-      registry.
-    </p>
-    <p>Test data: {testData}</p>
-    <div
-      style={{
-        backgroundColor: "#f0f0f0",
-        padding: "10px",
-        borderRadius: "4px",
-        marginTop: "10px",
-      }}
-    >
+const TestCustomComponent: React.FC<Record<string, unknown>> = (props) => {
+  const testData = (props.testData as string) || "Default test data";
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h3>Test Custom Component</h3>
       <p>
-        ✅ If you can see this, the custom component was added successfully!
+        This is a test custom component that should not interfere with the view
+        registry.
       </p>
+      <p>Test data: {testData}</p>
+      <div
+        style={{
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          borderRadius: "4px",
+          marginTop: "10px",
+        }}
+      >
+        <p>
+          ✅ If you can see this, the custom component was added successfully!
+        </p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default TestCustomViewRegistration;
