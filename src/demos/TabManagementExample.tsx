@@ -29,6 +29,7 @@ export const TabManagementExample: React.FC = () => {
 
     // Try to add a tab with a custom ID
     addLog("Adding tab with custom ID 'my-custom-tab'");
+    console.log("About to call addViewAsTab with title:", "My Custom Tab");
     const tabId = addViewAsTab({
       viewId: "workspace-manager",
       pane: "center",
