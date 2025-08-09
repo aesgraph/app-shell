@@ -564,12 +564,12 @@ export const TabManager: React.FC<TabManagerProps> = ({
                       </button>
                     );
                   })}
-                  {/* Divider between custom/custom+default items and 'Close all tabs' */}
+                  {/* Divider between custom items and 'Close all tabs' (only when not on a specific tab) */}
                   {onCloseAllTabs &&
-                    ((contextMenu.isOpen && contextMenu.targetTabId) ||
-                      (Array.isArray(contextMenuItems)
-                        ? contextMenuItems.length > 0
-                        : typeof contextMenuItems === "function")) && (
+                    !contextMenu.targetTabId &&
+                    (Array.isArray(contextMenuItems)
+                      ? contextMenuItems.length > 0
+                      : typeof contextMenuItems === "function") && (
                       <div
                         style={{
                           height: 1,
@@ -582,41 +582,45 @@ export const TabManager: React.FC<TabManagerProps> = ({
               )
             );
           })()}
-          <button
-            type="button"
-            onClick={() => {
-              setContextMenu({ isOpen: false });
-              onCloseAllTabs?.();
-            }}
-            disabled={tabs.length === 0}
-            style={{
-              display: "flex",
-              width: "100%",
-              background: "transparent",
-              border: "none",
-              color:
-                tabs.length === 0 ? theme.colors.textMuted : theme.colors.text,
-              textAlign: "left",
-              padding: "6px 8px",
-              borderRadius: 0,
-              fontSize: "12px",
-              lineHeight: 1.2,
-              cursor: tabs.length === 0 ? "default" : "pointer",
-            }}
-            onMouseEnter={(e) => {
-              if (!(e.currentTarget as HTMLButtonElement).disabled) {
+          {!contextMenu.targetTabId && (
+            <button
+              type="button"
+              onClick={() => {
+                setContextMenu({ isOpen: false });
+                onCloseAllTabs?.();
+              }}
+              disabled={tabs.length === 0}
+              style={{
+                display: "flex",
+                width: "100%",
+                background: "transparent",
+                border: "none",
+                color:
+                  tabs.length === 0
+                    ? theme.colors.textMuted
+                    : theme.colors.text,
+                textAlign: "left",
+                padding: "6px 8px",
+                borderRadius: 0,
+                fontSize: "12px",
+                lineHeight: 1.2,
+                cursor: tabs.length === 0 ? "default" : "pointer",
+              }}
+              onMouseEnter={(e) => {
+                if (!(e.currentTarget as HTMLButtonElement).disabled) {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    theme.colors.surfaceHover;
+                }
+              }}
+              onMouseLeave={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.background =
-                  theme.colors.surfaceHover;
-              }
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "transparent";
-            }}
-            title={tabs.length === 0 ? "No tabs to close" : "Close all tabs"}
-          >
-            Close all tabs
-          </button>
+                  "transparent";
+              }}
+              title={tabs.length === 0 ? "No tabs to close" : "Close all tabs"}
+            >
+              Close all tabs
+            </button>
+          )}
         </div>
       )}
     </div>
