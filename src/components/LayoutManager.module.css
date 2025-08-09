@@ -208,9 +208,9 @@
 [data-panel-group-direction="horizontal"]
   > [data-panel][data-panel-size="0.00"]
   + [data-panel-resize-handle-enabled="true"] {
-  width: 10px !important;
-  max-width: 10px !important;
-  min-width: 10px !important;
+  width: 8px !important;
+  max-width: 8px !important;
+  min-width: 8px !important;
   z-index: 5;
 }
 
@@ -227,9 +227,9 @@
   > [data-panel-resize-handle-enabled="true"]:has(
     + [data-panel][data-panel-size="0.00"]
   ) {
-  width: 10px !important;
-  max-width: 10px !important;
-  min-width: 10px !important;
+  width: 8px !important;
+  max-width: 8px !important;
+  min-width: 8px !important;
   z-index: 5;
 }
 
