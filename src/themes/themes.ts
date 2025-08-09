@@ -112,8 +112,8 @@ const darkColors: ThemeColors = {
   workspacePanel: "#23272e", // --color-panel
   workspaceTitleBackground: "#23272e", // --color-title-bg
   workspaceTitleText: "#d4d4d4", // --color-title-text
-  workspaceResizer: "#23272e", // --color-resizer
-  workspaceResizerHover: "#444444", // --color-resizer-hover
+  workspaceResizer: "#666666", // slightly brighter for visibility
+  workspaceResizerHover: "#808080", // hover also slightly brighter
   workspaceScrollbar: "#555555", // --color-scrollbar
   workspaceScrollbarHover: "#777777", // --color-scrollbar-hover
 };
