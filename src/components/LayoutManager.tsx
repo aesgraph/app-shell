@@ -371,11 +371,23 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       const [leftSize, centerSize, rightSize] = layoutArr;
 
       if (pane === "left") {
-        horizontalGroupRef.current?.setLayout([0, centerSize + leftSize, rightSize]);
+        horizontalGroupRef.current?.setLayout([
+          0,
+          centerSize + leftSize,
+          rightSize,
+        ]);
       } else if (pane === "center") {
-        horizontalGroupRef.current?.setLayout([leftSize, 0, rightSize + centerSize]);
+        horizontalGroupRef.current?.setLayout([
+          leftSize,
+          0,
+          rightSize + centerSize,
+        ]);
       } else if (pane === "right") {
-        horizontalGroupRef.current?.setLayout([leftSize, centerSize + rightSize, 0]);
+        horizontalGroupRef.current?.setLayout([
+          leftSize,
+          centerSize + rightSize,
+          0,
+        ]);
       }
     }
   };
@@ -1057,6 +1069,11 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="left"
+                  onCloseAllTabs={() => {
+                    // Clear all tabs in left pane and active id
+                    setTabs((prev) => ({ ...prev, left: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, left: "" }));
+                  }}
                   rightContent={
                     <>
                       {renderMinimizeButton("left")}
@@ -1090,6 +1107,10 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="center"
+                  onCloseAllTabs={() => {
+                    setTabs((prev) => ({ ...prev, center: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, center: "" }));
+                  }}
                   rightContent={
                     <>
                       {renderMinimizeButton("center")}
@@ -1123,6 +1144,10 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="right"
+                  onCloseAllTabs={() => {
+                    setTabs((prev) => ({ ...prev, right: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, right: "" }));
+                  }}
                   rightContent={
                     <>
                       {renderMinimizeButton("right")}
@@ -1158,6 +1183,10 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                 handleTabDrop(tabId, targetPanel as Pane, dropIndex)
               }
               panelId="bottom"
+              onCloseAllTabs={() => {
+                setTabs((prev) => ({ ...prev, bottom: [] }));
+                setActiveTabIds((prev) => ({ ...prev, bottom: "" }));
+              }}
               rightContent={
                 <>
                   {renderMinimizeButton("bottom")}

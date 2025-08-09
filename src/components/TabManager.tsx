@@ -18,6 +18,7 @@ export interface TabManagerProps {
   onTabDrop: (tabId: string, targetPanel: string, dropIndex?: number) => void;
   panelId: string;
   rightContent?: React.ReactNode;
+  onCloseAllTabs?: () => void;
 }
 
 // Dropdown for adding new tabs (declare outside component)
@@ -102,11 +103,41 @@ export const TabManager: React.FC<TabManagerProps> = ({
   onTabDrop,
   panelId,
   rightContent,
+  onCloseAllTabs,
 }) => {
   const dragTabId = useRef<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null);
   const [dropPosition, setDropPosition] = React.useState<number>(0);
   const { theme } = useTheme();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  const [contextMenu, setContextMenu] = React.useState<
+    { isOpen: true; x: number; y: number } | { isOpen: false }
+  >({ isOpen: false });
+
+  React.useEffect(() => {
+    if (!contextMenu.isOpen) return;
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Close if clicking outside the tab bar or any menu content
+      const container = containerRef.current;
+      if (!container) {
+        setContextMenu({ isOpen: false });
+        return;
+      }
+      if (!container.contains(e.target as Node)) {
+        setContextMenu({ isOpen: false });
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setContextMenu({ isOpen: false });
+    };
+    document.addEventListener("mousedown", handleGlobalClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleGlobalClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [contextMenu.isOpen]);
 
   const handleDragStart = (e: React.DragEvent, tabId: string) => {
     dragTabId.current = tabId;
@@ -174,10 +205,21 @@ export const TabManager: React.FC<TabManagerProps> = ({
 
   return (
     <div
+      ref={containerRef}
       className={styles["aes-tabBar"]}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        // Position context menu relative to tab bar container
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        setContextMenu({
+          isOpen: true,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
+      }}
       data-panel-id={panelId}
       style={{
         display: "flex",
@@ -344,6 +386,63 @@ export const TabManager: React.FC<TabManagerProps> = ({
           }}
         >
           {rightContent}
+        </div>
+      )}
+
+      {/* Context menu */}
+      {contextMenu.isOpen && (
+        <div
+          style={{
+            position: "absolute",
+            left: contextMenu.x,
+            top: contextMenu.y,
+            background: theme.colors.surface,
+            color: theme.colors.text,
+            border: `1px solid ${theme.colors.border}`,
+            boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+            borderRadius: 4,
+            padding: 2,
+            zIndex: 1000,
+            minWidth: 130,
+            fontSize: "12px",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setContextMenu({ isOpen: false });
+              onCloseAllTabs?.();
+            }}
+            disabled={tabs.length === 0}
+            style={{
+              display: "flex",
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              color:
+                tabs.length === 0 ? theme.colors.textMuted : theme.colors.text,
+              textAlign: "left",
+              padding: "6px 8px",
+              borderRadius: 0,
+              fontSize: "12px",
+              lineHeight: 1.2,
+              cursor: tabs.length === 0 ? "not-allowed" : "pointer",
+            }}
+            onMouseEnter={(e) => {
+              if (!(e.currentTarget as HTMLButtonElement).disabled) {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  theme.colors.surfaceHover;
+              }
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "transparent";
+            }}
+            title={tabs.length === 0 ? "No tabs to close" : "Close all tabs"}
+          >
+            Close all tabs
+          </button>
         </div>
       )}
     </div>
