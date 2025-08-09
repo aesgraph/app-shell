@@ -199,7 +199,7 @@
 }
 
 /* Enlarge the first vertical handle when the left pane is minimized to make it easier to grab */
-[data-panel-group-direction="horizontal"]
+/* [data-panel-group-direction="horizontal"]
   > [data-panel][data-panel-size="0"]
   + [data-panel-resize-handle-enabled="true"],
 [data-panel-group-direction="horizontal"]
@@ -212,10 +212,10 @@
   max-width: 8px !important;
   min-width: 8px !important;
   z-index: 5;
-}
+} */
 
 /* Enlarge the last vertical handle when the right pane is minimized (handle precedes minimized panel) */
-[data-panel-group-direction="horizontal"]
+/* [data-panel-group-direction="horizontal"]
   > [data-panel-resize-handle-enabled="true"]:has(
     + [data-panel][data-panel-size="0"]
   ),
@@ -231,7 +231,7 @@
   max-width: 8px !important;
   min-width: 8px !important;
   z-index: 5;
-}
+} */
 
 [data-panel-group-direction="horizontal"]
   > [data-panel-resize-handle-enabled="true"]:before {
