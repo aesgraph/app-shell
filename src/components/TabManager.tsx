@@ -110,6 +110,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
   const [dropPosition, setDropPosition] = React.useState<number>(0);
   const { theme } = useTheme();
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
   const [contextMenu, setContextMenu] = React.useState<
     { isOpen: true; x: number; y: number } | { isOpen: false }
@@ -117,24 +118,24 @@ export const TabManager: React.FC<TabManagerProps> = ({
 
   React.useEffect(() => {
     if (!contextMenu.isOpen) return;
-    const handleGlobalClick = (e: MouseEvent) => {
-      // Close if clicking outside the tab bar or any menu content
-      const container = containerRef.current;
-      if (!container) {
+    const handleGlobalMouseDown = (e: MouseEvent) => {
+      // Close if clicking outside the context menu
+      const menu = menuRef.current;
+      if (!menu) {
         setContextMenu({ isOpen: false });
         return;
       }
-      if (!container.contains(e.target as Node)) {
+      if (!menu.contains(e.target as Node)) {
         setContextMenu({ isOpen: false });
       }
     };
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setContextMenu({ isOpen: false });
     };
-    document.addEventListener("mousedown", handleGlobalClick);
+    document.addEventListener("mousedown", handleGlobalMouseDown);
     document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener("mousedown", handleGlobalClick);
+      document.removeEventListener("mousedown", handleGlobalMouseDown);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [contextMenu.isOpen]);
@@ -392,6 +393,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
       {/* Context menu */}
       {contextMenu.isOpen && (
         <div
+          ref={menuRef}
           style={{
             position: "absolute",
             left: contextMenu.x,
@@ -407,6 +409,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
             fontSize: "12px",
           }}
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
         >
           <button
             type="button"
