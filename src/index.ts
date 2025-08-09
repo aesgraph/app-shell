@@ -56,6 +56,13 @@ export {
   hasView,
 } from "./utils/programmaticViews";
 
+// Programmatic context menu utilities
+export { addToPaneContextMenu } from "./utils/programmaticContextMenu";
+export type {
+  PaneContextMenuContext,
+  PaneContextMenuItemOptions,
+} from "./utils/programmaticContextMenu";
+
 // Tab management utilities (use within components with AppShell context)
 export { useTabManagement } from "./contexts/useAppShell";
 export type {

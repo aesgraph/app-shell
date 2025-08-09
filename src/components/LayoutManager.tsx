@@ -13,7 +13,12 @@ import { WorkspaceState } from "../types/workspace";
 import { createDefaultLayoutConfig } from "../utils/layoutConfigUtils";
 import { applyThemeVars, getThemeStyles } from "../utils/themeUtils";
 import styles from "./LayoutManager.module.css";
-import { Tab, TabManager } from "./TabManager";
+import {
+  Tab,
+  TabManager,
+  ContextMenuItem,
+  ContextMenuBuildContext,
+} from "./TabManager";
 import { registerLayoutManagerViews } from "../views/layoutManagerViews";
 
 type Pane = PaneType;
@@ -486,6 +491,22 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   const handleTabSelect = (pane: Pane, tabId: string) => {
     logWithLevel("info", `Tab selected - Pane: ${pane}, Tab ID: ${tabId}`);
     setActiveTabIds((prev) => ({ ...prev, [pane]: tabId }));
+  };
+
+  // Allow upstream to extend via event-based hook: "build-pane-context-menu"
+  // Projects can listen and push items onto the provided array.
+  const buildPaneContextMenuItems = (
+    context: ContextMenuBuildContext
+  ): ContextMenuItem[] => {
+    const items: ContextMenuItem[] = [];
+    const event = new CustomEvent("build-pane-context-menu", {
+      detail: {
+        context,
+        items,
+      },
+    });
+    document.dispatchEvent(event);
+    return items;
   };
 
   // Function to get current workspace state
@@ -1074,6 +1095,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     setTabs((prev) => ({ ...prev, left: [] }));
                     setActiveTabIds((prev) => ({ ...prev, left: "" }));
                   }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("left")}
@@ -1111,6 +1133,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     setTabs((prev) => ({ ...prev, center: [] }));
                     setActiveTabIds((prev) => ({ ...prev, center: "" }));
                   }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("center")}
@@ -1148,6 +1171,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                     setTabs((prev) => ({ ...prev, right: [] }));
                     setActiveTabIds((prev) => ({ ...prev, right: "" }));
                   }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("right")}
@@ -1187,6 +1211,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                 setTabs((prev) => ({ ...prev, bottom: [] }));
                 setActiveTabIds((prev) => ({ ...prev, bottom: "" }));
               }}
+              contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
               rightContent={
                 <>
                   {renderMinimizeButton("bottom")}

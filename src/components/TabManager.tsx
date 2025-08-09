@@ -10,6 +10,24 @@ export interface Tab {
   content: React.ReactNode;
 }
 
+export type ContextMenuItem =
+  | {
+      type?: "item";
+      id: string;
+      label: string;
+      disabled?: boolean;
+      onSelect: () => void;
+    }
+  | {
+      type: "separator";
+    };
+
+export interface ContextMenuBuildContext {
+  panelId: string;
+  tabs: Tab[];
+  activeTabId: string;
+}
+
 export interface TabManagerProps {
   tabs: Tab[];
   activeTabId: string;
@@ -19,6 +37,9 @@ export interface TabManagerProps {
   panelId: string;
   rightContent?: React.ReactNode;
   onCloseAllTabs?: () => void;
+  contextMenuItems?:
+    | ContextMenuItem[]
+    | ((context: ContextMenuBuildContext) => ContextMenuItem[]);
 }
 
 // Dropdown for adding new tabs (declare outside component)
@@ -104,6 +125,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
   panelId,
   rightContent,
   onCloseAllTabs,
+  contextMenuItems,
 }) => {
   const dragTabId = useRef<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null);
@@ -411,6 +433,90 @@ export const TabManager: React.FC<TabManagerProps> = ({
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         >
+          {/* Custom items (if provided) */}
+          {(() => {
+            const items = Array.isArray(contextMenuItems)
+              ? contextMenuItems
+              : typeof contextMenuItems === "function"
+                ? contextMenuItems({ panelId, tabs, activeTabId })
+                : [];
+            return (
+              items &&
+              items.length > 0 && (
+                <div>
+                  {items.map((item, index) => {
+                    if (item.type === "separator") {
+                      return (
+                        <div
+                          key={`sep-${index}`}
+                          style={{
+                            height: 1,
+                            background: theme.colors.border,
+                            margin: "2px 0",
+                          }}
+                        />
+                      );
+                    }
+                    const isDisabled = !!item.disabled;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          if (isDisabled) return;
+                          setContextMenu({ isOpen: false });
+                          item.onSelect();
+                        }}
+                        disabled={isDisabled}
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          background: "transparent",
+                          border: "none",
+                          color: isDisabled
+                            ? theme.colors.textMuted
+                            : theme.colors.text,
+                          textAlign: "left",
+                          padding: "6px 8px",
+                          borderRadius: 0,
+                          fontSize: "12px",
+                          lineHeight: 1.2,
+                          cursor: isDisabled ? "default" : "pointer",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (
+                            !(e.currentTarget as HTMLButtonElement).disabled
+                          ) {
+                            (
+                              e.currentTarget as HTMLButtonElement
+                            ).style.background = theme.colors.surfaceHover;
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.background = "transparent";
+                        }}
+                        title={item.label}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                  {/* Divider between custom items and defaults if defaults exist */}
+                  {onCloseAllTabs && (
+                    <div
+                      style={{
+                        height: 1,
+                        background: theme.colors.border,
+                        margin: "2px 0",
+                      }}
+                    />
+                  )}
+                </div>
+              )
+            );
+          })()}
           <button
             type="button"
             onClick={() => {
@@ -430,7 +536,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
               borderRadius: 0,
               fontSize: "12px",
               lineHeight: 1.2,
-              cursor: tabs.length === 0 ? "not-allowed" : "pointer",
+              cursor: tabs.length === 0 ? "default" : "pointer",
             }}
             onMouseEnter={(e) => {
               if (!(e.currentTarget as HTMLButtonElement).disabled) {
