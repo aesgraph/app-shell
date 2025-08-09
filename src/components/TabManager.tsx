@@ -26,6 +26,7 @@ export interface ContextMenuBuildContext {
   panelId: string;
   tabs: Tab[];
   activeTabId: string;
+  targetTabId?: string;
 }
 
 export interface TabManagerProps {
@@ -135,7 +136,10 @@ export const TabManager: React.FC<TabManagerProps> = ({
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   const [contextMenu, setContextMenu] = React.useState<
-    { isOpen: true; x: number; y: number } | { isOpen: false }
+    | { isOpen: true; x: number; y: number; targetTabId?: string }
+    | {
+        isOpen: false;
+      }
   >({ isOpen: false });
 
   React.useEffect(() => {
@@ -237,10 +241,25 @@ export const TabManager: React.FC<TabManagerProps> = ({
         e.preventDefault();
         // Position context menu relative to tab bar container
         const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        // Detect if a tab element was right-clicked
+        const target = e.target as HTMLElement;
+        const tabEl = target.closest("[data-tab-index]") as HTMLElement | null;
+        let targetTabId: string | undefined;
+        if (
+          tabEl &&
+          tabEl.dataset &&
+          typeof tabEl.dataset.tabIndex !== "undefined"
+        ) {
+          const idx = Number(tabEl.dataset.tabIndex);
+          if (!Number.isNaN(idx) && tabs[idx]) {
+            targetTabId = tabs[idx].id;
+          }
+        }
         setContextMenu({
           isOpen: true,
           x: e.clientX - rect.left,
           y: e.clientY - rect.top,
+          targetTabId,
         });
       }}
       data-panel-id={panelId}
@@ -433,12 +452,54 @@ export const TabManager: React.FC<TabManagerProps> = ({
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         >
+          {/* Default: Close tab when a specific tab was right-clicked */}
+          {contextMenu.isOpen && contextMenu.targetTabId && (
+            <button
+              type="button"
+              onClick={() => {
+                setContextMenu({ isOpen: false });
+                onTabClose(contextMenu.targetTabId!);
+              }}
+              style={{
+                display: "flex",
+                width: "100%",
+                background: "transparent",
+                border: "none",
+                color: theme.colors.text,
+                textAlign: "left",
+                padding: "6px 8px",
+                borderRadius: 0,
+                fontSize: "12px",
+                lineHeight: 1.2,
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  theme.colors.surfaceHover;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "transparent";
+              }}
+              title="Close tab"
+            >
+              Close tab
+            </button>
+          )}
+
           {/* Custom items (if provided) */}
           {(() => {
             const items = Array.isArray(contextMenuItems)
               ? contextMenuItems
               : typeof contextMenuItems === "function"
-                ? contextMenuItems({ panelId, tabs, activeTabId })
+                ? contextMenuItems({
+                    panelId,
+                    tabs,
+                    activeTabId,
+                    targetTabId: contextMenu.isOpen
+                      ? contextMenu.targetTabId
+                      : undefined,
+                  })
                 : [];
             return (
               items &&
@@ -503,16 +564,20 @@ export const TabManager: React.FC<TabManagerProps> = ({
                       </button>
                     );
                   })}
-                  {/* Divider between custom items and defaults if defaults exist */}
-                  {onCloseAllTabs && (
-                    <div
-                      style={{
-                        height: 1,
-                        background: theme.colors.border,
-                        margin: "2px 0",
-                      }}
-                    />
-                  )}
+                  {/* Divider between custom/custom+default items and 'Close all tabs' */}
+                  {onCloseAllTabs &&
+                    ((contextMenu.isOpen && contextMenu.targetTabId) ||
+                      (Array.isArray(contextMenuItems)
+                        ? contextMenuItems.length > 0
+                        : typeof contextMenuItems === "function")) && (
+                      <div
+                        style={{
+                          height: 1,
+                          background: theme.colors.border,
+                          margin: "2px 0",
+                        }}
+                      />
+                    )}
                 </div>
               )
             );
