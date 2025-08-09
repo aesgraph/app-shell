@@ -200,8 +200,12 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       const ViewComponent = viewDef.component;
       const { props = {}, title, activate = true } = options || {};
 
-      console.log("LayoutManager: addViewAsTab received title:", title);
-      console.log("LayoutManager: viewDef.title:", viewDef.title);
+      logWithLevel(
+        "info",
+        "LayoutManager: addViewAsTab received title:",
+        title
+      );
+      logWithLevel("info", "LayoutManager: viewDef.title:", viewDef.title);
 
       // Create and cache the component instance
       const content = React.createElement(ViewComponent, {
@@ -217,7 +221,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         content: content,
       };
 
-      console.log("LayoutManager: Final tab title:", newTab.title);
+      logWithLevel("info", "LayoutManager: Final tab title:", newTab.title);
       logWithLevel("info", "LayoutManager: Adding new tab:", newTab);
 
       setTabs((prev) => ({
@@ -302,7 +306,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         event.detail
       );
       const { panelId, viewId, props, title, tabId, activate } = event.detail;
-      console.log("LayoutManager: Extracted title from event:", title);
+      logWithLevel("info", "LayoutManager: Extracted title from event:", title);
       addViewAsTab(viewId, panelId as Pane, { props, title, tabId, activate });
     };
 
