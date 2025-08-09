@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@aesgraph/app-shell.svg)](https://www.npmjs.com/package/@aesgraph/app-shell)
 [![Deployed on Vercel](https://vercel.com/button)](https://app-shell-aesgraph.vercel.app)
 
-A flexible, resizable workspace shell component for React applications with tab management, theme support, and customizable layouts.
+A workspace shell component for React applications with tab management, theme support, and customizable layouts.
 
 <img width="1644" height="1179" alt="image" src="https://github.com/user-attachments/assets/d9c46995-6892-4e55-b361-287d8e333d6a" />
 
@@ -416,7 +416,6 @@ This project includes automated security scanning to prevent accidental exposure
 ### Security Checks
 
 - **TruffleHog**: Scans for verified secrets and API keys
-- **Gitleaks**: Detects hardcoded secrets and credentials (requires license)
 
 ### Security Workflow
 
@@ -434,15 +433,6 @@ The security scan runs automatically on:
 - Hardcoded credentials
 - Service-specific tokens (GitHub, npm, AWS, etc.)
 - And many more patterns automatically detected by Gitleaks
-
-### If Secrets Are Found
-
-If the security scan detects potential secrets:
-
-1. The workflow will fail
-2. Review the findings in the GitHub Actions logs
-3. Remove any actual secrets from the codebase
-4. Use environment variables or secure secret management instead
 
 ### Commit Message Format
 

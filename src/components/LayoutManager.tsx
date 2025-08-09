@@ -363,18 +363,20 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   // Collapse logic for each pane
   const handleMinimize = (pane: Pane) => {
     if (pane === "bottom") {
-      verticalGroupRef.current?.setLayout([85, 15]); // Respect minimum bottom size
+      // Fully collapse bottom pane
+      verticalGroupRef.current?.setLayout([100, 0]);
     } else {
-      // left, center, right
+      // Collapse the specified horizontal pane to 0 and redistribute its size to neighbors
       const layoutArr = horizontalGroupRef.current?.getLayout?.() || layout;
-      let newLayout = [...layoutArr];
-      if (pane === "left")
-        newLayout = [10, newLayout[1] + newLayout[0] - 10, newLayout[2]]; // Minimize to min size
-      if (pane === "center")
-        newLayout = [newLayout[0], 20, newLayout[2] + newLayout[1] - 20]; // Minimize to min size
-      if (pane === "right")
-        newLayout = [newLayout[0], newLayout[1] + newLayout[2] - 10, 10]; // Minimize to min size
-      horizontalGroupRef.current?.setLayout(newLayout);
+      const [leftSize, centerSize, rightSize] = layoutArr;
+
+      if (pane === "left") {
+        horizontalGroupRef.current?.setLayout([0, centerSize + leftSize, rightSize]);
+      } else if (pane === "center") {
+        horizontalGroupRef.current?.setLayout([leftSize, 0, rightSize + centerSize]);
+      } else if (pane === "right") {
+        horizontalGroupRef.current?.setLayout([leftSize, centerSize + rightSize, 0]);
+      }
     }
   };
   // Tab state
@@ -1026,7 +1028,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         }}
         autoSaveId="vertical-group"
       >
-        <Panel defaultSize={100 - initialBottomHeight} collapsible>
+        <Panel defaultSize={100 - initialBottomHeight} collapsible minSize={0}>
           <PanelGroup
             direction="horizontal"
             ref={horizontalGroupRef}
@@ -1041,7 +1043,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
             autoSaveId="horizontal-group"
           >
             {/* Left Pane */}
-            <Panel defaultSize={initialLayout[0]} collapsible>
+            <Panel defaultSize={initialLayout[0]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-leftPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -1074,7 +1076,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               }}
             />
             {/* Center Pane */}
-            <Panel defaultSize={initialLayout[1]} collapsible>
+            <Panel defaultSize={initialLayout[1]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-centerPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -1107,7 +1109,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               }}
             />
             {/* Right Pane */}
-            <Panel defaultSize={initialLayout[2]} collapsible>
+            <Panel defaultSize={initialLayout[2]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-rightPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -1142,7 +1144,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
           }}
         />
         {/* Bottom Pane */}
-        <Panel defaultSize={initialBottomHeight} collapsible>
+        <Panel defaultSize={initialBottomHeight} collapsible minSize={0}>
           <div
             className={`${styles["aes-pane"]} ${styles["aes-bottomPane"]}`}
             style={themeStyles.workspace.panel}
