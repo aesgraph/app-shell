@@ -214,6 +214,25 @@
   z-index: 5;
 }
 
+/* Enlarge the last vertical handle when the right pane is minimized (handle precedes minimized panel) */
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"]:has(
+    + [data-panel][data-panel-size="0"]
+  ),
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"]:has(
+    + [data-panel][data-panel-size="0.0"]
+  ),
+[data-panel-group-direction="horizontal"]
+  > [data-panel-resize-handle-enabled="true"]:has(
+    + [data-panel][data-panel-size="0.00"]
+  ) {
+  width: 10px !important;
+  max-width: 10px !important;
+  min-width: 10px !important;
+  z-index: 5;
+}
+
 [data-panel-group-direction="horizontal"]
   > [data-panel-resize-handle-enabled="true"]:before {
   top: 0;
