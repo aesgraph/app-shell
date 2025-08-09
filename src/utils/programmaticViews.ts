@@ -86,6 +86,7 @@ export interface AddCustomViewOptions {
  *
  * @param options Configuration for adding the view
  * @returns The generated tab ID, or null if the view wasn't found
+ * @throws Error when the provided tab ID is already in use
  */
 export function addViewAsTab(options: AddViewOptions): string | null {
   const {
@@ -111,7 +112,9 @@ export function addViewAsTab(options: AddViewOptions): string | null {
     console.error(
       `Tab ID "${tabId}" is already in use. Please choose a different ID.`
     );
-    return null;
+    throw new Error(
+      `Tab ID "${tabId}" is already in use. Please choose a different ID.`
+    );
   }
 
   // Create custom event to add the tab
