@@ -9,8 +9,20 @@ export interface PaneContextMenuContext {
 export interface PaneContextMenuItemOptions {
   id: string;
   label: string;
-  onSelect: (context: PaneContextMenuContext) => void;
+  /**
+   * Click handler for the menu item. Receives the pane context (pane id, tabs, active tab).
+   */
+  onClick: (context: PaneContextMenuContext) => void;
+  /**
+   * Whether the item should be disabled. Can be a boolean or a function that
+   * evaluates against the current pane context each time the menu opens.
+   */
   disabled?: boolean | ((context: PaneContextMenuContext) => boolean);
+  /**
+   * Predicate to determine whether this item should be INCLUDED for the given
+   * pane context. Return true to include, false to omit. This runs on every
+   * menu open, so you can make context-aware items (e.g., only show on right pane).
+   */
   predicate?: (context: PaneContextMenuContext) => boolean;
   separatorBefore?: boolean;
   separatorAfter?: boolean;
@@ -40,13 +52,26 @@ export function addToPaneContextMenu(
             id: string;
             label: string;
             disabled?: boolean;
-            onSelect: () => void;
+            onClick: () => void;
           }
         | { type: "separator" }
       >;
     }>;
 
-    const { context, items } = custom.detail || ({} as any);
+    const { context, items } =
+      (custom.detail as {
+        context?: PaneContextMenuContext;
+        items?: Array<
+          | {
+              type?: "item";
+              id: string;
+              label: string;
+              disabled?: boolean;
+              onClick: () => void;
+            }
+          | { type: "separator" }
+        >;
+      }) || {};
     if (!context || !items) return;
 
     if (options.predicate && !options.predicate(context)) return;
@@ -64,7 +89,7 @@ export function addToPaneContextMenu(
       id: options.id,
       label: options.label,
       disabled,
-      onSelect: () => options.onSelect(context),
+      onClick: () => options.onClick(context),
     });
 
     if (options.separatorAfter) {

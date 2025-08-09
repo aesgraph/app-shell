@@ -16,7 +16,7 @@ export type ContextMenuItem =
       id: string;
       label: string;
       disabled?: boolean;
-      onSelect: () => void;
+      onClick: () => void;
     }
   | {
       type: "separator";
@@ -465,7 +465,7 @@ export const TabManager: React.FC<TabManagerProps> = ({
                         onClick={() => {
                           if (isDisabled) return;
                           setContextMenu({ isOpen: false });
-                          item.onSelect();
+                          item.onClick();
                         }}
                         disabled={isDisabled}
                         style={{
