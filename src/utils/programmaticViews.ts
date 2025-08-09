@@ -1,5 +1,6 @@
 import { globalViewRegistry, ViewDefinition } from "../types/ViewRegistry";
 import type { PaneType } from "../types/LayoutConfig";
+import type { WorkspaceState } from "../types/workspace";
 
 /**
  * Check if a tab ID is unique across the entire app shell
@@ -7,12 +8,37 @@ import type { PaneType } from "../types/LayoutConfig";
  * @returns True if the tab ID is unique
  */
 export function isTabIdUnique(tabId: string): boolean {
-  // This function now needs to be called from within a component that has access to the AppShell context
-  // For programmatic usage, we'll use a different approach
-  console.warn(
-    `isTabIdUnique(${tabId}) should be called from within a component with AppShell context access`
-  );
-  return true; // Default to true for programmatic usage
+  try {
+    const g = globalThis as unknown as {
+      getCurrentWorkspace?: () => WorkspaceState | null;
+      getCurrentWorkspaceState?: () => Omit<
+        WorkspaceState,
+        "id" | "name" | "timestamp"
+      >;
+    };
+    const currentWorkspace =
+      typeof g.getCurrentWorkspace === "function"
+        ? g.getCurrentWorkspace()
+        : null;
+    if (currentWorkspace) {
+      const exists = currentWorkspace.tabContainers?.some((c) =>
+        c.tabs?.some((t) => t.id === tabId)
+      );
+      return !exists;
+    }
+    // Fallback to LayoutManager snapshot if available
+    const snapshotGetter = g.getCurrentWorkspaceState;
+    if (typeof snapshotGetter === "function") {
+      const snap = snapshotGetter();
+      const exists = snap.tabContainers?.some((c) =>
+        c.tabs?.some((t) => t.id === tabId)
+      );
+      return !exists;
+    }
+  } catch {
+    // Fall through to default true if state unavailable
+  }
+  return true;
 }
 
 /**
@@ -33,8 +59,7 @@ export function reserveTabId(tabId: string): boolean {
  * @param tabId The tab ID to release
  */
 export function releaseTabId(tabId: string): void {
-  // No need to maintain separate state - the workspace state is the source of truth
-  console.log(`Released tab ID: ${tabId}`);
+  void tabId; // No-op when using live workspace state as the source of truth
 }
 
 export interface AddViewOptions {

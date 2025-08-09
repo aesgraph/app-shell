@@ -208,6 +208,17 @@ export const AppShellProvider: React.FC<WorkspaceProviderProps> = ({
     return currentWorkspace;
   }, [currentWorkspace]);
 
+  // Expose getCurrentWorkspace globally for non-React programmatic APIs
+  useEffect(() => {
+    const g = globalThis as unknown as {
+      getCurrentWorkspace?: () => WorkspaceState | null;
+    };
+    g.getCurrentWorkspace = getCurrentWorkspace;
+    return () => {
+      delete g.getCurrentWorkspace;
+    };
+  }, [getCurrentWorkspace]);
+
   const updateWorkspace = useCallback(
     (id: string, updates: Partial<WorkspaceState>) => {
       setSavedWorkspaces((prev) => {
