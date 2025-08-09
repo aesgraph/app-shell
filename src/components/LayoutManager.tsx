@@ -13,7 +13,12 @@ import { WorkspaceState } from "../types/workspace";
 import { createDefaultLayoutConfig } from "../utils/layoutConfigUtils";
 import { applyThemeVars, getThemeStyles } from "../utils/themeUtils";
 import styles from "./LayoutManager.module.css";
-import { Tab, TabManager } from "./TabManager";
+import {
+  Tab,
+  TabManager,
+  ContextMenuItem,
+  ContextMenuBuildContext,
+} from "./TabManager";
 import { registerLayoutManagerViews } from "../views/layoutManagerViews";
 
 type Pane = PaneType;
@@ -169,33 +174,54 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
 
   // Function to add a view as a tab
   const addViewAsTab = useCallback(
-    (viewId: string, pane: Pane) => {
+    (
+      viewId: string,
+      pane: Pane,
+      options?: {
+        props?: Record<string, unknown>;
+        title?: string;
+        tabId?: string;
+        activate?: boolean;
+      }
+    ) => {
       logWithLevel(
         "info",
         "LayoutManager: addViewAsTab called with:",
         viewId,
-        pane
+        pane,
+        options
       );
       const viewDef = globalViewRegistry.getView(viewId);
       logWithLevel("info", "LayoutManager: viewDef found:", viewDef);
       if (!viewDef) return;
 
-      const tabId = `${viewId}-${Date.now()}`;
+      // Use custom tab ID if provided, otherwise generate one
+      const tabId = options?.tabId || `${viewId}-${Date.now()}`;
       const ViewComponent = viewDef.component;
+      const { props = {}, title, activate = true } = options || {};
+
+      logWithLevel(
+        "info",
+        "LayoutManager: addViewAsTab received title:",
+        title
+      );
+      logWithLevel("info", "LayoutManager: viewDef.title:", viewDef.title);
 
       // Create and cache the component instance
       const content = React.createElement(ViewComponent, {
         key: tabId,
         ...(viewDef.props || {}),
+        ...props,
       });
       tabInstanceCache.current.set(tabId, content);
 
       const newTab: Tab = {
         id: tabId,
-        title: viewDef.title,
+        title: title || viewDef.title,
         content: content,
       };
 
+      logWithLevel("info", "LayoutManager: Final tab title:", newTab.title);
       logWithLevel("info", "LayoutManager: Adding new tab:", newTab);
 
       setTabs((prev) => ({
@@ -203,10 +229,65 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         [pane]: [...prev[pane], newTab],
       }));
 
-      setActiveTabIds((prev) => ({
+      if (activate) {
+        setActiveTabIds((prev) => ({
+          ...prev,
+          [pane]: newTab.id,
+        }));
+      }
+    },
+    [logWithLevel]
+  );
+
+  // Function to add a custom component as a tab
+  const addCustomTabAsTab = useCallback(
+    (
+      tabId: string,
+      component: React.ComponentType<Record<string, unknown>>,
+      title: string,
+      pane: Pane,
+      options?: {
+        props?: Record<string, unknown>;
+        activate?: boolean;
+      }
+    ) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: addCustomTabAsTab called with:",
+        tabId,
+        title,
+        pane,
+        options
+      );
+
+      const { props = {}, activate = true } = options || {};
+
+      // Create and cache the component instance
+      const content = React.createElement(component, {
+        key: tabId,
+        ...props,
+      });
+      tabInstanceCache.current.set(tabId, content);
+
+      const newTab: Tab = {
+        id: tabId,
+        title: title,
+        content: content,
+      };
+
+      logWithLevel("info", "LayoutManager: Adding custom tab:", newTab);
+
+      setTabs((prev) => ({
         ...prev,
-        [pane]: newTab.id,
+        [pane]: [...prev[pane], newTab],
       }));
+
+      if (activate) {
+        setActiveTabIds((prev) => ({
+          ...prev,
+          [pane]: newTab.id,
+        }));
+      }
     },
     [logWithLevel]
   );
@@ -224,14 +305,38 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         "LayoutManager: Received add-tab event:",
         event.detail
       );
-      const { panelId, viewId } = event.detail;
-      addViewAsTab(viewId, panelId as Pane);
+      const { panelId, viewId, props, title, tabId, activate } = event.detail;
+      logWithLevel("info", "LayoutManager: Extracted title from event:", title);
+      addViewAsTab(viewId, panelId as Pane, { props, title, tabId, activate });
+    };
+
+    const handleAddCustomTab = (event: CustomEvent) => {
+      logWithLevel(
+        "info",
+        "LayoutManager: Received add-custom-tab event:",
+        event.detail
+      );
+      const { panelId, tabId, component, title, props, activate } =
+        event.detail;
+      addCustomTabAsTab(tabId, component, title, panelId as Pane, {
+        props,
+        activate,
+      });
     };
 
     document.addEventListener("add-tab", handleAddTab as EventListener);
-    return () =>
+    document.addEventListener(
+      "add-custom-tab",
+      handleAddCustomTab as EventListener
+    );
+    return () => {
       document.removeEventListener("add-tab", handleAddTab as EventListener);
-  }, [addViewAsTab, logWithLevel]);
+      document.removeEventListener(
+        "add-custom-tab",
+        handleAddCustomTab as EventListener
+      );
+    };
+  }, [addViewAsTab, addCustomTabAsTab, logWithLevel]);
 
   // Cleanup tab instance cache on unmount
   useEffect(() => {
@@ -267,18 +372,32 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   // Collapse logic for each pane
   const handleMinimize = (pane: Pane) => {
     if (pane === "bottom") {
-      verticalGroupRef.current?.setLayout([85, 15]); // Respect minimum bottom size
+      // Fully collapse bottom pane
+      verticalGroupRef.current?.setLayout([100, 0]);
     } else {
-      // left, center, right
+      // Collapse the specified horizontal pane to 0 and redistribute its size to neighbors
       const layoutArr = horizontalGroupRef.current?.getLayout?.() || layout;
-      let newLayout = [...layoutArr];
-      if (pane === "left")
-        newLayout = [10, newLayout[1] + newLayout[0] - 10, newLayout[2]]; // Minimize to min size
-      if (pane === "center")
-        newLayout = [newLayout[0], 20, newLayout[2] + newLayout[1] - 20]; // Minimize to min size
-      if (pane === "right")
-        newLayout = [newLayout[0], newLayout[1] + newLayout[2] - 10, 10]; // Minimize to min size
-      horizontalGroupRef.current?.setLayout(newLayout);
+      const [leftSize, centerSize, rightSize] = layoutArr;
+
+      if (pane === "left") {
+        horizontalGroupRef.current?.setLayout([
+          0,
+          centerSize + leftSize,
+          rightSize,
+        ]);
+      } else if (pane === "center") {
+        horizontalGroupRef.current?.setLayout([
+          leftSize,
+          0,
+          rightSize + centerSize,
+        ]);
+      } else if (pane === "right") {
+        horizontalGroupRef.current?.setLayout([
+          leftSize,
+          centerSize + rightSize,
+          0,
+        ]);
+      }
     }
   };
   // Tab state
@@ -376,6 +495,22 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
   const handleTabSelect = (pane: Pane, tabId: string) => {
     logWithLevel("info", `Tab selected - Pane: ${pane}, Tab ID: ${tabId}`);
     setActiveTabIds((prev) => ({ ...prev, [pane]: tabId }));
+  };
+
+  // Allow upstream to extend via event-based hook: "build-pane-context-menu"
+  // Projects can listen and push items onto the provided array.
+  const buildPaneContextMenuItems = (
+    context: ContextMenuBuildContext
+  ): ContextMenuItem[] => {
+    const items: ContextMenuItem[] = [];
+    const event = new CustomEvent("build-pane-context-menu", {
+      detail: {
+        context,
+        items,
+      },
+    });
+    document.dispatchEvent(event);
+    return items;
   };
 
   // Function to get current workspace state
@@ -717,7 +852,23 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
     });
   };
 
-  const handleTabDrop = (tabId: string, targetPane: Pane) => {
+  // Helper function to determine drop position within a pane
+  const getDropIndex = (pane: Pane, draggedTabId: string): number => {
+    const paneTabs = tabs[pane];
+    const draggedIndex = paneTabs.findIndex((tab) => tab.id === draggedTabId);
+    if (draggedIndex === -1) return -1;
+
+    // For now, just move to the end of the pane
+    // In a more sophisticated implementation, you could calculate the exact drop position
+    // based on mouse position relative to tab elements
+    return paneTabs.length;
+  };
+
+  const handleTabDrop = (
+    tabId: string,
+    targetPane: Pane,
+    dropIndex?: number
+  ) => {
     logWithLevel(
       "info",
       `Tab drop initiated - Tab ID: ${tabId}, Target Pane: ${targetPane}`
@@ -732,7 +883,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         tabToMove = found;
       }
     });
-    if (!fromPane || !tabToMove || fromPane === targetPane) {
+    if (!fromPane || !tabToMove) {
       logWithLevel(
         "warn",
         `Tab drop cancelled - fromPane: ${fromPane}, tabToMove: ${!!tabToMove}, targetPane: ${targetPane}`
@@ -740,19 +891,46 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
       return;
     }
 
-    logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
-    setTabs((prev) => {
-      const newTabs = { ...prev };
-      newTabs[fromPane!] = newTabs[fromPane!].filter((tab) => tab.id !== tabId);
-      newTabs[targetPane] = [...newTabs[targetPane], tabToMove!];
-      return newTabs;
-    });
-    setActiveTabIds((prev) => ({
-      ...prev,
-      [fromPane!]:
-        tabs[fromPane!].filter((tab) => tab.id !== tabId)[0]?.id || "",
-      [targetPane]: tabId,
-    }));
+    if (fromPane === targetPane) {
+      // Reordering within the same pane - use provided drop index or calculate
+      const finalDropIndex =
+        dropIndex !== undefined ? dropIndex : getDropIndex(targetPane, tabId);
+      if (finalDropIndex !== -1) {
+        logWithLevel(
+          "info",
+          `Reordering tab within ${targetPane} to position ${finalDropIndex}`
+        );
+        setTabs((prev) => {
+          const newTabs = { ...prev };
+          const paneTabs = [...newTabs[targetPane]];
+          const currentIndex = paneTabs.findIndex((tab) => tab.id === tabId);
+          if (currentIndex !== -1) {
+            // Remove from current position and insert at new position
+            const [movedTab] = paneTabs.splice(currentIndex, 1);
+            paneTabs.splice(finalDropIndex, 0, movedTab);
+            newTabs[targetPane] = paneTabs;
+          }
+          return newTabs;
+        });
+      }
+    } else {
+      // Moving between different panes
+      logWithLevel("info", `Moving tab from ${fromPane} to ${targetPane}`);
+      setTabs((prev) => {
+        const newTabs = { ...prev };
+        newTabs[fromPane!] = newTabs[fromPane!].filter(
+          (tab) => tab.id !== tabId
+        );
+        newTabs[targetPane] = [...newTabs[targetPane], tabToMove!];
+        return newTabs;
+      });
+      setActiveTabIds((prev) => ({
+        ...prev,
+        [fromPane!]:
+          tabs[fromPane!].filter((tab) => tab.id !== tabId)[0]?.id || "",
+        [targetPane]: tabId,
+      }));
+    }
   };
 
   // ...existing maximize/restore logic...
@@ -887,7 +1065,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
         }}
         autoSaveId="vertical-group"
       >
-        <Panel defaultSize={100 - initialBottomHeight} collapsible>
+        <Panel defaultSize={100 - initialBottomHeight} collapsible minSize={0}>
           <PanelGroup
             direction="horizontal"
             ref={horizontalGroupRef}
@@ -902,7 +1080,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
             autoSaveId="horizontal-group"
           >
             {/* Left Pane */}
-            <Panel defaultSize={initialLayout[0]} collapsible>
+            <Panel defaultSize={initialLayout[0]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-leftPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -912,10 +1090,16 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.left}
                   onTabSelect={(tabId) => handleTabSelect("left", tabId)}
                   onTabClose={(tabId) => handleTabClose("left", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="left"
+                  onCloseAllTabs={() => {
+                    // Clear all tabs in left pane and active id
+                    setTabs((prev) => ({ ...prev, left: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, left: "" }));
+                  }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("left")}
@@ -935,7 +1119,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               }}
             />
             {/* Center Pane */}
-            <Panel defaultSize={initialLayout[1]} collapsible>
+            <Panel defaultSize={initialLayout[1]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-centerPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -945,10 +1129,15 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.center}
                   onTabSelect={(tabId) => handleTabSelect("center", tabId)}
                   onTabClose={(tabId) => handleTabClose("center", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="center"
+                  onCloseAllTabs={() => {
+                    setTabs((prev) => ({ ...prev, center: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, center: "" }));
+                  }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("center")}
@@ -968,7 +1157,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               }}
             />
             {/* Right Pane */}
-            <Panel defaultSize={initialLayout[2]} collapsible>
+            <Panel defaultSize={initialLayout[2]} collapsible minSize={0}>
               <div
                 className={`${styles["aes-pane"]} ${styles["aes-rightPane"]}`}
                 style={themeStyles.workspace.panel}
@@ -978,10 +1167,15 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
                   activeTabId={activeTabIds.right}
                   onTabSelect={(tabId) => handleTabSelect("right", tabId)}
                   onTabClose={(tabId) => handleTabClose("right", tabId)}
-                  onTabDrop={(tabId, targetPanel) =>
-                    handleTabDrop(tabId, targetPanel as Pane)
+                  onTabDrop={(tabId, targetPanel, dropIndex) =>
+                    handleTabDrop(tabId, targetPanel as Pane, dropIndex)
                   }
                   panelId="right"
+                  onCloseAllTabs={() => {
+                    setTabs((prev) => ({ ...prev, right: [] }));
+                    setActiveTabIds((prev) => ({ ...prev, right: "" }));
+                  }}
+                  contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
                   rightContent={
                     <>
                       {renderMinimizeButton("right")}
@@ -1003,7 +1197,7 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
           }}
         />
         {/* Bottom Pane */}
-        <Panel defaultSize={initialBottomHeight} collapsible>
+        <Panel defaultSize={initialBottomHeight} collapsible minSize={0}>
           <div
             className={`${styles["aes-pane"]} ${styles["aes-bottomPane"]}`}
             style={themeStyles.workspace.panel}
@@ -1013,10 +1207,15 @@ export const LayoutManager: React.FC<LayoutManagerProps> = ({
               activeTabId={activeTabIds.bottom}
               onTabSelect={(tabId) => handleTabSelect("bottom", tabId)}
               onTabClose={(tabId) => handleTabClose("bottom", tabId)}
-              onTabDrop={(tabId, targetPanel) =>
-                handleTabDrop(tabId, targetPanel as Pane)
+              onTabDrop={(tabId, targetPanel, dropIndex) =>
+                handleTabDrop(tabId, targetPanel as Pane, dropIndex)
               }
               panelId="bottom"
+              onCloseAllTabs={() => {
+                setTabs((prev) => ({ ...prev, bottom: [] }));
+                setActiveTabIds((prev) => ({ ...prev, bottom: "" }));
+              }}
+              contextMenuItems={(ctx) => buildPaneContextMenuItems(ctx)}
               rightContent={
                 <>
                   {renderMinimizeButton("bottom")}

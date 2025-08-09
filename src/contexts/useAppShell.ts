@@ -30,6 +30,15 @@ export const useWorkspace = () => {
   };
 };
 
+// Tab management hook for easier access to tab-related functions
+export const useTabManagement = () => {
+  const context = useAppShell();
+  return {
+    getExistingTabIds: context.getExistingTabIds,
+    isTabIdUnique: context.isTabIdUnique,
+  };
+};
+
 // Theme-specific hook for easier theme access
 export const useTheme = () => {
   const context = useAppShell();

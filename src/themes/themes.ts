@@ -112,8 +112,8 @@ const darkColors: ThemeColors = {
   workspacePanel: "#23272e", // --color-panel
   workspaceTitleBackground: "#23272e", // --color-title-bg
   workspaceTitleText: "#d4d4d4", // --color-title-text
-  workspaceResizer: "#23272e", // --color-resizer
-  workspaceResizerHover: "#444444", // --color-resizer-hover
+  workspaceResizer: "#666666", // slightly brighter for visibility
+  workspaceResizerHover: "#808080", // hover also slightly brighter
   workspaceScrollbar: "#555555", // --color-scrollbar
   workspaceScrollbarHover: "#777777", // --color-scrollbar-hover
 };
@@ -154,7 +154,7 @@ const draculaColors: ThemeColors = {
   workspacePanel: "#44475a", // --color-panel
   workspaceTitleBackground: "#44475a", // --color-title-bg
   workspaceTitleText: "#bd93f9", // --color-title-text
-  workspaceResizer: "#6272a4", // --color-resizer
+  workspaceResizer: "#7a89b8", // slightly more distinct than scrollbar
   workspaceResizerHover: "#bd93f9", // --color-resizer-hover
   workspaceScrollbar: "#6272a4", // --color-scrollbar
   workspaceScrollbarHover: "#bd93f9", // --color-scrollbar-hover
@@ -196,7 +196,7 @@ const oneDarkColors: ThemeColors = {
   workspacePanel: "#3e4451", // --color-panel
   workspaceTitleBackground: "#3e4451", // --color-title-bg
   workspaceTitleText: "#61afef", // --color-title-text
-  workspaceResizer: "#5c6370", // --color-resizer
+  workspaceResizer: "#7a8290", // slightly more distinct than scrollbar
   workspaceResizerHover: "#61afef", // --color-resizer-hover
   workspaceScrollbar: "#5c6370", // --color-scrollbar
   workspaceScrollbarHover: "#61afef", // --color-scrollbar-hover
@@ -238,7 +238,7 @@ const solarizedColors: ThemeColors = {
   workspacePanel: "#073642", // --color-panel
   workspaceTitleBackground: "#073642", // --color-title-bg
   workspaceTitleText: "#268bd2", // --color-title-text
-  workspaceResizer: "#586e75", // --color-resizer
+  workspaceResizer: "#6f8790", // slightly more distinct than scrollbar
   workspaceResizerHover: "#268bd2", // --color-resizer-hover
   workspaceScrollbar: "#586e75", // --color-scrollbar
   workspaceScrollbarHover: "#268bd2", // --color-scrollbar-hover
@@ -280,7 +280,7 @@ const monokaiColors: ThemeColors = {
   workspacePanel: "#3e3d32", // --color-panel
   workspaceTitleBackground: "#3e3d32", // --color-title-bg
   workspaceTitleText: "#f92672", // --color-title-text
-  workspaceResizer: "#75715e", // --color-resizer
+  workspaceResizer: "#8d8973", // slightly more distinct than scrollbar
   workspaceResizerHover: "#f92672", // --color-resizer-hover
   workspaceScrollbar: "#75715e", // --color-scrollbar
   workspaceScrollbarHover: "#f92672", // --color-scrollbar-hover
@@ -322,7 +322,7 @@ const nordColors: ThemeColors = {
   workspacePanel: "#3b4252", // --color-panel
   workspaceTitleBackground: "#3b4252", // --color-title-bg
   workspaceTitleText: "#88c0d0", // --color-title-text
-  workspaceResizer: "#4c566a", // --color-resizer
+  workspaceResizer: "#667389", // slightly more distinct than scrollbar
   workspaceResizerHover: "#88c0d0", // --color-resizer-hover
   workspaceScrollbar: "#4c566a", // --color-scrollbar
   workspaceScrollbarHover: "#88c0d0", // --color-scrollbar-hover
@@ -364,7 +364,7 @@ const gruvboxColors: ThemeColors = {
   workspacePanel: "#3c3836", // --color-panel
   workspaceTitleBackground: "#3c3836", // --color-title-bg
   workspaceTitleText: "#fabd2f", // --color-title-text
-  workspaceResizer: "#504945", // --color-resizer
+  workspaceResizer: "#6a625b", // slightly more distinct than scrollbar
   workspaceResizerHover: "#fabd2f", // --color-resizer-hover
   workspaceScrollbar: "#504945", // --color-scrollbar
   workspaceScrollbarHover: "#fabd2f", // --color-scrollbar-hover
@@ -406,7 +406,7 @@ const tokyoColors: ThemeColors = {
   workspacePanel: "#24283b", // --color-panel
   workspaceTitleBackground: "#24283b", // --color-title-bg
   workspaceTitleText: "#7aa2f7", // --color-title-text
-  workspaceResizer: "#414868", // --color-resizer
+  workspaceResizer: "#5a6482", // slightly more distinct than scrollbar
   workspaceResizerHover: "#7aa2f7", // --color-resizer-hover
   workspaceScrollbar: "#414868", // --color-scrollbar
   workspaceScrollbarHover: "#7aa2f7", // --color-scrollbar-hover
@@ -448,7 +448,7 @@ const catppuccinColors: ThemeColors = {
   workspacePanel: "#313244", // --color-panel
   workspaceTitleBackground: "#313244", // --color-title-bg
   workspaceTitleText: "#cba6f7", // --color-title-text
-  workspaceResizer: "#45475a", // --color-resizer
+  workspaceResizer: "#5e6273", // slightly more distinct than scrollbar
   workspaceResizerHover: "#cba6f7", // --color-resizer-hover
   workspaceScrollbar: "#45475a", // --color-scrollbar
   workspaceScrollbarHover: "#cba6f7", // --color-scrollbar-hover

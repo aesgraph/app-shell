@@ -13,6 +13,9 @@ export {
   StatefulCounter,
 } from "./demos";
 
+// Examples
+export { default as TestCustomViewRegistration } from "./examples/TestCustomViewRegistration";
+
 // Views
 export { WorkspaceConfigEditor, WorkspaceManager } from "./views";
 export { default as ProgrammaticWorkspaceAccess } from "./views/examples/ProgrammaticWorkspaceAccess";
@@ -41,6 +44,31 @@ export { themes, defaultTheme, commonSizes } from "./themes/themes";
 // Layout utilities
 export { createDefaultLayoutConfig } from "./utils/layoutConfigUtils";
 export { exampleCustomConfig } from "./utils/exampleConfigs";
+
+// Programmatic view management utilities
+export {
+  addViewAsTab,
+  addCustomViewAsTab,
+  addViewsAsTabs,
+  addCustomViewsAsTabs,
+  getAvailableViewIds,
+  getViewsByCategory,
+  hasView,
+} from "./utils/programmaticViews";
+
+// Programmatic context menu utilities
+export { addToPaneContextMenu } from "./utils/programmaticContextMenu";
+export type {
+  PaneContextMenuContext,
+  PaneContextMenuItemOptions,
+} from "./utils/programmaticContextMenu";
+
+// Tab management utilities (use within components with AppShell context)
+export { useTabManagement } from "./contexts/useAppShell";
+export type {
+  AddViewOptions,
+  AddCustomViewOptions,
+} from "./utils/programmaticViews";
 
 // Types
 export type { LayoutConfig } from "./types/LayoutConfig";

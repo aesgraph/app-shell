@@ -3,6 +3,7 @@ import type { ViewDefinition } from "../types/ViewRegistry";
 import WorkspaceManager from "./WorkspaceManager";
 import WorkspaceConfigEditor from "./WorkspaceConfigEditor";
 import ProgrammaticWorkspaceAccess from "./examples/ProgrammaticWorkspaceAccess";
+import TestComponentWithProps from "../demos/TestComponentWithProps";
 import {
   FileExplorerView,
   TerminalView,
@@ -32,6 +33,13 @@ export const defaultViews: ViewDefinition[] = [
     component: ProgrammaticWorkspaceAccess,
     description: "Example of programmatic workspace access",
     category: "example",
+  },
+  {
+    id: "test-component-with-props",
+    title: "Test Component with Props",
+    component: TestComponentWithProps,
+    description: "Test component that displays received props",
+    category: "test",
   },
   {
     id: "file-explorer",
